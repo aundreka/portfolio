@@ -1,6 +1,6 @@
 
 
-piano concept:
+portfolio concept:
     main 
         The site starts with a short piano intro, and the keys "fall into place" as the homepage loads.
         a girl playing piano, different pianos surrounding her
