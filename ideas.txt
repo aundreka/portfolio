@@ -1,0 +1,48 @@
+
+
+portfolio concept:
+    main 
+        The site starts with a short piano intro, and the keys "fall into place" as the homepage loads.
+        a girl playing piano, different pianos surrounding her
+        arrows on the left and right to switch pianos
+        each piano represents a different category. the piano categories are: games, websites, apps, machine learning, competitions 
+        click on a piano to open list view
+        click on the girl to show about me
+
+    list view
+        piano is shown vertically
+        a piano key can be clicked on to show projects
+        a page showcasing the project and a short description
+        horizontal scrolling
+        upon hovering over a piano key it expands slightly to show project name 
+
+    projects
+        piano key expands to the right until the whole screen is white
+        soft piano note sound effect
+
+    about me
+        scrolls down from main
+        name could appear in a handwritten font as if "signed" in real-time.
+        girl looks at the mouse cursor
+        The page scrolls horizontally like a music sheet
+        categories (educational background, skills, contant information) appearing as notes on a floating staff.
+
+    skills
+        tech stack shown
+        soft skills
+
+    educational background
+        standard article format with heading and description
+
+    contact information
+        contact information in list format
+
+    search/filter features
+        "click anywhere search for a project"
+        follows the cursor
+        when clicked, the girl looks at the cursor
+        Each typed letter plays a soft piano note, making the search experience musical.
+        Visual Search Suggestions – As you type, suggested projects appear as floating piano keys that you can directly click.
+
+
+    
