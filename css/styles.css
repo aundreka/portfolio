@@ -1,0 +1,516 @@
+:root {
+  --dark: #524A4E;
+  --light-pink: #FDEFF4;
+  --pink: #FFC0D3;
+  --dark-pink: #FFB0C8;
+  --white: #FFFFFF;
+  --light-blue: #9CF6F6;
+  --blue: #89D2DC;
+  --dark-blue: #69A2B0;
+  --yellow: #FFFD98;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, button, input, textarea, select, #piano-label {
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: var(--light);
+  perspective: 800px;
+}
+
+/* ---------- NAVIGATION ---------- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  display: grid;
+  grid-template-columns: 160px 1fr 160px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.30);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+.nav__spacer { width: 160px; }
+.nav__actions {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  justify-content: end;
+  gap: 8px;
+}
+/* ===== Intro hints overlay ===== */
+#intro-hints {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none; /* don't block clicks */
+}
+
+/* Nicer hint pill */
+.intro-hint {
+  pointer-events: none;
+  user-select: none;
+  position: fixed;   /* <<< REQUIRED so left/top works */
+  z-index: 10000;
+
+  padding: 10px 14px;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.30);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.2px;
+  color: rgba(20,20,20,0.82);
+
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 280ms ease, transform 280ms ease;
+}
+
+.intro-hint.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.intro-hint__text{
+  white-space: nowrap;
+}
+
+/* Arrow */
+.intro-hint__path {
+  fill: none;
+  stroke: rgba(30,30,30,0.70);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Draw animation */
+.intro-hint__path.is-drawing {
+  stroke-dasharray: var(--dash, 400);
+  stroke-dashoffset: var(--dash, 400);
+  animation: introDraw 900ms ease forwards;
+}
+
+@keyframes introDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.intro-hint__arrow {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
+
+
+/* ---------- HERO HEADING ---------- */
+#hero-heading {
+  position: fixed;
+  top: 120px;
+  left: 100px;
+  margin: 0;
+  margin-bottom: 24px;
+  z-index: 50;
+  color: var(--dark);
+  font-weight: 200;
+  letter-spacing: .5px;
+  line-height: 1.05;
+  font-size: clamp(24px, 4.5vw, 60px);
+}
+#hero-heading::after {
+  content: "|";
+  display: inline-block;
+  margin-left: 4px;
+  animation: blink 1s steps(1) infinite;
+  color: var(--dark-pink);
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ---------- MAIN + STAGE ---------- */
+.main-container.index {
+  width: 100%;
+  min-height: 100vh;
+  height: 100vh;
+  overflow: visible;
+}
+.stage {
+  position: relative;
+  top: 300px;
+  width: 900px;
+  height: 500px;
+  margin: 0 auto;
+  perspective: 1000px;
+  overflow: visible;
+}
+
+/* ---------- CAT (WRAPPED) ---------- */
+.cat-wrap {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(260px, 28vw, 420px);
+  aspect-ratio: 3 / 5;
+  z-index: 1002;
+  pointer-events: auto;
+  transition: transform 400ms cubic-bezier(.2, .9, .2, 1), left 400ms ease;
+}
+body.about-focus .cat-wrap {
+  transform: translateX(-50%) scale(0.9);
+}
+.cat-wrap.cat-fixed-left {
+  left: max(16px, env(safe-area-inset-left) + 16px);
+  transform: none;
+}
+@media (max-width: 480px) {
+  body.about-focus .cat-wrap { transform: translateX(-50%) scale(0.82); }
+}
+
+/* GLB fills wrapper and never reacts */
+#cat {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible !important;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* Invisible full-cover button for click → About */
+#cat-click {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  border: none;
+    display: block;
+
+  cursor: pointer;
+}
+
+/* ---------- CONTROLS ---------- */
+.controls-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 800px;
+  z-index: 1001 !important;  
+}
+.controls {
+  color: var(--dark);
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  font-size: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+  transform: translateY(150px);
+}
+.controls:hover {
+  color: var(--pink);
+  font-size: 50px;
+}
+/* ---------- CLICK OVERLAYS ---------- */
+.piano {
+  border-radius: 6px;
+  transform-style: preserve-3d;
+  will-change: transform, filter;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+}
+
+/* Make the 3D models never capture pointer events */
+.piano model-viewer {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* Full-cover invisible button on top of each piano */
+.piano-hit {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: inherit;
+}
+
+/* Cat hover/click target already exists, just give it a nice radius too */
+.cat-wrap {
+  border-radius: 22px;
+  will-change: filter, transform;
+}
+
+/* ---------- GLOW EFFECTS ---------- */
+/* On hover */
+.cat-wrap:hover,
+.piano:hover {
+  filter:
+    drop-shadow(0 0 14px rgba(255, 176, 200, 0.85))
+    drop-shadow(0 0 36px rgba(156, 246, 246, 0.55));
+}
+
+/* On keyboard focus (accessibility) */
+.cat-wrap:has(#cat-click:focus-visible),
+.piano:has(.piano-hit:focus-visible) {
+  filter:
+    drop-shadow(0 0 14px rgba(255, 176, 200, 0.85))
+    drop-shadow(0 0 36px rgba(156, 246, 246, 0.55));
+}
+
+/* Optional: subtle "press" feedback */
+#cat-click:active,
+.piano-hit:active {
+  transform: scale(0.99);
+}
+.highlight {
+  outline: 3px solid rgba(255, 176, 200, 0.9);
+  box-shadow: 0 0 28px rgba(156, 246, 246, 0.45);
+  border-radius: 14px;
+  transition: box-shadow 250ms ease, outline 250ms ease;
+}
+/* ---------- PIANOS ---------- */
+.piano-carousel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  overflow: visible;
+}
+.piano-lift .piano { transform: translateY(-140px) !important; }
+.piano {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  transition: transform 0.6s ease-in-out;
+}
+.piano model-viewer {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+.piano:nth-child(n+2) model-viewer {
+  width: 80%;
+  height: 80%;
+}
+#piano-click{
+  position: fixed;      /* we will set left/top/width/height from JS */
+  left: 0; top: 0;
+  width: 1px; height: 1px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: fixed;
+  z-index: 9999;
+  border-radius: 18px;
+}
+.piano { filter: none; }
+.piano.is-front.glow{
+  filter:
+    drop-shadow(0 0 10px var(--glow-soft))
+    drop-shadow(0 0 22px var(--glow-soft));
+}
+#piano-click{
+  position: fixed;
+  z-index: 99999;
+  pointer-events: auto;
+  background: transparent;
+  border: none;
+  border-radius: 18px;
+}
+
+model-viewer.piano {
+  pointer-events: none !important; /* clicks go through to #piano-click */
+}
+
+/* ---------- PIANO LABEL ---------- */
+#piano-label {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  height: fit-content;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font: 700 40px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0px;
+  background: #000;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(100px);
+  pointer-events: none;
+  z-index: 20;
+  transition: opacity 260ms ease, transform 320ms cubic-bezier(.2, .9, .2, 1);
+  top: 50px;
+}
+#piano-label.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- LABEL ANIMATIONS ---------- */
+.label--in::before { animation: labelIn 320ms cubic-bezier(.2, .9, .2, 1) forwards; }
+.label--out { animation: labelOut 250ms ease forwards; }
+@keyframes labelIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes labelOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---------- FOCUS TRANSITIONS ---------- */
+.nav, #hero-heading, .stage, #piano-label, .about .about__inner {
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+body.about-focus .nav,
+body.about-focus #hero-heading,
+body.about-focus .stage,
+body.about-focus #piano-label,
+body.about-focus .about .about__inner {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+}
+
+/* ---------- ABOUT SECTION ---------- */
+.about {
+  min-height: 90vh;
+  display: grid;
+  place-items: center;
+  padding: 64px 16px;
+}
+.about__inner {
+  max-width: 900px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+}
+
+/* ---------- GENERAL MODEL-VIEWER ---------- */
+model-viewer { overflow: visible !important; }
+
+
+@keyframes move {
+  100% { transform: translate3d(0, 0, 1px) rotate(360deg); }
+}
+
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: #3E1E68;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* bottom fade/blur overlay */
+.background::after {
+  content: "";
+  position: fixed;     /* follow the viewport like the background */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 18vh;        /* how tall the fade is */
+  pointer-events: none;
+  z-index: 1;
+
+  /* fade from transparent to page bg color */
+  background: linear-gradient(
+    to bottom,
+    rgba(62, 30, 104, 0) 0%,
+    rgba(255, 255, 255, 0.25) 45%,
+    #fff 100%
+  );
+
+  /* optional softness at the seam */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+
+/* each bubble */
+.background span {
+  width: 20vmin;
+  height: 20vmin;
+  border-radius: 20vmin;
+  position: absolute;
+  backface-visibility: hidden;
+  animation: move linear infinite;
+  animation-duration: 45s;  /* <-- unit fixed */
+  /* color + box-shadow will be updated by JS for palette sync */
+}
+
+/* Keep your precise positions/delays/durations; unit fixes only */
+.background span:nth-child(0){ top:95%; left:87%; animation-duration:11s; animation-delay:-38s; transform-origin:18vw -16vh; }
+.background span:nth-child(1){ top:71%; left:49%; animation-duration:44s; animation-delay:-21s; transform-origin:-7vw -13vh; }
+.background span:nth-child(2){ top:29%; left:58%; animation-duration:46s; animation-delay:-21s; transform-origin:-13vw -16vh; }
+.background span:nth-child(3){ top:59%; left:34%; animation-duration:34s; animation-delay:-8s;  transform-origin:15vw 20vh; }
+.background span:nth-child(4){ top:91%; left:82%; animation-duration:10s; animation-delay:-42s; transform-origin:4vw 0vh;  }
+.background span:nth-child(5){ top:62%; left:24%; animation-duration:40s; animation-delay:-43s; transform-origin:3vw 8vh;  }
+.background span:nth-child(6){ top:79%; left:97%; animation-duration:41s; animation-delay:-43s; transform-origin:23vw -9vh; }
+.background span:nth-child(7){ top:41%; left:44%; animation-duration:39s; animation-delay:-42s; transform-origin:-15vw 23vh; }
+.background span:nth-child(8){ top:41%; left:85%; animation-duration:49s; animation-delay:-41s; transform-origin:-5vw -24vh; }
+.background span:nth-child(9){ top:65%; left:55%; animation-duration:14s; animation-delay:-23s; transform-origin:25vw 15vh; }
+.background span:nth-child(10){ top:61%; left:39%; animation-duration:41s; animation-delay:-15s; transform-origin:-13vw -16vh; }
+.background span:nth-child(11){ top:73%; left:13%; animation-duration:9s;  animation-delay:-45s; transform-origin:25vw 12vh; }
+.background span:nth-child(12){ top:22%; left:67%; animation-duration:18s; animation-delay:-24s; transform-origin:25vw 2vh;  }
+.background span:nth-child(13){ top:57%; left:82%; animation-duration:46s; animation-delay:-42s; transform-origin:21vw 9vh;  }
+.background span:nth-child(14){ top:76%; left:6%;  animation-duration:8s;  animation-delay:-29s; transform-origin:17vw 21vh; }
+.background span:nth-child(15){ top:95%; left:51%; animation-duration:48s; animation-delay:-13s; transform-origin:-12vw -3vh; }
+.background span:nth-child(16){ top:60%; left:96%; animation-duration:15s; animation-delay:-4s;  transform-origin:-1vw -5vh;  }
+.background span:nth-child(17){ top:60%; left:20%; animation-duration:39s; animation-delay:-29s; transform-origin:-7vw -13vh; }
+.background span:nth-child(18){ top:94%; left:47%; animation-duration:14s; animation-delay:-17s; transform-origin:14vw -14vh; }
+.background span:nth-child(19){ top:85%; left:1%;  animation-duration:32s; animation-delay:-38s; transform-origin:12vw -4vh;  }
+

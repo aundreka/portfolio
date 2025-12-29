@@ -5,8 +5,7 @@ portfolio concept:
         The site starts with a short piano intro, and the keys "fall into place" as the homepage loads.
         a girl playing piano, different pianos surrounding her
         arrows on the left and right to switch pianos
-        each piano represents a different coding lists pianonots from different pianos
-        search page 
+        each piano represents a different category. the piano categories are: games, websites, apps, machine learning, competitions 
         click on a piano to open list view
         click on the girl to show about me
 
@@ -27,7 +26,6 @@ portfolio concept:
         girl looks at the mouse cursor
         The page scrolls horizontally like a music sheet
         categories (educational background, skills, contant information) appearing as notes on a floating staff.
-        Clicking on a note zooms in to the girl and beside her the details of respective category
 
     skills
         tech stack shown

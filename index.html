@@ -1,55 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Aundreka Perez - Portfolio</title>
-        <link rel="stylesheet" href="styles.css">
-        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    </head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aundreka Perez - Portfolio</title>
 
-    <body>
-        <main class="main-container index">
-            <div class="figure">
-                <h1>This is a girl</h1>
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/entrance.css" />
+    <link rel="stylesheet" href="css/about.css" />
+    <link rel="stylesheet" href="css/projects.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+
+    <!-- model-viewer -->
+    <script
+      type="module"
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+    ></script>
+  </head>
+
+  <body>
+    <div class="background-wrapper">
+
+    <!-- FLOATING BUBBLE BACKGROUND (used by applyBackgroundTheme in js/index.js) -->
+    <div class="background" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- (Optional) keep your previous gradient/gloss layer if you want -->
+    <div class="bg-orbs" aria-hidden="true">
+      <div class="bg-orbs__layer"></div>
+      <div class="bg-orbs__gloss"></div>
+    </div>
+    </div>
+
+
+
+    <h1 id="hero-heading"></h1>
+
+    <main class="main-container index">
+      <div class="stage">
+        <div class="controls-container">
+          <div class="piano-carousel">
+            <div class="cat-wrap">
+              <model-viewer
+                id="cat"
+                src="assets/models/cat.glb"
+                autoplay
+                interaction-prompt="none"
+                style="background: transparent; pointer-events: none"
+              ></model-viewer>
+              <button id="cat-click" aria-label="Scroll to About"></button>
+
             </div>
-            <div class="controls-container">
-                <button class="controls" id="prevbtn"><</button>
-                <div class="piano-carousel">
-                        <model-viewer class="piano" src="assets/models/piano3.glb" alt="Piano 1" disable-zoom camera-orbit="90deg 90deg 0deg">
-                            <div slot="hotspot-0" data-position="0 0.4 0" data-normal="0 1 0" class="icon-label">
-                                <img src="assets/icons/1.png" alt="icons" class="icon">
-                            </div>
-                        </model-viewer>
 
-                        <model-viewer class="piano" src="assets/models/piano3.glb" alt="Piano 2" disable-zoom camera-orbit="90deg 90deg 0deg">
-                            <div slot="hotspot-0" data-position="0 0.4 0" data-normal="0 1 0" class="icon-label">
-                                <img src="assets/icons/2.png" alt="Python Icon" class="icon">
-                            </div>
-                        </model-viewer>
+            <model-viewer class="piano" src="assets/models/piano3.glb" alt="Piano 1" disable-zoom camera-orbit="90deg 90deg 0deg"></model-viewer>
+            <model-viewer class="piano" src="assets/models/piano3.glb" alt="Piano 2" disable-zoom camera-orbit="90deg 90deg 0deg"></model-viewer>
+            <model-viewer class="piano" src="assets/models/piano3.glb" alt="Piano 3" disable-zoom camera-orbit="90deg 90deg 0deg"></model-viewer>
+            <model-viewer class="piano" src="assets/models/piano3.glb" alt="Piano 4" disable-zoom camera-orbit="90deg 90deg 0deg"></model-viewer>
+            <model-viewer class="piano" src="assets/models/piano3.glb" alt="Piano 5" disable-zoom camera-orbit="90deg 90deg 0deg"></model-viewer>
+            <button id="piano-click"
+            aria-label="Open selected project"
+            title="Open project"
+          ></button>
+          </div>
 
-                        <model-viewer class="piano" src="assets/models/piano3.glb" alt="Piano 3" disable-zoom camera-orbit="90deg 90deg 0deg">
-                            <div slot="hotspot-0" data-position="0 0.4 0" data-normal="0 1 0" class="icon-label">
-                                <img src="assets/icons/3.png" alt="icons" class="icon">
-                            </div>
-                        </model-viewer>
+          <div id="piano-label" aria-live="polite"></div>
+          <button class="controls" id="prevbtn"><</button>
+          <button class="controls" id="nextbtn">></button>
+        </div>
+      </div>
+    </main>
 
-                        <model-viewer class="piano" src="assets/models/piano3.glb" alt="Piano 4" disable-zoom camera-orbit="90deg 90deg 0deg">
-                            <div slot="hotspot-0" data-position="0 0.4 0" data-normal="0 1 0" class="icon-label">
-                                <img src="assets/icons/4.png" alt="Kotlin Icon" class="icon">
-                            </div>
-                        </model-viewer>
+    <section id="about" class="about">
+      <!-- ONE horizontal scroller that contains everything -->
+      <div class="about__scroller" id="aboutTrack">
+        <div class="strip">
+          <!-- staff drawn across the whole strip -->
+          <div class="staff-lines" aria-hidden="true"></div>
 
-                        <model-viewer class="piano" src="assets/models/piano3.glb" alt="Piano 5" disable-zoom camera-orbit="90deg 90deg 0deg">
-                            <div slot="hotspot-0" data-position="0 0.4 0" data-normal="0 1 0" class="icon-label">
-                                <img src="assets/icons/5.png" alt="React Icon" class="icon">
-                            </div>
-                        </model-viewer>
-                </div>
-                
-                <button class="controls" id="nextbtn">></button>
+          <!-- INTRO (text + photo) -->
+          <div class="intro-block">
+            <div class="intro-text">
+              <p>
+                Motivated Computer Science student with hands-on experience building cross-platform
+                mobile apps and full-stack websites. Cisco-certified SQL Engineer and Python
+                enthusiast with a strong foundation in predictive algorithms, AI, and deep learning.
+              </p>
             </div>
-        </main>
-        <script src="js/index.js"></script>
-    </body>
+            <img src="assets/images/profile.png" alt="Aundreka Perez" class="intro-photo" />
+          </div>
+
+          <!-- LONG STAFF CONTENT -->
+         <div class="staff-track">
+          <button
+            class="note-block"
+            data-category="education"
+            data-color="#ff2d2d"
+            data-fx="assets/music/fx1.wav"
+            aria-label="View Education Details"
+          >
+            <img src="assets/notes/note1.png" class="note-img" alt="" />
+            <span class="label bottom note-title">Education</span>
+          </button>
+
+          <button
+            class="note-block"
+            data-category="skills"
+            data-color="#ffd000"
+            data-fx="assets/music/fx2.wav"
+            aria-label="View Skills & Tech Stack"
+          >
+            <img src="assets/notes/note2.png" class="note-img" alt="" />
+            <span class="label top note-title">Skills</span>
+          </button>
+
+          <button
+            class="note-block"
+            data-category="work"
+            data-color="#8b3dff"
+            data-fx="assets/music/fx3.wav"
+            aria-label="View Work Experience"
+          >
+            <img src="assets/notes/note3.png" class="note-img" alt="" />
+            <span class="label bottom note-title">Work</span>
+          </button>
+
+          <button
+            class="note-block"
+            data-category="contact"
+            data-color="#1e66ff"
+            data-fx="assets/music/fx4.wav"
+            aria-label="View Contact Information"
+          >
+            <img src="assets/notes/note4.png" class="note-img" alt="" />
+            <span class="label top note-title">Contact</span>
+          </button>
+        </div>
+
+        </div>
+      </div>
+
+            <!-- Enhanced Modal with better structure -->
+      <div id="about-modal" class="about-modal" hidden>
+        <div class="about-modal__backdrop"></div>
+        <div class="about-modal__dialog">
+          <button class="about-modal__close" aria-label="Close modal"></button>
+          <!-- Content will be dynamically inserted here by JavaScript -->
+          <div id="about-modal-body"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Placeholder for projects section if needed -->
+   <section id="projects" class="projects">
+      <div class="projects__wrap">
+        <!-- Top filter bar -->
+        <div class="projects__topbar">
+          <div class="projects__dot"></div>
+
+          <div class="projects__filters">
+            <div class="filter" data-filter="language">
+              <button class="filter__btn" type="button">
+                <span class="filter__label">LANGUAGE</span>
+                <span class="filter__value" id="langValue">All</span>
+              </button>
+              <div class="filter__menu" id="langMenu"></div>
+            </div>
+
+            <div class="filter" data-filter="category">
+              <button class="filter__btn" type="button">
+                <span class="filter__label">CATEGORY</span>
+                <span class="filter__value" id="catValue">All</span>
+              </button>
+              <div class="filter__menu" id="catMenu"></div>
+            </div>
+          </div>
+           <div class="projects__hint">
+            Drag to browse projects. Click outside the piano to close details.
+          </div>
+        </div>
+
+        <!-- Piano area -->
+        <div class="projects_piano" id="projectsPiano">
+          <!-- JS renders keys / open-note layout here -->
+        </div>
+      </div>
+    </section>
+
+`
+
+    <!-- Scripts -->
+    <script src="js/index.js"></script>
+    <script src="js/entrance.js" defer></script>
+    <script src="js/about.js" defer></script>
+    <script src="js/projects.js" defer></script>
+
+  </body>
 </html>

@@ -1,0 +1,383 @@
+#projects.projects{
+  position: relative;
+  width: 100%;
+  background: #fff;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* wrapper */
+#projects .projects__wrap{
+  width: 100%;
+  max-width: 100%;
+  padding-bottom: 20px;
+}
+
+/* =========================
+   TOP BAR (dot + filters)
+   ========================= */
+#projects .projects__topbar{
+  position: relative;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding: 0 34px;
+  border-bottom: 2px solid #111;
+  background: #fff;
+}
+
+#projects .projects__dot{
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: #e8a7bb; /* pink dot */
+  flex: 0 0 auto;
+}
+
+#projects .projects__filters{
+  display: flex;
+  align-items: center;
+  gap: 54px;
+}
+
+#projects .filter{
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#projects .filter__btn{
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 10px 8px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+  letter-spacing: 0.06em;
+}
+
+#projects .filter__label{
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+#projects .filter__value{
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+/* dropdown menu (JS toggles visibility via class or inline style) */
+#projects .filter__menu{
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  max-height: 320px;
+  overflow: auto;
+  background: #fff;
+  border: 2px solid #111;
+  box-shadow: 0 10px 0 rgba(0,0,0,0.06);
+  display: none;
+  z-index: 50;
+}
+
+/* Suggested: JS can add .is-open to the .filter */
+#projects .filter.is-open .filter__menu{ display: block; }
+
+#projects .filter__menu button,
+#projects .filter__menu .filter__item{
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  padding: 12px 14px;
+  cursor: pointer;
+  font: inherit;
+  color: #111;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.14);
+}
+#projects .filter__menu button:last-child,
+#projects .filter__menu .filter__item:last-child{
+  border-bottom: 0;
+}
+#projects .filter__menu button:hover,
+#projects .filter__menu .filter__item:hover{
+  background: #ffe266; /* matches your hover yellow vibe */
+  font-weight: 700;
+}
+#projects .projects__hint{
+  margin-left: auto;        /* pushes to the far right */
+  align-self: flex-start;   /* top-right */
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: rgba(17,17,17,0.55);
+
+  user-select: none;
+  pointer-events: none;     /* it's just a hint, not interactive */
+  white-space: nowrap;
+}
+
+#projects .projects__hint{
+  background: rgba(0,0,0,0.01);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 999px;
+  padding: 8px 12px;
+  margin-top: 30px;
+}
+/* =========================
+   PIANO SCROLLER AREA
+   ========================= */
+/* =========================================================
+   PROJECTS — Piano (SCOPED) — FIXED
+   - Black keys are BETWEEN white keys (overlay layer)
+   - Horizontal scroll always works
+   - Accordion open (white keys expand; neighbors shrink)
+   ========================================================= */
+
+#projects .projects_piano{
+  position: relative;
+  width: 100%;
+  background: #fff;
+  border-left: 2px solid #111;
+  border-right: 2px solid #111;
+  border-bottom: 2px solid #111;
+
+  overflow-x: auto;     /* horizontal scroll */
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;  /* allow trackpad/touch horizontal pan */
+}
+#projects .projects_piano::-webkit-scrollbar{ display:none; }
+
+/* Track must be wider than container to enable scroll */
+#projects .piano-track{
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  height: 760px;
+  width: max-content;     /* actual overflow width */
+  min-width: 100%;        /* still fill if few keys */
+}
+
+/* White keys */
+#projects .piano-key{
+  position: relative;
+  height: 760px;
+  background: #fff;
+  border-right: 2px solid #111;
+  box-sizing: border-box;
+  user-select: none;
+
+  flex: 0 0 var(--key-w, 200px);
+  width: var(--key-w, 200px);
+
+  transition: flex-basis 260ms ease, width 260ms ease, background-color 120ms ease;
+}
+
+#projects .piano-key:last-child{ border-right: 0; }
+
+#projects .key-title{
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  font-size: 15px;
+  line-height: 1.25;
+  font-weight: 400;
+  color: #111;
+  white-space: pre-line;
+}
+
+/* Empty placeholders (inert) */
+#projects .piano-key.is-empty{
+  cursor: default;
+}
+#projects .piano-key.is-empty:hover{
+  background: #fff;
+}
+#projects .piano-key.is-empty .key-title{
+  opacity: 0;
+}
+
+/* Hover */
+#projects .piano-key:hover{
+  background: #ffe266;
+}
+#projects .piano-key:hover .key-title{
+  font-weight: 800;
+}
+
+/* Accordion sizing */
+#projects .piano-track.is-accordion .piano-key{
+  flex-basis: var(--key-w-small, 120px);
+  width: var(--key-w-small, 120px);
+}
+#projects .piano-track.is-accordion .piano-key.is-open{
+  flex-basis: var(--open-w, 70%);
+  width: var(--open-w, 70%);
+  background: #fff;
+}
+
+#projects .note{
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: #fff;
+  box-sizing: border-box;
+  padding: 22px 26px 22px 26px; /* tighter to give media more space */
+}
+
+/* Media takes the top half */
+#projects .note__media{
+  height: 52%;                 /* top half-ish */
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1.55fr 0.7fr 0.55fr;
+  gap: 12px;
+}
+
+/* Purple blocks fill the media area */
+#projects .note__media .media--big,
+#projects .note__media .media--tall,
+#projects .note__media .media--mid > div{
+  border-radius: 18px;
+  background: #cbb4c0;
+  height: 100%;
+}
+#projects .note__media .media--mid{
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Put text at the bottom */
+#projects .note__desc{
+  position: absolute;
+  left: 26px;
+  right: 180px;     /* leave space for icons on the right */
+  bottom: 130px;     /* sits above title */
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #111;
+  max-width: 760px;
+}
+
+#projects .note__title{
+  position: absolute;
+  left: 26px;
+  right: 180px;
+  bottom: 26px;
+  margin: 0;
+  font-size: 46px;
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #111;
+}
+
+/* Icons bottom right */
+#projects .note__langs{
+  position: absolute;
+  right: 26px;
+  bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+}
+#projects .note__langs img{
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  display: block;
+}
+
+/* ---------- BLACK KEYS OVERLAY (between white keys) ---------- */
+
+#projects .blacklayer{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;   /* don't block hovering/clicking keys */
+  z-index: 9;
+}
+
+/* Each black key is placed at a boundary between keys */
+#projects .blacklayer .black-key{
+  position: absolute;
+  top: 0px;
+
+  width: 100px;
+  height: 430px;
+  border-radius: 18px;
+  background: #000;
+}
+
+
+/* =========================
+   RESPONSIVE (keep mockup proportions)
+   ========================= */
+@media (max-width: 1100px){
+  #projects .note,
+  #projects .project-note,
+  #projects .open-note{
+    width: 860px;
+  }
+  #projects .note__title,
+  #projects .project-note__title{
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 900px){
+  #projects .piano-key,
+  #projects .piano,
+  #projects .projects_piano .key{
+    flex-basis: 108px;
+    width: 108px;
+  }
+  #projects .note,
+  #projects .project-note,
+  #projects .open-note{
+    left: 108px;
+    width: 760px;
+  }
+}
+
+#projects #projectsPiano.projects_piano{
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  touch-action: pan-x !important;
+}
+
+/* Make sure the flex track can overflow */
+#projects #projectsPiano .piano-track{
+  width: max-content !important;
+}
+/* hover shows per-project image (set via --hover-bg) */
+#projects #projectsPiano .piano-key{
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#projects #projectsPiano .piano-key:hover{
+  background-image: var(--hover-bg);
+}
+
+/* keep open key clean (no hover bg) */
+#projects #projectsPiano .piano-key.is-open{
+  background-image: none !important;
+}
+
+#projects .blacklayer .black-key.is-hidden{
+  display: none !important;
+}
