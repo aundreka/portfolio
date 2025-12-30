@@ -279,6 +279,7 @@ body.about-focus .cat-wrap {
 .cat-wrap {
   border-radius: 22px;
   will-change: filter, transform;
+  pointer-events: auto;
 }
 
 /* ---------- GLOW EFFECTS ---------- */

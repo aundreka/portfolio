@@ -81,12 +81,17 @@
   background: #fff;
   border: 2px solid #111;
   box-shadow: 0 10px 0 rgba(0,0,0,0.06);
-  display: none;
   z-index: 50;
+
+  /* IMPORTANT: no display:none */
+  display: block;
+
+  /* closed state */
+  pointer-events: none;
+  visibility: hidden;
 }
 
 /* Suggested: JS can add .is-open to the .filter */
-#projects .filter.is-open .filter__menu{ display: block; }
 
 #projects .filter__menu button,
 #projects .filter__menu .filter__item{
@@ -380,4 +385,59 @@
 
 #projects .blacklayer .black-key.is-hidden{
   display: none !important;
+}
+#projects .filter{ position: relative; }
+
+#projects .filter__menu{
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  max-height: 320px;
+  overflow: auto;
+  background: #fff;
+  border: 2px solid #111;
+  box-shadow: 0 10px 0 rgba(0,0,0,0.06);
+  z-index: 50;
+
+  display: block;
+
+  /* CLOSED STATE */
+  opacity: 0;                 /* <-- fade the box too */
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+  will-change: opacity;
+}
+
+/* Right align category menu */
+#projects .filter[data-filter="category"] .filter__menu{
+  left: auto;
+  right: 0;
+}
+
+/* Keep inner stable (no separate fade) */
+#projects .filter__menuInner{
+  opacity: 1;
+  transform: none;
+}
+
+/* OPEN */
+#projects .filter.is-open .filter__menu{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* CLOSING: fade only (menu stays visible while fading out) */
+#projects .filter.is-closing .filter__menu{
+  opacity: 0;
+  visibility: visible;  /* keep visible so fade-out can play */
+  pointer-events: none;
+}
+
+/* Topbar/button must never animate */
+#projects .filter__btn{
+  transition: none !important;
+  transform: none !important;
 }

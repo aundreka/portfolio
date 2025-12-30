@@ -1,5 +1,4 @@
 // js/index.js
-// Carousel + labels + drag + stationary-cat + cat-wrap click → About
 
 /***********************
  * DOM LOOKUPS
@@ -125,13 +124,7 @@ function applyBackgroundTheme(colorName = "purple") {
 // Call once on load (after initial layout)
 applyBackgroundTheme(colors[currentIndex % colors.length]);
 
-/***********************
- * AUDIO: INTRO + PIANO SFX
- ***********************/
-const startAudio = new Audio("assets/music/start.mp3");
-startAudio.preload = "auto";
-startAudio.volume = 0.6;
-startAudio.loop = false;
+
 
 const pianoSounds = Array.from({ length: Math.max(1, totalPianos) }, (_, i) => {
   const a = new Audio(`assets/music/piano${i + 1}.wav`);
@@ -180,8 +173,6 @@ function playFromStart(audio) {
 }
 
 function stopAllAudio() {
-  try { startAudio.pause(); } catch(_) {}
-  try { startAudio.currentTime = 0; } catch(_) {}
   for (const a of pianoSounds) {
     try { a.pause(); } catch(_) {}
     try { a.currentTime = 0; } catch(_) {}
@@ -265,6 +256,9 @@ pianos.forEach((piano) => {
  * LABEL OVERLAY
  ***********************/
 const labels = ["Apps", "Websites", "Games", "AI/ML", "UI/UX"];
+
+// ✅ Category values used by projects.js filters
+const PIANO_CATEGORIES = ["apps", "websites", "games", "ai/ml", "ui/ux"];
 let labelEl = document.getElementById("piano-label");
 
 function ensureLabelEl() {
@@ -463,9 +457,23 @@ prevBtn?.addEventListener("click", () => {
 });
 pianoClick?.addEventListener("click", (e) => {
   e.preventDefault();
+
   const front = getCenterPiano();
-  const projectId = front?.dataset?.projectId || `project-${currentIndex+1}`;
+  const projectId = front?.dataset?.projectId || `project-${currentIndex + 1}`;
+
+  // ✅ Set category filter to match the clicked piano (apps/websites/etc.)
+  const cat = PIANO_CATEGORIES[currentIndex % PIANO_CATEGORIES.length] || "All";
+  if (window.ProjectsPiano?.setCategory) {
+    window.ProjectsPiano.setCategory(cat);
+  }
+
+  // ✅ Then scroll to Projects + subsection (your existing behavior)
   scrollToProject(projectId);
+
+  setTimeout(() => {
+  window.ProjectsPiano?.setCategory?.(cat);
+}, 50);
+
 });
 window.addEventListener("resize", () => {
   positionFrontClickOverlay();
@@ -662,15 +670,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const heading = document.getElementById("hero-heading");
   const heroText = "Hi, I'm Aundreka Perez.";
 
-  // keep your existing audio behavior
-  tryPlayAudio(startAudio);
-  const gestureStart = () => {
-    tryPlayAudio(startAudio);
-    window.removeEventListener("pointerdown", gestureStart);
-    window.removeEventListener("keydown", gestureStart);
-  };
-  window.addEventListener("pointerdown", gestureStart);
-  window.addEventListener("keydown", gestureStart);
 
   // ensure pianoClick is on body if needed (your existing logic)
   if (pianoClick && pianoClick.parentElement !== document.body) {
@@ -732,8 +731,12 @@ function makeHint({
   shiftX = 0, shiftY = 0,
   prefer = "above",
   arrowStartDX = 0, arrowStartDY = 0,
-  arrowEndDX = 0, arrowEndDY = 0
-}) {  // hint bubble
+  arrowEndDX = 0, arrowEndDY = 0,
+
+  // ✅ NEW: smoothing options
+  smooth = false,
+  smoothK = 0.16, // 0.10 = slower/smoother, 0.25 = snappier
+}) {
   const hint = document.createElement("div");
   hint.className = "intro-hint";
   hint.id = id;
@@ -741,8 +744,8 @@ function makeHint({
   const span = document.createElement("span");
   span.className = "intro-hint__text";
   hint.appendChild(span);
+  let enabled = false;
 
-  // arrow svg + path
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.classList.add("intro-hint__arrow");
   svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
@@ -773,47 +776,63 @@ function makeHint({
     );
   }
 
+  const lerp = (a, b, k) => a + (b - a) * k;
+
+  // ✅ NEW: persistent “current” state for smoothing
+  let hasState = false;
+  let cur = {
+    hx: 0, hy: 0,
+    startX: 0, startY: 0,
+    endX: 0, endY: 0,
+    ctrlX: 0, ctrlY: 0,
+  };
+
   function layout() {
     const tr = getTargetRect();
     if (!tr) {
-      hint.style.opacity = "0";
-      return;
+hint.style.opacity = "0";
+svg.style.opacity = "0";
+return;
     }
+    // ✅ only visible after showTyped()
+    svg.style.opacity  = enabled ? "1" : "0";
+    hint.style.opacity = enabled ? "1" : "0";
+
+    // optional: avoid accidental clicks before visible
+    hint.style.pointerEvents = enabled ? "auto" : "none";
+    svg.style.pointerEvents  = "none";
 
     const padding = 14;
 
-    // we need size to place it, so force one measurement
+    // measure
     const hintRect = hint.getBoundingClientRect();
 
     const tx = tr.left + tr.width / 2;
     const ty = tr.top + tr.height / 2;
 
-    // base placement relative to target
+    // --- target bubble position (desired) ---
     let hx;
     if (side === "left")  hx = tr.left - hintRect.width - gap;
     if (side === "right") hx = tr.right + gap;
 
-    // vertical preference
     let hy;
     if (prefer === "above") hy = tr.top - hintRect.height - 18;
     else if (prefer === "below") hy = tr.bottom + 18;
     else hy = ty - hintRect.height / 2;
 
-    // apply custom shifts
     hx += shiftX;
     hy += shiftY;
 
-    // clamp inside viewport
+    // clamp
     hx = Math.max(padding, Math.min(window.innerWidth - hintRect.width - padding, hx));
     hy = Math.max(padding, Math.min(window.innerHeight - hintRect.height - padding, hy));
 
+    // place “desired” first, then anti-overlap adjustment (still on desired)
     hint.style.left = `${hx}px`;
-    hint.style.top = `${hy}px`;
+    hint.style.top  = `${hy}px`;
 
-    // if bubble still overlaps the target because of clamping, push it away
     const placed = hint.getBoundingClientRect();
     if (rectsOverlap(placed, tr)) {
-      // try pushing vertically first
       const push = 28;
       let tryHy = hy;
 
@@ -824,7 +843,6 @@ function makeHint({
       tryHy = Math.max(padding, Math.min(window.innerHeight - hintRect.height - padding, tryHy));
       hint.style.top = `${tryHy}px`;
 
-      // remeasure, if still overlaps, push horizontally away from target
       const placed2 = hint.getBoundingClientRect();
       if (rectsOverlap(placed2, tr)) {
         let tryHx = hx + (side === "left" ? -push : push);
@@ -833,54 +851,84 @@ function makeHint({
       }
     }
 
-    // ARROW: start OUTSIDE the bubble edge so it never overlaps the bubble
+    // after overlap adjustment, recompute desired from actual placed rect
     const b = hint.getBoundingClientRect();
+    let desiredHx = b.left;
+    let desiredHy = b.top;
 
-let startY = b.top + b.height * 0.55;
-let startX =
-  side === "left"
-    ? (b.right + 10)
-    : (b.left - 10);
+    // --- desired arrow start (from bubble edge) ---
+    let desiredStartY = b.top + b.height * 0.55;
+    let desiredStartX = side === "left" ? (b.right + 10) : (b.left - 10);
 
-// ✅ independent nudges (won’t move the bubble)
-startX += arrowStartDX;
-startY += arrowStartDY;
-    // end point: center of target rect
-let endX, endY;
-const marginFromTarget = 26; // how far away from the model the arrowhead stops
+    desiredStartX += arrowStartDX;
+    desiredStartY += arrowStartDY;
 
-if (id === "intro-hint-cat") {
-  // stop on the LEFT side of the cat (arrowhead stays away from the face)
-  endX = tr.left - marginFromTarget;
-  endY = tr.top + tr.height * 0.48;
-} else if (id === "intro-hint-piano") {
-  // stop on the RIGHT side of the piano overlay/model
-  endX = tr.right + marginFromTarget;
-  endY = tr.top + tr.height * 0.65;
-} else {
-  // fallback (edge depending on side)
-  endX = (side === "left") ? (tr.left - marginFromTarget) : (tr.right + marginFromTarget);
-  endY = tr.top + tr.height * 0.55;
-}
-endX += arrowEndDX;
-endY += arrowEndDY;
+    // --- desired arrow end (near target) ---
+    const marginFromTarget = 26;
+    let desiredEndX, desiredEndY;
 
+    if (id === "intro-hint-cat") {
+      desiredEndX = tr.left - marginFromTarget;
+      desiredEndY = tr.top + tr.height * 0.48;
+    } else if (id === "intro-hint-piano") {
+      desiredEndX = tr.right + marginFromTarget;
+      desiredEndY = tr.top + tr.height * 0.65;
+    } else {
+      desiredEndX = (side === "left") ? (tr.left - marginFromTarget) : (tr.right + marginFromTarget);
+      desiredEndY = tr.top + tr.height * 0.55;
+    }
 
-    // control point for curve (curve away from bubble)
-    const midX = (startX + endX) / 2;
-    const midY = (startY + endY) / 2;
+    desiredEndX += arrowEndDX;
+    desiredEndY += arrowEndDY;
+
+    // --- desired control point (curve) ---
+    const midX = (desiredStartX + desiredEndX) / 2;
+    const midY = (desiredStartY + desiredEndY) / 2;
     const curve = 110;
 
-    const ctrlX = midX + (side === "left" ? -curve : curve);
-    const ctrlY = midY - curve * 0.35;
+    let desiredCtrlX = midX + (side === "left" ? -curve : curve);
+    let desiredCtrlY = midY - curve * 0.35;
 
-    svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
-path.setAttribute("d", `M ${startX} ${startY} Q ${ctrlX} ${ctrlY} ${endX} ${endY}`);
-const len = path.getTotalLength();
-path.style.setProperty("--dash", `${Math.ceil(len)}`);
+    // ✅ APPLY SMOOTHING
+    if (smooth) {
+      if (!hasState) {
+        hasState = true;
+        cur.hx = desiredHx; cur.hy = desiredHy;
+        cur.startX = desiredStartX; cur.startY = desiredStartY;
+        cur.endX = desiredEndX;     cur.endY = desiredEndY;
+        cur.ctrlX = desiredCtrlX;   cur.ctrlY = desiredCtrlY;
+      } else {
+        cur.hx     = lerp(cur.hx,     desiredHx,     smoothK);
+        cur.hy     = lerp(cur.hy,     desiredHy,     smoothK);
+        cur.startX = lerp(cur.startX, desiredStartX, smoothK);
+        cur.startY = lerp(cur.startY, desiredStartY, smoothK);
+        cur.endX   = lerp(cur.endX,   desiredEndX,   smoothK);
+        cur.endY   = lerp(cur.endY,   desiredEndY,   smoothK);
+        cur.ctrlX  = lerp(cur.ctrlX,  desiredCtrlX,  smoothK);
+        cur.ctrlY  = lerp(cur.ctrlY,  desiredCtrlY,  smoothK);
+      }
+
+      // use transform for smoother compositor movement
+hint.style.transform = ""; // important: prevent runaway bounding-rect feedback
+hint.style.left = `${cur.hx}px`;
+hint.style.top  = `${cur.hy}px`;
+
+svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
+path.setAttribute(
+  "d",
+  `M ${cur.startX} ${cur.startY} Q ${cur.ctrlX} ${cur.ctrlY} ${cur.endX} ${cur.endY}`
+);
+    } else {
+      // original behavior (no easing)
+      hint.style.transform = "";
+      svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
+      path.setAttribute("d", `M ${desiredStartX} ${desiredStartY} Q ${desiredCtrlX} ${desiredCtrlY} ${desiredEndX} ${desiredEndY}`);
+    }
+
+    const len = path.getTotalLength();
+    path.style.setProperty("--dash", `${Math.ceil(len)}`);
   }
 
-  // keep updating as things move
   let rafId = 0;
   function tick() {
     layout();
@@ -888,16 +936,19 @@ path.style.setProperty("--dash", `${Math.ceil(len)}`);
   }
   tick();
 
-async function showTyped() {
-  hint.classList.add("is-visible");
+   async function showTyped() {
+    enabled = true;
 
-  // kick the arrow draw immediately
-  path.classList.remove("is-drawing");
-  void path.getBoundingClientRect();
-  path.classList.add("is-drawing");
+    // ensure we have a fresh path length before drawing
+    layout();
 
-  await typeInto(span, text, 28);
-}
+    hint.classList.add("is-visible");
+    path.classList.remove("is-drawing");
+    void path.getBoundingClientRect();
+    path.classList.add("is-drawing");
+
+    await typeInto(span, text, 28);
+  }
 
   return {
     el: hint,
@@ -911,6 +962,7 @@ async function showTyped() {
     }
   };
 }
+
   function getFrontPianoRectTarget() {
     // best target: your overlay (tracks front piano) if visible; fallback to the actual front model-viewer
     if (pianoClick && pianoClick.style.display !== "none") return pianoClick;
@@ -940,6 +992,8 @@ const catHint = makeHint({
   shiftX: -40,
   shiftY: -18,      // bubble up
   prefer: "middle",
+  smooth: true,
+  smoothK: 0.14, // try 0.12–0.18
 
   arrowStartDY: -30  // arrow start DOWN a bit (creates separation from bubble)
   // OR use -10 to move arrow start up; pick what separates best
@@ -952,10 +1006,13 @@ const pianoHint = makeHint({
   side: "right",
   gap: 70,
   shiftX: 40,
-  shiftY: 50,       // bubble down
+  shiftY: 50,
   prefer: "middle",
+  arrowStartDY: -30,
 
-  arrowStartDY: -30 // arrow start UP a bit so it doesn't collide with bubble
+  // ✅ smooth follow
+  smooth: true,
+  smoothK: 0.14, // try 0.12–0.18
 });
 
     // type them sequentially (feels cleaner)

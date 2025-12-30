@@ -1,3 +1,4 @@
+//projects.js
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.querySelector("#projects.projects");
   if (!root) return;
@@ -16,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------- sizing knobs (accordion) ---------- */
-  // If your CSS uses these vars (it does), this makes the open key larger.
   pianoHost.style.setProperty("--open-w", "1300px");
   pianoHost.style.setProperty("--key-w", "190px");
   pianoHost.style.setProperty("--key-w-small", "120px");
@@ -24,72 +24,334 @@ document.addEventListener("DOMContentLoaded", () => {
   const LANGUAGES = ["All","python","html css js","php sql","react native","react","next","expo","kotlin","java","c++","flutter"];
   const CATEGORIES = ["All","apps","websites","games","ai/ml","ui/ux"];
 
-  const PROJECTS = [
-    {
-      title: "PRISM — Social Media Auto-Posting + Analytics",
-      description: "A scheduling + analytics platform with a content calendar, performance tracking, and automation workflows.",
-      language: "react native",
-      category: "apps",
-      icons: ["react native", "expo", "javascript"],
-      note: "c",
-      keyBg: "assets/projects/prism/key.jpg",
-      media: { big: "", midTop: "", midBottom: "", tall: "" },
-    },
-    {
-      title: "Grimm Runner — Top-Down Survival Game",
-      description: "A top-down survival game with wave-based enemies, upgrades, and progression systems.",
-      language: "flutter",
-      category: "games",
-      icons: ["flutter", "dart", "firebase"],
-      note: "d",
-      keyBg: "assets/projects/grimm/key.jpg",
-      media: { big: "", midTop: "", midBottom: "", tall: "" },
-    },
-    {
-      title: "BitMind — Bitcoin Auto-Trading System",
-      description: "An AI-powered trading system with predictive modeling, backtesting, and real-time execution.",
-      language: "python",
-      category: "ai/ml",
-      icons: ["python", "pytorch", "pandas"],
-      note: "e",
-      keyBg: "assets/projects/bitmind/key.jpg",
-      media: { big: "", midTop: "", midBottom: "", tall: "" },
-    },
-    {
-      title: "SchedU — PDF-to-Lesson Plan Generator",
-      description: "A teacher assistant that converts PDFs into lesson plans, quizzes, and activities with export options.",
-      language: "react",
-      category: "websites",
-      icons: ["react", "next", "typescript"],
-      note: "f",
-      keyBg: "assets/projects/schedu/key.jpg",
-      media: { big: "", midTop: "", midBottom: "", tall: "" },
-    },
-    {
-      title: "WindErA — Local Wind Speed Dashboard",
-      description: "A dashboard for wind monitoring and hazard awareness with real-time data and alerts.",
-      language: "html css js",
-      category: "websites",
-      icons: ["html css js", "leaflet", "firebase"],
-      note: "a",
-      keyBg: "assets/projects/windera/key.jpg",
-      media: { big: "", midTop: "", midBottom: "", tall: "" },
-    },
-    {
-      title: "Clinic Feasibility — Salus Specialty Clinic",
-      description: "A feasibility pack with market + financial analysis and a simple 1-storey floor plan.",
-      language: "php sql",
-      category: "ui/ux",
-      icons: ["php sql", "mysql", "figma"],
-      note: "b",
-      keyBg: "assets/projects/salus/key.jpg",
-      media: { big: "", midTop: "", midBottom: "", tall: "" },
-    },
-  ];
+const PROJECTS = [
+  /* =====================
+     APPS
+     ===================== */
+  {
+    title: "PRISM — Social Media Auto-Posting + Analytics",
+    description:
+      "A scheduling + analytics platform with a content calendar, performance tracking, and automation workflows.",
+    language: "react native",
+    category: "apps",
+    icons: ["react native", "expo", "javascript"],
+    note: "c",
+    keyBg: "assets/projects/prism/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "SchedU — Teacher Assistant + Lesson Workflow Tool",
+    description:
+      "A school-focused productivity app for organizing lessons, generating classroom materials, and managing activities.",
+    language: "react",
+    category: "apps",
+    icons: ["react", "javascript", "ui/ux"],
+    note: "d",
+    keyBg: "assets/projects/schedu/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "iBotomo — Automation / Utility App",
+    description:
+      "A utility-style app that streamlines repetitive tasks with simple flows, screens, and quick actions.",
+    language: "kotlin",
+    category: "apps",
+    icons: ["kotlin", "android", "ui/ux"],
+    note: "e",
+    keyBg: "assets/projects/ibotomo/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Gabay — Guidance / Helper App",
+    description:
+      "A structured guide-style app focused on clear navigation, accessible UI, and task-based user flows.",
+    language: "react native",
+    category: "apps",
+    icons: ["react native", "expo", "ui/ux"],
+    note: "f",
+    keyBg: "assets/projects/gabay/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Viewpoint — Content / Posting App Concept",
+    description:
+      "An app concept for viewing and sharing posts with emphasis on layout, filtering, and interaction design.",
+    language: "react",
+    category: "apps",
+    icons: ["react", "javascript", "ui/ux"],
+    note: "g",
+    keyBg: "assets/projects/viewpoint/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Tarot Reading App — Card Draw + Interpretations",
+    description:
+      "A tarot app with card draws, saved readings, and clean UI for quick interpretation browsing.",
+    language: "flutter",
+    category: "apps",
+    icons: ["flutter", "dart", "ui/ux"],
+    note: "a",
+    keyBg: "assets/projects/tarot/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Dating App — Profiles + Match Flow Concept",
+    description:
+      "A mobile concept focused on profile cards, swipe/match interaction, and messaging-ready layouts.",
+    language: "react native",
+    category: "apps",
+    icons: ["react native", "expo", "ui/ux"],
+    note: "b",
+    keyBg: "assets/projects/dating/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Land Marketing App — Listings + Lead Capture",
+    description:
+      "A listing app for land/property marketing with filters, gallery pages, and inquiry/lead capture.",
+    language: "react",
+    category: "apps",
+    icons: ["react", "javascript", "ui/ux"],
+    note: "c#",
+    keyBg: "assets/projects/land-marketing/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Weather App — Forecast UI + Alerts",
+    description:
+      "A weather app with location-based forecasts, clean cards, and a layout designed for quick scanning.",
+    language: "react native",
+    category: "apps",
+    icons: ["react native", "expo", "ui/ux"],
+    note: "d#",
+    keyBg: "assets/projects/weather-app/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "University Blood Bank App — Donor + Inventory Flow",
+    description:
+      "A campus-oriented app concept for donor info, inventory browsing, and request/appointment flow.",
+    language: "react",
+    category: "apps",
+    icons: ["react", "javascript", "ui/ux"],
+    note: "f#",
+    keyBg: "assets/projects/bloodbank-app/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+
+  /* =====================
+     GAMES
+     ===================== */
+  {
+    title: "Ju-On Horror Game — Survivable Visual-Novel Style",
+    description:
+      "A horror game with exploration, puzzles, limited resources, and replayable survival mechanics.",
+    language: "html css js",
+    category: "games",
+    icons: ["html", "css", "javascript"],
+    note: "e",
+    keyBg: "assets/projects/juon/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Tower Defense Game — Waves + Upgrades",
+    description:
+      "A strategy game prototype with wave systems, enemy scaling, and upgrade-based progression.",
+    language: "java",
+    category: "games",
+    icons: ["java", "game-dev", "logic"],
+    note: "g#",
+    keyBg: "assets/projects/tower-defense/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Grimm Runner — Top-Down Survival Runner",
+    description:
+      "A survival game with movement/combat loops, expanding maps, and performance-focused gameplay logic.",
+    language: "flutter",
+    category: "games",
+    icons: ["flutter", "dart", "game-dev"],
+    note: "a#",
+    keyBg: "assets/projects/grimm-runner/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Tree Traversal Visualizer — Algorithms Mini-Game",
+    description:
+      "A small interactive project that visualizes tree traversal steps (DFS/BFS) in a game-like flow.",
+    language: "python",
+    category: "games",
+    icons: ["python", "algorithms", "data-structures"],
+    note: "b#",
+    keyBg: "assets/projects/tree-traversal/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+
+  /* =====================
+     WEBSITES
+     ===================== */
+  {
+    title: "Beth Aven — Website / Landing Page",
+    description:
+      "A responsive site focused on layout, typography, and clean section-based presentation.",
+    language: "html css js",
+    category: "websites",
+    icons: ["html", "css", "javascript"],
+    note: "c",
+    keyBg: "assets/projects/beth-aven/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Gabriel — Portfolio / Personal Site",
+    description:
+      "A personal website emphasizing UI polish, sections, and interactive presentation of work.",
+    language: "html css js",
+    category: "websites",
+    icons: ["html", "css", "javascript", "ui/ux"],
+    note: "d",
+    keyBg: "assets/projects/gabriel-site/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "League of Legends Login — UI Clone Practice",
+    description:
+      "A front-end UI recreation project focused on spacing, alignment, and form styling details.",
+    language: "html css js",
+    category: "websites",
+    icons: ["html", "css", "javascript", "ui/ux"],
+    note: "e",
+    keyBg: "assets/projects/lol-login/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "School Websites — Multiple Academic Builds",
+    description:
+      "A set of school-based website projects featuring responsive layouts, pages, and components.",
+    language: "php sql",
+    category: "websites",
+    icons: ["php", "sql", "html"],
+    note: "f",
+    keyBg: "assets/projects/school-websites/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Diversity Globe — Informational Website",
+    description:
+      "A content-forward site with structured sections, visual hierarchy, and accessible navigation.",
+    language: "html css js",
+    category: "websites",
+    icons: ["html", "css", "javascript"],
+    note: "g",
+    keyBg: "assets/projects/diversity-globe/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "University Blood Bank Website — Portal Concept",
+    description:
+      "A web portal concept for donor information, inventory browsing, and request-friendly navigation.",
+    language: "react",
+    category: "websites",
+    icons: ["react", "javascript", "ui/ux"],
+    note: "a",
+    keyBg: "assets/projects/bloodbank-website/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Weather Website — Forecast Dashboard",
+    description:
+      "A dashboard-style site that displays weather information with clean UI and readable data cards.",
+    language: "html css js",
+    category: "websites",
+    icons: ["html", "css", "javascript"],
+    note: "b",
+    keyBg: "assets/projects/weather-website/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+
+  /* =====================
+     AI / ML (added 3)
+     ===================== */
+  {
+    title: "PRISM — Analytics Intelligence (AI/ML Extension)",
+    description:
+      "A machine-learning extension for performance prediction and smarter scheduling decisions using historical analytics.",
+    language: "python",
+    category: "ai/ml",
+    icons: ["python", "ml", "time-series"],
+    note: "c",
+    keyBg: "assets/projects/prism-ml/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "BitMind — Bitcoin Auto-Trading (Predictive Modeling)",
+    description:
+      "A trading system combining time-series prediction, backtesting, and real-time execution logic for decision-making.",
+    language: "python",
+    category: "ai/ml",
+    icons: ["python", "ml", "time-series", "backtesting"],
+    note: "d",
+    keyBg: "assets/projects/bitmind/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Neural Interface Programming — EEG Brain-to-Code Prototype",
+    description:
+      "A research prototype exploring EEG signal processing and transformer-based decoding for real-time intent-to-code translation.",
+    language: "python",
+    category: "ai/ml",
+    icons: ["python", "pytorch", "signal-processing", "transformers"],
+    note: "e",
+    keyBg: "assets/projects/eeg-brain-to-code/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+
+  /* =====================
+     UI / DESIGN
+     ===================== */
+  {
+    title: "Gabriel — UI System + Visual Polish",
+    description:
+      "A UI-focused build emphasizing typography, spacing, responsive grids, and interaction details.",
+    language: "html css js",
+    category: "ui/ux",
+    icons: ["ui/ux", "html", "css", "javascript"],
+    note: "f",
+    keyBg: "assets/projects/ui-gabriel/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "Weather App — UI/UX Case Build",
+    description:
+      "A design-forward weather UI with readable cards, hierarchy, and polished micro-interactions.",
+    language: "react native",
+    category: "ui/ux",
+    icons: ["ui/ux", "react native", "expo"],
+    note: "g",
+    keyBg: "assets/projects/ui-weather-app/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+  {
+    title: "School Projects — UI Components + Layout Practice",
+    description:
+      "A collection of UI builds from school work focusing on layout structure, consistency, and clean screens.",
+    language: "html css js",
+    category: "ui/ux",
+    icons: ["ui/ux", "html", "css", "javascript"],
+    note: "a#",
+    keyBg: "assets/projects/ui-school-projects/key.jpg",
+    media: { big: "", midTop: "", midBottom: "", tall: "" },
+  },
+];
+
+
 
   const NOTE_LETTERS = ["a","b","c","d","e","f","g"];
-  const NOTE_BASE = "assets/music/notes"; // expects a6.mp3, b6.mp3...
+  const NOTE_BASE = "assets/music/notes";
   const HOVER_COOLDOWN_MS = 120;
+
+  // --- animation knobs ---
+  const KEY_ANIM_MS = 520;
+  const NOTE_ANIM_MS = 380;
 
   const state = {
     language: "All",
@@ -170,133 +432,192 @@ document.addEventListener("DOMContentLoaded", () => {
   /* -----------------------------
      FILTER MENUS
      ----------------------------- */
-  function clearMenus() {
-    langFilter.classList.remove("is-open");
-    catFilter.classList.remove("is-open");
+function clearMenus() {
+  clearMenusAnimated();
+}
+
+function openMenu(which) {
+  // close the other one instantly (no overlap), open target
+  if (which === "language") closeMenuAnimated(catFilter);
+  if (which === "category") closeMenuAnimated(langFilter);
+
+  const target = (which === "language") ? langFilter : catFilter;
+  target.classList.remove("is-closing");
+  target.classList.add("is-open");
+}
+
+function toggleMenu(which) {
+  const target = (which === "language") ? langFilter : catFilter;
+  if (target.classList.contains("is-open")) {
+    closeMenuAnimated(target);
+  } else {
+    openMenu(which);
   }
+}
+const MENU_ANIM_MS = 180;
 
-  function toggleMenu(which) {
-    if (which === "language") {
-      const willOpen = !langFilter.classList.contains("is-open");
-      clearMenus();
-      if (willOpen) langFilter.classList.add("is-open");
-    } else {
-      const willOpen = !catFilter.classList.contains("is-open");
-      clearMenus();
-      if (willOpen) catFilter.classList.add("is-open");
-    }
-  }
+function closeMenuAnimated(filterEl) {
+  if (!filterEl.classList.contains("is-open")) return;
 
-  function renderMenu(menuEl, items, onPick) {
-    menuEl.innerHTML = "";
-    items.forEach((item) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = item;
-      btn.addEventListener("click", () => onPick(item));
-      menuEl.appendChild(btn);
-    });
-  }
+  // If already closing, don’t double-run
+  if (filterEl.classList.contains("is-closing")) return;
 
-  renderMenu(langMenuEl, LANGUAGES, (picked) => {
-    state.language = picked;
-    langValueEl.textContent = picked;
-    state.openIndex = null;
-    clearMenus();
-    render();
+  filterEl.classList.add("is-closing");
+
+  window.setTimeout(() => {
+    filterEl.classList.remove("is-open");
+    filterEl.classList.remove("is-closing");
+  }, MENU_ANIM_MS);
+}
+
+function clearMenusAnimated() {
+  closeMenuAnimated(langFilter);
+  closeMenuAnimated(catFilter);
+}
+function renderMenu(menuEl, items, onPick) {
+  // Keep the menu container stable; animate only the inner content.
+  menuEl.innerHTML = "";
+
+  const inner = document.createElement("div");
+  inner.className = "filter__menuInner";
+
+  items.forEach((item) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = item;
+    btn.addEventListener("click", () => onPick(item));
+    inner.appendChild(btn);
   });
 
-  renderMenu(catMenuEl, CATEGORIES, (picked) => {
-    state.category = picked;
-    catValueEl.textContent = picked;
-    state.openIndex = null;
-    clearMenus();
-    render();
-  });
+  menuEl.appendChild(inner);
+}
 
-  langFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    toggleMenu("language");
-  });
 
-  catFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    toggleMenu("category");
-  });
+renderMenu(langMenuEl, LANGUAGES, (picked) => {
+  state.language = picked;
+  langValueEl.textContent = picked;
+  state.openIndex = null;
+  clearMenus();
+  render();
+});
 
-  document.addEventListener("click", (e) => {
-    if (!root.contains(e.target)) clearMenus();
-  });
+renderMenu(catMenuEl, CATEGORIES, (picked) => {
+  state.category = picked;
+  catValueEl.textContent = picked;
+  state.openIndex = null;
+  clearMenus();
+  render();
+});
+
+langFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  toggleMenu("language");
+});
+
+catFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  toggleMenu("category");
+});
+
+/* ✅ Close when clicking anywhere outside the filters (even outside #projects) */
+document.addEventListener("pointerdown", (e) => {
+  if (langFilter.contains(e.target) || catFilter.contains(e.target)) return;
+  clearMenusAnimated();
+});
 
   /* -----------------------------
      NOTE PANEL
      ----------------------------- */
-  function buildNotePanel(project) {
-    const note = document.createElement("div");
-    note.className = "note";
+ function buildNotePanel(project) {
+  const note = document.createElement("div");
+  note.className = "note";
 
-    const media = document.createElement("div");
-    media.className = "note__media";
+  // slide RIGHT (from left → to position) + fade in
+  note.style.opacity = "0";
+  note.style.transform = "translateX(-18px)";
+  note.style.transition = `opacity ${NOTE_ANIM_MS}ms ease, transform ${NOTE_ANIM_MS}ms ease`;
 
-    const big = document.createElement("div");
-    big.className = "media--big";
+  const media = document.createElement("div");
+  media.className = "note__media";
 
-    const mid = document.createElement("div");
-    mid.className = "media--mid";
-    const midTop = document.createElement("div");
-    const midBottom = document.createElement("div");
-    mid.appendChild(midTop);
-    mid.appendChild(midBottom);
+  const big = document.createElement("div");
+  big.className = "media--big";
 
-    const tall = document.createElement("div");
-    tall.className = "media--tall";
+  const mid = document.createElement("div");
+  mid.className = "media--mid";
+  const midTop = document.createElement("div");
+  const midBottom = document.createElement("div");
+  mid.appendChild(midTop);
+  mid.appendChild(midBottom);
 
-    const m = project.media || {};
-    if (m.big) big.style.background = `url("${m.big}") center/cover no-repeat`;
-    if (m.midTop) midTop.style.background = `url("${m.midTop}") center/cover no-repeat`;
-    if (m.midBottom) midBottom.style.background = `url("${m.midBottom}") center/cover no-repeat`;
-    if (m.tall) tall.style.background = `url("${m.tall}") center/cover no-repeat`;
+  const tall = document.createElement("div");
+  tall.className = "media--tall";
 
-    media.appendChild(big);
-    media.appendChild(mid);
-    media.appendChild(tall);
+  const m = project.media || {};
+  if (m.big) big.style.background = `url("${m.big}") center/cover no-repeat`;
+  if (m.midTop) midTop.style.background = `url("${m.midTop}") center/cover no-repeat`;
+  if (m.midBottom) midBottom.style.background = `url("${m.midBottom}") center/cover no-repeat`;
+  if (m.tall) tall.style.background = `url("${m.tall}") center/cover no-repeat`;
 
-    const desc = document.createElement("p");
-    desc.className = "note__desc";
-    desc.textContent = project.description || "This is the project description.";
+  media.appendChild(big);
+  media.appendChild(mid);
+  media.appendChild(tall);
 
-    const title = document.createElement("h2");
-    title.className = "note__title";
-    title.textContent = project.title || "This is the Project Title";
+  const desc = document.createElement("p");
+  desc.className = "note__desc";
+  desc.textContent = project.description || "This is the project description.";
 
-    const langs = document.createElement("div");
-    langs.className = "note__langs";
+  const title = document.createElement("h2");
+  title.className = "note__title";
+  title.textContent = project.title || "This is the Project Title";
 
-    const icons = Array.isArray(project.icons) ? project.icons : [];
-    icons.slice(0, 6).forEach((iconKey) => {
-      const img = document.createElement("img");
-      img.alt = String(iconKey);
-      img.src = `assets/icons/${iconKey}.png`;
-      langs.appendChild(img);
-    });
+  const langs = document.createElement("div");
+  langs.className = "note__langs";
 
-    note.appendChild(media);
-    note.appendChild(desc);
-    note.appendChild(title);
-    note.appendChild(langs);
+  const icons = Array.isArray(project.icons) ? project.icons : [];
+  icons.slice(0, 6).forEach((iconKey) => {
+    const img = document.createElement("img");
+    img.alt = String(iconKey);
+    img.src = `assets/icons/${iconKey}.png`;
+    langs.appendChild(img);
+  });
 
-    return note;
-  }
+  note.appendChild(media);
+  note.appendChild(desc);
+  note.appendChild(title);
+  note.appendChild(langs);
+
+  // trigger enter animation next frame
+  requestAnimationFrame(() => {
+    note.style.opacity = "1";
+    note.style.transform = "translateX(0)";
+  });
+
+  return note;
+}
 
   function computeKeyCount() {
     const filtered = getFilteredProjects();
     const hostW = pianoHost.clientWidth || window.innerWidth || 1200;
 
-    // approximate "closed" key width (should match CSS)
     const approxKeyW = 190;
     const fit = Math.ceil(hostW / approxKeyW);
     const baseline = Math.max(12, fit + 6);
     return Math.max(filtered.length, baseline);
+  }
+
+  /* -----------------------------
+     BLACK KEYS — extend to end
+     Fix: black layer width must match the FULL scroll width (not just visible area)
+     ----------------------------- */
+  function syncBlackLayerSize(track) {
+    const layer = track.querySelector(".blacklayer");
+    if (!layer) return;
+    // Ensure layer spans entire piano track width
+    const fullW = track.scrollWidth || track.getBoundingClientRect().width;
+    layer.style.width = `${fullW}px`;
   }
 
   function buildBlackLayer(track, keyCount) {
@@ -310,18 +631,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const keyW = firstKey ? firstKey.getBoundingClientRect().width : 190;
     const blackW = 74;
 
+    // build keys all the way through the last boundary
     for (let i = 0; i < keyCount - 1; i++) {
       if (!boundaryHasBlack(i)) continue;
+
       const black = document.createElement("div");
       black.className = "black-key";
       black.dataset.boundary = String(i);
 
       const x = (i + 1) * keyW - (blackW / 2);
       black.style.left = `${x}px`;
+
       layer.appendChild(black);
     }
 
     track.appendChild(layer);
+
+    // IMPORTANT: extend layer to full track length (so blacks reach the end)
+    syncBlackLayerSize(track);
   }
 
   function hideBlackKeysInsideOpen(track) {
@@ -345,6 +672,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const center = x + w / 2;
 
       if (center > left && center < right) bk.classList.add("is-hidden");
+    });
+  }
+
+  function applyKeyTransitions(track) {
+    track.querySelectorAll(".piano-key").forEach((k) => {
+      // smooth accordion open/close even if CSS changes widths/flex-basis
+      k.style.transition = `flex-basis ${KEY_ANIM_MS}ms ease, width ${KEY_ANIM_MS}ms ease, transform ${KEY_ANIM_MS}ms ease`;
+      k.style.willChange = "flex-basis,width,transform";
     });
   }
 
@@ -393,8 +728,16 @@ document.addEventListener("DOMContentLoaded", () => {
     pianoHost.appendChild(track);
 
     requestAnimationFrame(() => {
+      applyKeyTransitions(track);
+
       buildBlackLayer(track, KEY_COUNT);
       hideBlackKeysInsideOpen(track);
+
+      // In case accordion changes scrollWidth after layout settles
+      requestAnimationFrame(() => {
+        syncBlackLayerSize(track);
+        hideBlackKeysInsideOpen(track);
+      });
     });
   }
 
@@ -429,10 +772,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* -----------------------------
      Click open/close + drag scroll
-     - Clicking the SAME key again closes it
-     - Vertical wheel scroll is NEVER trapped:
-       * if user wheel-scrolls vertically, we let page scroll
-       * horizontal scrolling remains via trackpad deltaX and drag
      ----------------------------- */
   let isDown = false;
   let startX = 0;
@@ -462,7 +801,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isDown) return;
     isDown = false;
 
-    // drag gesture -> no click
     if (moved > DRAG_THRESHOLD) return;
 
     const el = document.elementFromPoint(e.clientX, e.clientY);
@@ -477,7 +815,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const project = filtered[slot];
     if (!project) return;
 
-    // click sound always
     playNote(pickNoteLetter(project, slot));
 
     // toggle open/close
@@ -490,51 +827,30 @@ document.addEventListener("DOMContentLoaded", () => {
       opened?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }
   });
-  
+
   pianoHost.addEventListener("pointercancel", () => { isDown = false; });
-document.addEventListener("pointerdown", (e) => {
-  if (state.openIndex === null) return;
 
-  // Only handle clicks when Projects section exists on the page
-  if (!root.contains(e.target)) return;
+  document.addEventListener("pointerdown", (e) => {
+    if (state.openIndex === null) return;
+    if (!root.contains(e.target)) return;
+    if (e.target.closest(".piano-key")) return;
+    if (e.target.closest(".note")) return;
 
-  // If click is inside a key, do nothing (key click toggles itself)
-  if (e.target.closest(".piano-key")) return;
+    state.openIndex = null;
+    render();
+  });
 
-  // If click is inside the note panel, do nothing
-  if (e.target.closest(".note")) return;
-
-  // Otherwise close
-  state.openIndex = null;
-  render();
-});
   /* -----------------------------
      Wheel behavior FIX
-     The real issue: your previous wheel handler converted vertical wheel to horizontal,
-     which prevents page from scrolling down.
-     New behavior:
-       - If the user scrolls vertically (deltaY dominant), let the PAGE scroll.
-       - If the user scrolls horizontally (deltaX dominant), let the piano scroll.
      ----------------------------- */
   pianoHost.addEventListener("wheel", (e) => {
     const absX = Math.abs(e.deltaX);
     const absY = Math.abs(e.deltaY);
-
-    // Horizontal intent (trackpad shift or horizontal wheel) -> scroll piano
-    if (absX > absY) {
-      // allow piano to handle horizontal scroll
-      return;
-    }
-
-    // Vertical intent -> DO NOT preventDefault, let page scroll naturally
-    // (no conversion of deltaY into horizontal scroll)
+    if (absX > absY) return;
   }, { passive: true });
 
   /* -----------------------------
      Projects snap-to-center
-     Keep it ONLY when coming DOWN into Projects (not while trying to leave up)
-     - snaps when section is >=60% visible
-     - only if user is scrolling DOWN
      ----------------------------- */
   let lastScrollY = window.scrollY;
   let snapLock = false;
@@ -555,7 +871,6 @@ document.addEventListener("pointerdown", (e) => {
       const goingDown = nowY > lastScrollY;
       lastScrollY = nowY;
 
-      // Only snap when user is moving DOWN into the section
       if (!goingDown) return;
 
       if (ent.intersectionRatio >= 0.6) {
@@ -576,17 +891,51 @@ document.addEventListener("pointerdown", (e) => {
   io.observe(root);
 
   /* -----------------------------
-     Remove ABOUT snapping entirely
-     (you asked: it should just go to about section)
-     ----------------------------- */
-
-  /* -----------------------------
      INIT
      ----------------------------- */
   langValueEl.textContent = state.language;
   catValueEl.textContent = state.category;
 
   render();
+// ✅ Allow other scripts (index.js) to set filters programmatically
+window.ProjectsPiano = window.ProjectsPiano || {};
 
+window.ProjectsPiano.setCategory = (cat) => {
+  const normalized = String(cat || "All");
+  state.category = normalized;
+  catValueEl.textContent = normalized;
+  state.openIndex = null;
+  clearMenus();
+  render();
+};
+
+window.ProjectsPiano.setLanguage = (lang) => {
+  const normalized = String(lang || "All");
+  state.language = normalized;
+  langValueEl.textContent = normalized;
+  state.openIndex = null;
+  clearMenus();
+  render();
+};
+
+window.ProjectsPiano.resetFilters = () => {
+  state.language = "All";
+  state.category = "All";
+  langValueEl.textContent = "All";
+  catValueEl.textContent = "All";
+  state.openIndex = null;
+  clearMenus();
+  render();
+};
+
+  // keep black layer stretched on resize (and after accordion layout changes)
   window.addEventListener("resize", () => { render(); });
+
+  // optional: if your track width changes after fonts/images load, stretch black layer again
+  window.addEventListener("load", () => {
+    const track = pianoHost.querySelector(".piano-track");
+    if (!track) return;
+    syncBlackLayerSize(track);
+    hideBlackKeysInsideOpen(track);
+  });
 });
