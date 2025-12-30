@@ -37,7 +37,7 @@ body {
   perspective: 800px;
 }
 
-/* ---------- NAVIGATION ---------- */
+
 .nav {
   position: fixed;
   top: 0;
@@ -64,19 +64,19 @@ body {
   justify-content: end;
   gap: 8px;
 }
-/* ===== Intro hints overlay ===== */
+
 #intro-hints {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  pointer-events: none; /* don't block clicks */
+  pointer-events: none;
 }
 
-/* Nicer hint pill */
+
 .intro-hint {
   pointer-events: none;
   user-select: none;
-  position: fixed;   /* <<< REQUIRED so left/top works */
+  position: fixed;  
   z-index: 10000;
 
   padding: 10px 14px;
@@ -108,7 +108,7 @@ body {
   white-space: nowrap;
 }
 
-/* Arrow */
+
 .intro-hint__path {
   fill: none;
   stroke: rgba(30,30,30,0.70);
@@ -117,7 +117,7 @@ body {
   stroke-linejoin: round;
 }
 
-/* Draw animation */
+
 .intro-hint__path.is-drawing {
   stroke-dasharray: var(--dash, 400);
   stroke-dashoffset: var(--dash, 400);
@@ -138,7 +138,7 @@ body {
 
 
 
-/* ---------- HERO HEADING ---------- */
+
 #hero-heading {
   position: fixed;
   top: 120px;
@@ -161,7 +161,7 @@ body {
 }
 @keyframes blink { 50% { opacity: 0; } }
 
-/* ---------- MAIN + STAGE ---------- */
+
 .main-container.index {
   width: 100%;
   min-height: 100vh;
@@ -178,7 +178,7 @@ body {
   overflow: visible;
 }
 
-/* ---------- CAT (WRAPPED) ---------- */
+
 .cat-wrap {
   position: fixed;
   bottom: 20px;
@@ -201,7 +201,7 @@ body.about-focus .cat-wrap {
   body.about-focus .cat-wrap { transform: translateX(-50%) scale(0.82); }
 }
 
-/* GLB fills wrapper and never reacts */
+
 #cat {
   position: absolute;
   inset: 0;
@@ -212,7 +212,7 @@ body.about-focus .cat-wrap {
   pointer-events: none;
 }
 
-/* Invisible full-cover button for click → About */
+
 #cat-click {
   position: absolute;
   inset: 0;
@@ -223,7 +223,7 @@ body.about-focus .cat-wrap {
   cursor: pointer;
 }
 
-/* ---------- CONTROLS ---------- */
+
 .controls-container {
   display: flex;
   justify-content: center;
@@ -246,7 +246,7 @@ body.about-focus .cat-wrap {
   color: var(--pink);
   font-size: 50px;
 }
-/* ---------- CLICK OVERLAYS ---------- */
+
 .piano {
   border-radius: 6px;
   transform-style: preserve-3d;
@@ -257,7 +257,7 @@ body.about-focus .cat-wrap {
   -o-border-radius: 6px;
 }
 
-/* Make the 3D models never capture pointer events */
+
 .piano model-viewer {
   width: 100%;
   height: 100%;
@@ -265,7 +265,7 @@ body.about-focus .cat-wrap {
   pointer-events: none;
 }
 
-/* Full-cover invisible button on top of each piano */
+
 .piano-hit {
   position: absolute;
   inset: 0;
@@ -275,15 +275,15 @@ body.about-focus .cat-wrap {
   border-radius: inherit;
 }
 
-/* Cat hover/click target already exists, just give it a nice radius too */
+
 .cat-wrap {
   border-radius: 22px;
   will-change: filter, transform;
   pointer-events: auto;
 }
 
-/* ---------- GLOW EFFECTS ---------- */
-/* On hover */
+
+
 .cat-wrap:hover,
 .piano:hover {
   filter:
@@ -291,7 +291,7 @@ body.about-focus .cat-wrap {
     drop-shadow(0 0 36px rgba(156, 246, 246, 0.55));
 }
 
-/* On keyboard focus (accessibility) */
+
 .cat-wrap:has(#cat-click:focus-visible),
 .piano:has(.piano-hit:focus-visible) {
   filter:
@@ -299,7 +299,7 @@ body.about-focus .cat-wrap {
     drop-shadow(0 0 36px rgba(156, 246, 246, 0.55));
 }
 
-/* Optional: subtle "press" feedback */
+
 #cat-click:active,
 .piano-hit:active {
   transform: scale(0.99);
@@ -310,7 +310,7 @@ body.about-focus .cat-wrap {
   border-radius: 14px;
   transition: box-shadow 250ms ease, outline 250ms ease;
 }
-/* ---------- PIANOS ---------- */
+
 .piano-carousel {
   position: absolute;
   inset: 0;
@@ -338,7 +338,7 @@ body.about-focus .cat-wrap {
   height: 80%;
 }
 #piano-click{
-  position: fixed;      /* we will set left/top/width/height from JS */
+  position: fixed;     
   left: 0; top: 0;
   width: 1px; height: 1px;
   background: transparent;
@@ -365,10 +365,10 @@ body.about-focus .cat-wrap {
 }
 
 model-viewer.piano {
-  pointer-events: none !important; /* clicks go through to #piano-click */
+  pointer-events: none !important;
 }
 
-/* ---------- PIANO LABEL ---------- */
+
 #piano-label {
   position: absolute;
   inset: 0;
@@ -397,7 +397,7 @@ model-viewer.piano {
   transform: translateY(0);
 }
 
-/* ---------- LABEL ANIMATIONS ---------- */
+
 .label--in::before { animation: labelIn 320ms cubic-bezier(.2, .9, .2, 1) forwards; }
 .label--out { animation: labelOut 250ms ease forwards; }
 @keyframes labelIn {
@@ -409,7 +409,7 @@ model-viewer.piano {
   100% { opacity: 0; }
 }
 
-/* ---------- FOCUS TRANSITIONS ---------- */
+
 .nav, #hero-heading, .stage, #piano-label, .about .about__inner {
   transition: opacity 240ms ease, transform 240ms ease;
 }
@@ -423,7 +423,7 @@ body.about-focus .about .about__inner {
   transform: translateY(-6px);
 }
 
-/* ---------- ABOUT SECTION ---------- */
+
 .about {
   min-height: 90vh;
   display: grid;
@@ -439,7 +439,7 @@ body.about-focus .about .about__inner {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
 }
 
-/* ---------- GENERAL MODEL-VIEWER ---------- */
+
 model-viewer { overflow: visible !important; }
 
 
@@ -456,18 +456,18 @@ model-viewer { overflow: visible !important; }
   pointer-events: none;
 }
 
-/* bottom fade/blur overlay */
+
 .background::after {
   content: "";
-  position: fixed;     /* follow the viewport like the background */
+  position: fixed;    
   left: 0;
   right: 0;
   bottom: 0;
-  height: 18vh;        /* how tall the fade is */
+  height: 18vh;       
   pointer-events: none;
   z-index: 1;
 
-  /* fade from transparent to page bg color */
+ 
   background: linear-gradient(
     to bottom,
     rgba(62, 30, 104, 0) 0%,
@@ -475,13 +475,13 @@ model-viewer { overflow: visible !important; }
     #fff 100%
   );
 
-  /* optional softness at the seam */
+ 
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
 
-/* each bubble */
+
 .background span {
   width: 20vmin;
   height: 20vmin;
@@ -489,11 +489,11 @@ model-viewer { overflow: visible !important; }
   position: absolute;
   backface-visibility: hidden;
   animation: move linear infinite;
-  animation-duration: 45s;  /* <-- unit fixed */
-  /* color + box-shadow will be updated by JS for palette sync */
+  animation-duration: 45s; 
+ 
 }
 
-/* Keep your precise positions/delays/durations; unit fixes only */
+
 .background span:nth-child(0){ top:95%; left:87%; animation-duration:11s; animation-delay:-38s; transform-origin:18vw -16vh; }
 .background span:nth-child(1){ top:71%; left:49%; animation-duration:44s; animation-delay:-21s; transform-origin:-7vw -13vh; }
 .background span:nth-child(2){ top:29%; left:58%; animation-duration:46s; animation-delay:-21s; transform-origin:-13vw -16vh; }

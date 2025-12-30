@@ -1,33 +1,33 @@
-// js/entrance.js
+
 (() => {
   const LOG = "[entrance-anim]";
 
-  // Tuning knobs (ms / px)
+  
   const DUR = {
-    drop: 1000,     // was ~650 — longer, smoother fall
-    bounce: 700,    // was ~520 — gentler settle
-    stagger: 260,   // was ~120 — bigger gaps between pianos
-    catExtra: 380,  // extra delay so cat still lands last
+    drop: 1000,     
+    bounce: 700,    
+    stagger: 260,   
+    catExtra: 380,  
   };
   const BOUNCE = {
-    first: -10,     // was -14px — softer first bounce
-    second: -4,     // was -6px  — softer second bounce
+    first: -10,     
+    second: -4,     
   };
 
-  // Adjust if your cat uses a different selector
+  
   const getCat = () =>
     document.querySelector('[data-role="cat"]') ||
     document.querySelector('.cat') ||
     document.querySelector('.cat-wrap');
 
-  // Compute a per-element offscreen startY so it begins above the viewport
+  
   function computeStartY(el) {
-    const margin = 30; // px above top
+    const margin = 30; 
     const rect = el.getBoundingClientRect();
     return -(rect.top + rect.height + margin);
   }
 
-  // We need to capture each element's *final* carousel transform.
+  
   function animate() {
     const pianos = Array.from(
       document.querySelectorAll('model-viewer.piano, .piano')
@@ -39,13 +39,13 @@
       return;
     }
 
-    // Ensure carousel transforms are applied by index.js
+    
     const haveAnyTransform = pianos.some(
       el => getComputedStyle(el).transform !== "none"
     );
 
     const run = () => {
-      // Push smoother/longer timings into CSS custom properties
+      
       const rootStyle = document.documentElement.style;
       rootStyle.setProperty('--drop-duration', `${DUR.drop}ms`);
       rootStyle.setProperty('--bounce-duration', `${DUR.bounce}ms`);
@@ -59,15 +59,15 @@
       const targets = [...pianos];
       if (cat) targets.push(cat);
 
-      // Seed: cache final transform and compute each element's startY
+      
       targets.forEach((el) => {
-        const computedTF = getComputedStyle(el).transform; // e.g., matrix(...)
+        const computedTF = getComputedStyle(el).transform; 
         const finalTF = (computedTF && computedTF !== 'none') ? computedTF : 'none';
 
-        // Save inline transform so we can restore after the intro (if any)
+        
         el.dataset.origInlineTransform = el.style.transform || "";
 
-        // During intro, CSS uses these variables to compose the transform
+        
         el.style.setProperty('--finalTF', finalTF);
 
         const startY = computeStartY(el);
@@ -76,7 +76,7 @@
         el.classList.add('intro-target');
       });
 
-      // Start staggered animations after seed has painted
+      
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           const root = getComputedStyle(document.documentElement);
@@ -101,7 +101,7 @@
                 el.style.removeProperty('--finalTF');
                 el.style.removeProperty('--startY');
 
-                // Restore inline transform (carousel remains in control)
+                
                 if (el.dataset.origInlineTransform !== undefined) {
                   el.style.transform = el.dataset.origInlineTransform;
                 }
@@ -112,7 +112,7 @@
             }, delay);
           });
 
-          // Global cleanup after the last item finishes
+          
           const total =
             (pianos.length - 1) * stagger +
             (cat ? catExtra : 0) +
@@ -127,14 +127,14 @@
     };
 
     if (!haveAnyTransform) {
-      // Give index.js a tiny bit more time to position the carousel
+      
       setTimeout(run, 0);
     } else {
       run();
     }
   }
 
-  // Wait for full load so <model-viewer> upgrades & your index.js carousel have applied
+  
   if (document.readyState === 'complete') {
     animate();
   } else {

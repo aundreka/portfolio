@@ -5,16 +5,14 @@
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-/* wrapper */
+
 #projects .projects__wrap{
   width: 100%;
   max-width: 100%;
   padding-bottom: 20px;
 }
 
-/* =========================
-   TOP BAR (dot + filters)
-   ========================= */
+
 #projects .projects__topbar{
   position: relative;
   height: 92px;
@@ -30,7 +28,7 @@
   width: 42px;
   height: 42px;
   border-radius: 999px;
-  background: #e8a7bb; /* pink dot */
+  background: #e8a7bb;
   flex: 0 0 auto;
 }
 
@@ -70,7 +68,7 @@
   color: #111;
 }
 
-/* dropdown menu (JS toggles visibility via class or inline style) */
+
 #projects .filter__menu{
   position: absolute;
   top: calc(100% + 8px);
@@ -83,15 +81,15 @@
   box-shadow: 0 10px 0 rgba(0,0,0,0.06);
   z-index: 50;
 
-  /* IMPORTANT: no display:none */
+ 
   display: block;
 
-  /* closed state */
+ 
   pointer-events: none;
   visibility: hidden;
 }
 
-/* Suggested: JS can add .is-open to the .filter */
+
 
 #projects .filter__menu button,
 #projects .filter__menu .filter__item{
@@ -112,19 +110,19 @@
 }
 #projects .filter__menu button:hover,
 #projects .filter__menu .filter__item:hover{
-  background: #ffe266; /* matches your hover yellow vibe */
+  background: #ffe266;
   font-weight: 700;
 }
 #projects .projects__hint{
-  margin-left: auto;        /* pushes to the far right */
-  align-self: flex-start;   /* top-right */
+  margin-left: auto;       
+  align-self: flex-start;  
   font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.02em;
   color: rgba(17,17,17,0.55);
 
   user-select: none;
-  pointer-events: none;     /* it's just a hint, not interactive */
+  pointer-events: none;    
   white-space: nowrap;
 }
 
@@ -135,15 +133,8 @@
   padding: 8px 12px;
   margin-top: 30px;
 }
-/* =========================
-   PIANO SCROLLER AREA
-   ========================= */
-/* =========================================================
-   PROJECTS — Piano (SCOPED) — FIXED
-   - Black keys are BETWEEN white keys (overlay layer)
-   - Horizontal scroll always works
-   - Accordion open (white keys expand; neighbors shrink)
-   ========================================================= */
+
+
 
 #projects .projects_piano{
   position: relative;
@@ -153,26 +144,26 @@
   border-right: 2px solid #111;
   border-bottom: 2px solid #111;
 
-  overflow-x: auto;     /* horizontal scroll */
+  overflow-x: auto;    
   overflow-y: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
   overscroll-behavior-x: contain;
-  touch-action: pan-x;  /* allow trackpad/touch horizontal pan */
+  touch-action: pan-x; 
 }
 #projects .projects_piano::-webkit-scrollbar{ display:none; }
 
-/* Track must be wider than container to enable scroll */
+
 #projects .piano-track{
   position: relative;
   display: flex;
   align-items: stretch;
   height: 760px;
-  width: max-content;     /* actual overflow width */
-  min-width: 100%;        /* still fill if few keys */
+  width: max-content;    
+  min-width: 100%;       
 }
 
-/* White keys */
+
 #projects .piano-key{
   position: relative;
   height: 760px;
@@ -201,7 +192,7 @@
   white-space: pre-line;
 }
 
-/* Empty placeholders (inert) */
+
 #projects .piano-key.is-empty{
   cursor: default;
 }
@@ -212,7 +203,7 @@
   opacity: 0;
 }
 
-/* Hover */
+
 #projects .piano-key:hover{
   background: #ffe266;
 }
@@ -220,7 +211,7 @@
   font-weight: 800;
 }
 
-/* Accordion sizing */
+
 #projects .piano-track.is-accordion .piano-key{
   flex-basis: var(--key-w-small, 120px);
   width: var(--key-w-small, 120px);
@@ -237,19 +228,19 @@
   width: 100%;
   background: #fff;
   box-sizing: border-box;
-  padding: 22px 26px 22px 26px; /* tighter to give media more space */
+  padding: 22px 26px 22px 26px;
 }
 
-/* Media takes the top half */
+
 #projects .note__media{
-  height: 52%;                 /* top half-ish */
+  height: 52%;                
   margin: 0;
   display: grid;
   grid-template-columns: 1.55fr 0.7fr 0.55fr;
   gap: 12px;
 }
 
-/* Purple blocks fill the media area */
+
 #projects .note__media .media--big,
 #projects .note__media .media--tall,
 #projects .note__media .media--mid > div{
@@ -263,12 +254,12 @@
   gap: 12px;
 }
 
-/* Put text at the bottom */
+
 #projects .note__desc{
   position: absolute;
   left: 26px;
-  right: 180px;     /* leave space for icons on the right */
-  bottom: 130px;     /* sits above title */
+  right: 180px;    
+  bottom: 130px;    
   margin: 0;
   font-size: 15px;
   line-height: 1.5;
@@ -289,7 +280,7 @@
   color: #111;
 }
 
-/* Icons bottom right */
+
 #projects .note__langs{
   position: absolute;
   right: 26px;
@@ -306,16 +297,16 @@
   display: block;
 }
 
-/* ---------- BLACK KEYS OVERLAY (between white keys) ---------- */
+
 
 #projects .blacklayer{
   position: absolute;
   inset: 0;
-  pointer-events: none;   /* don't block hovering/clicking keys */
+  pointer-events: none;  
   z-index: 9;
 }
 
-/* Each black key is placed at a boundary between keys */
+
 #projects .blacklayer .black-key{
   position: absolute;
   top: 0px;
@@ -327,9 +318,7 @@
 }
 
 
-/* =========================
-   RESPONSIVE (keep mockup proportions)
-   ========================= */
+
 @media (max-width: 1100px){
   #projects .note,
   #projects .project-note,
@@ -363,11 +352,11 @@
   touch-action: pan-x !important;
 }
 
-/* Make sure the flex track can overflow */
+
 #projects #projectsPiano .piano-track{
   width: max-content !important;
 }
-/* hover shows per-project image (set via --hover-bg) */
+
 #projects #projectsPiano .piano-key{
   background-size: cover;
   background-position: center;
@@ -378,7 +367,7 @@
   background-image: var(--hover-bg);
 }
 
-/* keep open key clean (no hover bg) */
+
 #projects #projectsPiano .piano-key.is-open{
   background-image: none !important;
 }
@@ -402,41 +391,41 @@
 
   display: block;
 
-  /* CLOSED STATE */
-  opacity: 0;                 /* <-- fade the box too */
+ 
+  opacity: 0;                
   visibility: hidden;
   pointer-events: none;
   transition: opacity 180ms ease;
   will-change: opacity;
 }
 
-/* Right align category menu */
+
 #projects .filter[data-filter="category"] .filter__menu{
   left: auto;
   right: 0;
 }
 
-/* Keep inner stable (no separate fade) */
+
 #projects .filter__menuInner{
   opacity: 1;
   transform: none;
 }
 
-/* OPEN */
+
 #projects .filter.is-open .filter__menu{
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
 
-/* CLOSING: fade only (menu stays visible while fading out) */
+
 #projects .filter.is-closing .filter__menu{
   opacity: 0;
-  visibility: visible;  /* keep visible so fade-out can play */
+  visibility: visible; 
   pointer-events: none;
 }
 
-/* Topbar/button must never animate */
+
 #projects .filter__btn{
   transition: none !important;
   transform: none !important;

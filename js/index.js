@@ -1,4 +1,4 @@
-// js/index.js
+
 
 /***********************
  * DOM LOOKUPS
@@ -10,15 +10,15 @@ const nextBtn = document.getElementById("nextbtn");
 const pianos = document.querySelectorAll(".piano");
 const totalPianos = pianos.length;
 
-const catEl   = document.querySelector("#cat");        // <model-viewer>
-const catWrap = document.querySelector(".cat-wrap");   // wrapper div
-const catBtn  = document.getElementById("cat-click");  // invisible button overlay
+const catEl   = document.querySelector("#cat");        
+const catWrap = document.querySelector(".cat-wrap");   
+const catBtn  = document.getElementById("cat-click");  
 const pianoClick = document.getElementById("piano-click");
 
-// Your per-piano project subsection IDs (create these in Projects section)
+
 const PROJECT_IDS = ["project-1","project-2","project-3","project-4","project-5"];
 
-// Color → glow
+
 const GLOW_MAP = {
   red:    "rgba(255, 76, 76, 0.85)",
   blue:   "rgba(137, 210, 220, 0.85)",
@@ -34,7 +34,7 @@ const angleStep    = 360 / totalPianos;
 const radius       = 520;
 const heightFactor = 60;
 const offsetFactor = 60;
-const duration     = 800; // ms — used for transform transitions & label timing
+const duration     = 800; 
 const colors       = ["red", "blue", "green", "yellow", "purple"];
 
 /***********************
@@ -49,7 +49,7 @@ function exitAboutFocus() {
   document.body.classList.remove("about-focus");
   document.querySelector(".piano-carousel")?.classList.remove("piano-lift");
   catWrap?.classList.remove("cat-fixed-left");
-  // Re-show the current label after fade back
+  
   setTimeout(() => {
     if (typeof showLabelForIndex === "function") showLabelForIndex(currentIndex);
   }, 200);
@@ -80,27 +80,27 @@ window.addEventListener("orientationchange", keepCatFullyOnscreen, { passive: tr
 const bgRoot = document.querySelector(".background");
 const bgBubbles = bgRoot ? Array.from(bgRoot.querySelectorAll("span")) : [];
 
-// Define per-piano color palettes (background + three bubble tints)
+
 const BG_PALETTES = {
   red: {
-    base: "#ffffff", // light base
-    tints: ["#FFB3BA", "#FFD1CF", "#FFC7C7"] // pastel reds/pinks
+    base: "#ffffff", 
+    tints: ["#FFB3BA", "#FFD1CF", "#FFC7C7"] 
   },
   blue: {
     base: "#ffffff",
-    tints: ["#B3E5FC", "#CBEFFF", "#A7D8FF"] // pastel blues
+    tints: ["#B3E5FC", "#CBEFFF", "#A7D8FF"] 
   },
   green: {
     base: "#ffffff",
-    tints: ["#C8E6C9", "#DFF6DD", "#B2E2B2"] // pastel greens
+    tints: ["#C8E6C9", "#DFF6DD", "#B2E2B2"] 
   },
   yellow: {
     base: "#ffffff",
-    tints: ["#FFF9C4", "#FFFDE7", "#FFF3B0"] // pastel yellows
+    tints: ["#FFF9C4", "#FFFDE7", "#FFF3B0"] 
   },
   purple: {
     base: "#ffffff",
-    tints: ["#E1BEE7", "#F3E5F5", "#D1C4E9"] // pastel purples/lavender
+    tints: ["#E1BEE7", "#F3E5F5", "#D1C4E9"] 
   }
 };
 
@@ -108,20 +108,20 @@ function applyBackgroundTheme(colorName = "purple") {
   if (!bgRoot || bgBubbles.length === 0) return;
   const theme = BG_PALETTES[colorName] || BG_PALETTES.purple;
 
-  // Set base background
+  
   bgRoot.style.background = theme.base;
 
-  // Distribute bubble tints and matching glows
+  
   bgBubbles.forEach((el, i) => {
     const tint = theme.tints[i % theme.tints.length];
     el.style.color = tint;
-    // subtle glow sized similarly to your original
-    const glow = 5 + (i % 6); // 5..10 vmin
+    
+    const glow = 5 + (i % 6); 
     el.style.boxShadow = `${(i % 2 ? "" : "-")}40vmin 0 ${glow}vmin currentColor`;
   });
 }
 
-// Call once on load (after initial layout)
+
 applyBackgroundTheme(colors[currentIndex % colors.length]);
 
 
@@ -257,7 +257,7 @@ pianos.forEach((piano) => {
  ***********************/
 const labels = ["Apps", "Websites", "Games", "AI/ML", "UI/UX"];
 
-// ✅ Category values used by projects.js filters
+
 const PIANO_CATEGORIES = ["apps", "websites", "games", "ai/ml", "ui/ux"];
 let labelEl = document.getElementById("piano-label");
 
@@ -296,7 +296,7 @@ function hideLabel() {
  * GEOMETRY HELPERS
  ***********************/
 function getCenterPiano() {
-  return pianos[currentIndex]; // front one
+  return pianos[currentIndex]; 
 }
 
 /***********************
@@ -315,9 +315,9 @@ function markFrontPiano(frontIdx){
     const colorName = colors[i % colors.length];
     const glow = GLOW_MAP[colorName] || "rgba(255,176,200,0.85)";
     p.style.setProperty("--glow", glow);
-    p.style.setProperty("--glow-soft", glow.replace(/[\d.]+\)$/,'0.25)')); // ~35% opacity
+    p.style.setProperty("--glow-soft", glow.replace(/[\d.]+\)$/,'0.25)')); 
 
-    // store routing info on the element
+    
     p.dataset.projectId = PROJECT_IDS[i] || `project-${i+1}`;
   });
 }
@@ -335,24 +335,24 @@ function positionCatClickOverlay(){
   catBtn.style.display = visible ? "block" : "none";
   if (!visible) return;
 
-  // Default: cover the whole cat-wrap
+  
   let top = 0;
   let height = r.height;
 
-  // If the piano overlay overlaps the cat area, remove the bottom part of the cat hitbox
+  
   if (pianoR) {
     const overlapTop = Math.max(r.top, pianoR.top);
     const overlapBottom = Math.min(r.bottom, pianoR.bottom);
     const overlap = Math.max(0, overlapBottom - overlapTop);
 
     if (overlap > 0) {
-      // shrink from bottom: keep top the same, reduce height
-      height = Math.max(0, height - overlap - 8); // extra 8px buffer
+      
+      height = Math.max(0, height - overlap - 8); 
     }
   }
 
-  // Apply as percentages/pixels INSIDE catWrap (catBtn is absolute inset:0 by default)
-  // So we set its inset instead of left/top.
+  
+  
   catBtn.style.inset = `${top}px 0px 0px 0px`;
   catBtn.style.height = `${height}px`;
 }
@@ -373,7 +373,7 @@ function positionFrontClickOverlay(){
   pianoClick.style.display = visible ? "block" : "none";
   if (!visible) return;
 
-  const yOffset = 50; // ↓ move overlay down (tweak 12–32)
+  const yOffset = 50; 
 
   pianoClick.style.left = `${r.left}px`;
   pianoClick.style.top = `${r.top + yOffset}px`;
@@ -385,12 +385,12 @@ function scrollToProject(projectId){
   const projects = document.getElementById("projects");
   if (projects) projects.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  // after the main scroll settles, jump to subsection
+  
   setTimeout(() => {
     const el = document.getElementById(projectId);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 
-    // Optional: highlight
+    
     el?.classList?.add("highlight");
     setTimeout(() => el?.classList?.remove("highlight"), 1200);
   }, 450);
@@ -414,7 +414,7 @@ function animateRotation(targetIndex) {
       offsetX = 0;
     }
 
-    const orbitX = -effectiveAngle; // face viewer
+    const orbitX = -effectiveAngle; 
     piano.setAttribute("camera-orbit", `${orbitX}deg 90deg 90deg`);
     piano.style.transform =
       `translateX(${x + offsetX}px) translateZ(${z}px) translateY(${-y}px)`;
@@ -461,13 +461,13 @@ pianoClick?.addEventListener("click", (e) => {
   const front = getCenterPiano();
   const projectId = front?.dataset?.projectId || `project-${currentIndex + 1}`;
 
-  // ✅ Set category filter to match the clicked piano (apps/websites/etc.)
+  
   const cat = PIANO_CATEGORIES[currentIndex % PIANO_CATEGORIES.length] || "All";
   if (window.ProjectsPiano?.setCategory) {
     window.ProjectsPiano.setCategory(cat);
   }
 
-  // ✅ Then scroll to Projects + subsection (your existing behavior)
+  
   scrollToProject(projectId);
 
   setTimeout(() => {
@@ -485,7 +485,7 @@ window.addEventListener("scroll", () => {
   positionCatClickOverlay();
 }, { passive: true });
 
-// also after drag ends (because camera-orbit reset can change rect slightly)
+
 window.addEventListener("mouseup", () => setTimeout(positionFrontClickOverlay, 40), { passive: true });
 window.addEventListener("touchend", () => setTimeout(positionFrontClickOverlay, 40), { passive: true });
 pianoClick?.addEventListener("mouseenter", () => getCenterPiano()?.classList.add("glow"));
@@ -609,11 +609,11 @@ if (catEl) {
   window.addEventListener("touchmove", onMove, { passive: true });
   tick();
 
-  // Idle on load
+  
   catEl.addEventListener("load", () => {
     const anims = catEl.availableAnimations;
     if (anims && anims.length > 2) {
-      catEl.animationName = anims[2]; // Idle
+      catEl.animationName = anims[2]; 
       catEl.setAttribute("animation-loop", "true");
       catEl.play();
     }
@@ -630,10 +630,10 @@ function focusAboutScroll() {
   about.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-// Prefer the overlay button (keyboard accessible); fallback to wrapper
+
 catBtn?.addEventListener("click", (e) => { e.preventDefault(); focusAboutScroll(); });
 catWrap?.addEventListener("click", (e) => {
-  // If the overlay button exists, let it handle; otherwise the wrapper handles
+  
   if (catBtn) return;
   e.preventDefault();
   focusAboutScroll();
@@ -653,13 +653,13 @@ window.addEventListener("scroll", () => {
 
   if (docTop >= aboutTop - 10) {
     enterAboutFocus();
-    // Optional: slide cat while focused
+    
     catWrap?.classList.add("cat-fixed-left");
     document.querySelector(".piano-carousel")?.classList.add("piano-lift");
     keepCatFullyOnscreen();
   } else {
     exitAboutFocus();
-    if (catWrap) catWrap.style.left = ""; // clear any clamped inline left
+    if (catWrap) catWrap.style.left = ""; 
   }
 }, { passive: true });
 
@@ -671,12 +671,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroText = "Hi, I'm Aundreka Perez.";
 
 
-  // ensure pianoClick is on body if needed (your existing logic)
+  
   if (pianoClick && pianoClick.parentElement !== document.body) {
     document.body.appendChild(pianoClick);
   }
 
-  // ---------- helpers ----------
+  
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
   function typeInto(el, text, speed = 45) {
@@ -694,7 +694,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Create overlay root once
+  
   let hintsRoot = document.getElementById("intro-hints");
   if (!hintsRoot) {
     hintsRoot = document.createElement("div");
@@ -733,9 +733,9 @@ function makeHint({
   arrowStartDX = 0, arrowStartDY = 0,
   arrowEndDX = 0, arrowEndDY = 0,
 
-  // ✅ NEW: smoothing options
+  
   smooth = false,
-  smoothK = 0.16, // 0.10 = slower/smoother, 0.25 = snappier
+  smoothK = 0.16, 
 }) {
   const hint = document.createElement("div");
   hint.className = "intro-hint";
@@ -778,7 +778,7 @@ function makeHint({
 
   const lerp = (a, b, k) => a + (b - a) * k;
 
-  // ✅ NEW: persistent “current” state for smoothing
+  
   let hasState = false;
   let cur = {
     hx: 0, hy: 0,
@@ -794,23 +794,23 @@ hint.style.opacity = "0";
 svg.style.opacity = "0";
 return;
     }
-    // ✅ only visible after showTyped()
+    
     svg.style.opacity  = enabled ? "1" : "0";
     hint.style.opacity = enabled ? "1" : "0";
 
-    // optional: avoid accidental clicks before visible
+    
     hint.style.pointerEvents = enabled ? "auto" : "none";
     svg.style.pointerEvents  = "none";
 
     const padding = 14;
 
-    // measure
+    
     const hintRect = hint.getBoundingClientRect();
 
     const tx = tr.left + tr.width / 2;
     const ty = tr.top + tr.height / 2;
 
-    // --- target bubble position (desired) ---
+    
     let hx;
     if (side === "left")  hx = tr.left - hintRect.width - gap;
     if (side === "right") hx = tr.right + gap;
@@ -823,11 +823,11 @@ return;
     hx += shiftX;
     hy += shiftY;
 
-    // clamp
+    
     hx = Math.max(padding, Math.min(window.innerWidth - hintRect.width - padding, hx));
     hy = Math.max(padding, Math.min(window.innerHeight - hintRect.height - padding, hy));
 
-    // place “desired” first, then anti-overlap adjustment (still on desired)
+    
     hint.style.left = `${hx}px`;
     hint.style.top  = `${hy}px`;
 
@@ -851,19 +851,19 @@ return;
       }
     }
 
-    // after overlap adjustment, recompute desired from actual placed rect
+    
     const b = hint.getBoundingClientRect();
     let desiredHx = b.left;
     let desiredHy = b.top;
 
-    // --- desired arrow start (from bubble edge) ---
+    
     let desiredStartY = b.top + b.height * 0.55;
     let desiredStartX = side === "left" ? (b.right + 10) : (b.left - 10);
 
     desiredStartX += arrowStartDX;
     desiredStartY += arrowStartDY;
 
-    // --- desired arrow end (near target) ---
+    
     const marginFromTarget = 26;
     let desiredEndX, desiredEndY;
 
@@ -881,7 +881,7 @@ return;
     desiredEndX += arrowEndDX;
     desiredEndY += arrowEndDY;
 
-    // --- desired control point (curve) ---
+    
     const midX = (desiredStartX + desiredEndX) / 2;
     const midY = (desiredStartY + desiredEndY) / 2;
     const curve = 110;
@@ -889,7 +889,7 @@ return;
     let desiredCtrlX = midX + (side === "left" ? -curve : curve);
     let desiredCtrlY = midY - curve * 0.35;
 
-    // ✅ APPLY SMOOTHING
+    
     if (smooth) {
       if (!hasState) {
         hasState = true;
@@ -908,8 +908,8 @@ return;
         cur.ctrlY  = lerp(cur.ctrlY,  desiredCtrlY,  smoothK);
       }
 
-      // use transform for smoother compositor movement
-hint.style.transform = ""; // important: prevent runaway bounding-rect feedback
+      
+hint.style.transform = ""; 
 hint.style.left = `${cur.hx}px`;
 hint.style.top  = `${cur.hy}px`;
 
@@ -919,7 +919,7 @@ path.setAttribute(
   `M ${cur.startX} ${cur.startY} Q ${cur.ctrlX} ${cur.ctrlY} ${cur.endX} ${cur.endY}`
 );
     } else {
-      // original behavior (no easing)
+      
       hint.style.transform = "";
       svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
       path.setAttribute("d", `M ${desiredStartX} ${desiredStartY} Q ${desiredCtrlX} ${desiredCtrlY} ${desiredEndX} ${desiredEndY}`);
@@ -939,7 +939,7 @@ path.setAttribute(
    async function showTyped() {
     enabled = true;
 
-    // ensure we have a fresh path length before drawing
+    
     layout();
 
     hint.classList.add("is-visible");
@@ -964,25 +964,25 @@ path.setAttribute(
 }
 
   function getFrontPianoRectTarget() {
-    // best target: your overlay (tracks front piano) if visible; fallback to the actual front model-viewer
+    
     if (pianoClick && pianoClick.style.display !== "none") return pianoClick;
     return getCenterPiano?.() || null;
   }
 
-  // ---------- main sequence ----------
+  
   (async () => {
     if (!heading) return;
 
-    // (1) wait 3 seconds after page load
+    
     await wait(3000);
 
-    // type intro
+    
     await typeInto(heading, heroText, 85);
 
-    // tiny pause before the hints
+    
     await wait(250);
 
-    // (2) hint near cat + arrow to cat
+    
 const catHint = makeHint({
   id: "intro-hint-cat",
   text: "click to know more about me",
@@ -990,13 +990,13 @@ const catHint = makeHint({
   side: "left",
   gap: 70,
   shiftX: -40,
-  shiftY: -18,      // bubble up
+  shiftY: -18,      
   prefer: "middle",
   smooth: true,
-  smoothK: 0.14, // try 0.12–0.18
+  smoothK: 0.14, 
 
-  arrowStartDY: -30  // arrow start DOWN a bit (creates separation from bubble)
-  // OR use -10 to move arrow start up; pick what separates best
+  arrowStartDY: -30  
+  
 });
 
 const pianoHint = makeHint({
@@ -1010,19 +1010,19 @@ const pianoHint = makeHint({
   prefer: "middle",
   arrowStartDY: -30,
 
-  // ✅ smooth follow
+  
   smooth: true,
-  smoothK: 0.14, // try 0.12–0.18
+  smoothK: 0.14, 
 });
 
-    // type them sequentially (feels cleaner)
+    
     await catHint.showTyped();
     await wait(150);
     await pianoHint.showTyped();
 
-    // Optional: re-layout on your existing events too (extra safety)
+    
     const relayout = () => {
-      // forcing a frame is enough because the RAF loop is already running
+      
     };
     window.addEventListener("resize", relayout, { passive: true });
     window.addEventListener("scroll", relayout, { passive: true });

@@ -1,34 +1,31 @@
-/* ===============================
-   ABOUT SECTION — GLOBAL CONTROLS
-   =============================== */
+
 
 :root{
   --staff-gap: 48px;
   --staff-thick: 2px;
   --staff-start-mask: calc(28vw + 210px);
-    --staff-runway-top: 120px;     /* ✅ reduce this */
-  --staff-runway-bottom: 180px;  /* bottom can stay larger */
+    --staff-runway-top: 120px;    
+  --staff-runway-bottom: 180px; 
 
 }
 
-/* Section container */
+
 .about{
-  display: block !important;        /* kills display:grid */
-  place-items: unset !important;     /* kills centering */
+  display: block !important;       
+  place-items: unset !important;    
   height: auto !important;
   min-height: 100vh;
   padding-top: var(--scrubber-space);
-  padding-bottom: 260px;            /* actual runway */
+  padding-bottom: 260px;           
   position: relative;
 }
 
-/* The horizontal scroller fills the remaining height.
-   Keep this simple and predictable. */
+
 .about__scroller{
   width: 100%;
   min-height: 100vh;
 
-  position: relative;     /* important */
+  position: relative;    
   overflow-x: auto;
   overflow-y: visible;
 
@@ -38,7 +35,7 @@
 }
 .about__scroller::-webkit-scrollbar{ display: none; }
 
-/* The strip grows with its children so we get real overflow */
+
 .strip{
   position: relative;
   display: inline-flex;
@@ -50,8 +47,8 @@
     clamp(32px, 4vw, 64px)
     var(--staff-runway-bottom);
 }
-/* ---------- STAFF LINES ---------- */
-/* ---------- STAFF LINES (EXTRA TALL SAFE ZONE) ---------- */
+
+
 .staff-lines{
   position: absolute;
   left: 0;
@@ -62,7 +59,7 @@
   pointer-events: none;
   overflow: visible;
 }
-/* start-mask must stretch too */
+
 .staff-lines::after{
   content:"";
   position:absolute;
@@ -72,7 +69,7 @@
   z-index: 2;
 }
 
-/* SVG fills expanded area */
+
 .staff-svg{
   position:absolute;
   inset:0;
@@ -81,7 +78,7 @@
   overflow: visible;
 }
 
-/* stroke styling to match your old opacity variation */
+
 .staff-svg path{
   fill: none;
   stroke: rgba(0,0,0,.28);
@@ -97,7 +94,7 @@
 
 .staff-svg path.line-3{ stroke: rgba(0,0,0,.32); }
 
-/* Lift the hovered note in sync (JS updates --wave-lift) */
+
 .note-block{
   --wave-lift: 0px;
 }
@@ -132,7 +129,7 @@
 }
 
 
-/* ---------- INTRO (text + photo) ---------- */
+
 .intro-block{
   position: relative;
   z-index: 2;
@@ -156,7 +153,7 @@
   z-index: 2;
 }
 
-/* ---------- LONG STAFF CONTENT ---------- */
+
 .staff-track{
   position: relative;
   z-index: 2;
@@ -173,7 +170,7 @@
   transition: color .18s ease, text-shadow .18s ease, transform .18s ease;
 }
 
-/* On hover, set title to the category color */
+
 .note-block:hover .note-title{
   color: var(--note-color, #000);
   transform: translateY(-2px);
@@ -184,12 +181,12 @@
   grid-template-rows: 1fr auto 1fr;
   align-items: center;
   justify-items: center;
-  height: min(68vh, 820px);  /* prevents extreme clipping on tall screens */
+  height: min(68vh, 820px); 
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-    overflow: visible !important; /* ← THIS IS REQUIRED */
+    overflow: visible !important;
 
   
 }
@@ -202,30 +199,30 @@
   transition: transform .18s ease, filter .18s ease;
 }
 
-/* On hover: keep your scale and apply tint filter */
+
 .note-block:hover .note-img{
   transform: translateY(var(--note-offset, 0px)) scale(1.08);
   filter: var(--note-filter, none);
 }
-/* Education = Red */
+
 .note-block[data-category="education"]{
   --note-color: #ff2d2d;
   --note-filter: brightness(1.05) saturate(1.6) hue-rotate(-10deg);
 }
 
-/* Skills = Yellow */
+
 .note-block[data-category="skills"]{
   --note-color: #ffd000;
   --note-filter: brightness(1.12) saturate(2.2) hue-rotate(35deg);
 }
 
-/* Work = Purple */
+
 .note-block[data-category="work"]{
   --note-color: #8b3dff;
   --note-filter: brightness(1.05) saturate(1.9) hue-rotate(230deg);
 }
 
-/* Contact = Blue */
+
 .note-block[data-category="contact"]{
   --note-color: #1e66ff;
   --note-filter: brightness(1.03) saturate(1.8) hue-rotate(200deg);
@@ -247,22 +244,22 @@
 .label.bottom { grid-row: 3; align-self: start; transform: translateY( 2px); -webkit-transform: translateY( 2px); -moz-transform: translateY( 2px); -ms-transform: translateY( 2px); -o-transform: translateY( 2px); }
 
 
-/* ---------- SCRUBBER (sticky inside About) ---------- */
+
 .about-scrubber{
   position: sticky;
   top: 0;
   z-index: 5;
   width: min(900px, 86vw);
   height: 12px;
-  padding: 0 auto 100px;  /* small gap below bar */
+  padding: 0 auto 100px; 
   display: grid;
   align-items: center;
   opacity: 0;
   pointer-events: none;
   transition: opacity .25s ease;
-    margin: 0 auto;          /* ✅ centers it */
-  justify-self: center;    /* harmless if grid ever returns */
-  padding-top: 50px;    /* space from top edge */
+    margin: 0 auto;         
+  justify-self: center;   
+  padding-top: 50px;   
 
 }
 .about-scrubber.visible{
@@ -280,7 +277,7 @@
   position: absolute;
   top: 0; left: 0;
   height: 100%;
-  width: 80px;                 /* JS will size it */
+  width: 80px;                
   background: rgba(0,0,0,.45);
   border-radius: 999px;
   cursor: pointer;
@@ -289,28 +286,28 @@
 }
 .about-scrubber__thumb:hover{ background: rgba(0,0,0,.6); }
 
-/* ===== ABOUT MODAL: container & backdrop ===== */
+
 .about-modal[hidden]{ display:none; }
 .about-modal{
   position:absolute; inset:0; z-index:60;
   display:grid; place-items:center;
 }
 
-/* Keep backdrop clear/blur-only (no darkening) */
+
 .about-modal__backdrop{
   position:absolute; inset:0;
   background: transparent;
   backdrop-filter: blur(3px);
 }
 
-/* ===== Dialog card ===== */
+
 .about-modal__dialog{
   position:relative;
-  width:min(1200px, 96vw);        /* wider */
+  width:min(1200px, 96vw);       
   max-height:min(86vh, 1100px);
   overflow:auto;
 
-  /* Minimal, airy white card */
+ 
   background:#fff;
   color:#141414;
   border-radius:24px;
@@ -319,24 +316,24 @@
     0 40px 120px rgba(0,0,0,.10);
   padding: clamp(22px, 2.8vw, 40px);
 
-  /* Start state for animation */
+ 
   opacity:0;
   transform: translateY(12px) scale(.985);
   animation: modal-in .28s cubic-bezier(.2,.7,.2,1) forwards;
 }
 
-/* Closing animation state toggled by JS */
+
 .about-modal.closing .about-modal__dialog{
   animation: modal-out .22s ease forwards;
 }
 
-/* Motion safety */
+
 @media (prefers-reduced-motion: reduce){
   .about-modal__dialog{ animation:none; opacity:1; transform:none; }
   .about-modal.closing .about-modal__dialog{ animation:none; }
 }
 
-/* Keyframes */
+
 @keyframes modal-in{
   from{ opacity:0; transform: translateY(12px) scale(.985); }
   to  { opacity:1; transform: translateY(0) scale(1); }
@@ -346,7 +343,7 @@
   to  { opacity:0; transform: translateY(8px) scale(.985); }
 }
 
-/* Close button: subtle + visible on white */
+
 .about-modal__close{
   position:absolute; top:12px; right:14px;
   background:transparent; border:none; cursor:pointer;
@@ -355,14 +352,14 @@
 }
 .about-modal__close:hover{ opacity:1; transform: scale(1.05); }
 
-/* ===== Content styling (minimal & aesthetic) ===== */
+
 #about-modal-body{
-  /* limit line length for comfy reading */
+ 
   max-width: 980px;
   margin: 0 auto;
 }
 
-/* Title: sticky & with subtle divider */
+
 #about-modal-body h3{
   position: sticky; top: 0; z-index: 2;
   background:#fff;
@@ -380,7 +377,7 @@
   color:#111;
 }
 
-/* Body text & lists */
+
 #about-modal-body p,
 #about-modal-body li{
   font: 400 clamp(13px,1vw,16px) "Inter", system-ui;
@@ -389,22 +386,22 @@
 }
 #about-modal-body ul{ padding-left: 18px; }
 
-/* Section spacing: compact but tidy */
+
 #about-modal-body article{ margin: 10px 0 14px; }
 
-/* Subtle separators between major groups (e.g., skills categories) */
+
 #about-modal-body .group{
   padding: 8px 0 14px;
   border-top: 1px solid rgba(0,0,0,.06);
   margin-top: 10px;
 }
 
-/* ===== Icon grids (skills) ===== */
+
 .skills-grid{
   list-style:none;
   display:grid;
   grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
-  gap: 14px 24px;                 /* tighter vertical spacing */
+  gap: 14px 24px;                
   padding: 6px 0 2px;
   margin: 6px 0 12px;
   justify-items:center;
@@ -413,7 +410,7 @@
   display:flex; align-items:center; justify-content:center;
 }
 .skills-grid img{
-  width: 96px; height:96px;        /* larger icons */
+  width: 96px; height:96px;       
   object-fit: contain; user-select:none;
   transform: translateZ(0);
   transition: transform .18s ease, filter .18s ease;
@@ -429,12 +426,12 @@
   --wave-tilt: 0deg;
 }
 
-/* Apply the motion to the WHOLE block so title+note move together */
+
 .note-block.wave-active{
   transform: translateX(var(--wave-drift-x));
 }
 
-/* Image follows the crest (lift) */
+
 .note-block.wave-active .note-img{
   transform:
     translateY(calc(var(--note-offset, 0px) - var(--wave-lift)))
@@ -442,7 +439,7 @@
     scale(1.08);
 }
 
-/* Title follows too (same lift direction but slightly less) */
+
 .note-block.wave-active .note-title{
   transform:
     translateY(calc(-2px - min(70px, (var(--wave-lift) * 0.22))))

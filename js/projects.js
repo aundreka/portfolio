@@ -1,4 +1,4 @@
-//projects.js
+
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.querySelector("#projects.projects");
   if (!root) return;
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  /* ---------- sizing knobs (accordion) ---------- */
+ 
   pianoHost.style.setProperty("--open-w", "1300px");
   pianoHost.style.setProperty("--key-w", "190px");
   pianoHost.style.setProperty("--key-w-small", "120px");
@@ -25,9 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const CATEGORIES = ["All","apps","websites","games","ai/ml","ui/ux"];
 
 const PROJECTS = [
-  /* =====================
-     APPS
-     ===================== */
+ 
   {
     title: "PRISM — Social Media Auto-Posting + Analytics",
     description:
@@ -139,9 +137,7 @@ const PROJECTS = [
     media: { big: "", midTop: "", midBottom: "", tall: "" },
   },
 
-  /* =====================
-     GAMES
-     ===================== */
+ 
   {
     title: "Ju-On Horror Game — Survivable Visual-Novel Style",
     description:
@@ -187,9 +183,7 @@ const PROJECTS = [
     media: { big: "", midTop: "", midBottom: "", tall: "" },
   },
 
-  /* =====================
-     WEBSITES
-     ===================== */
+ 
   {
     title: "Beth Aven — Website / Landing Page",
     description:
@@ -268,9 +262,7 @@ const PROJECTS = [
     media: { big: "", midTop: "", midBottom: "", tall: "" },
   },
 
-  /* =====================
-     AI / ML (added 3)
-     ===================== */
+ 
   {
     title: "PRISM — Analytics Intelligence (AI/ML Extension)",
     description:
@@ -305,9 +297,7 @@ const PROJECTS = [
     media: { big: "", midTop: "", midBottom: "", tall: "" },
   },
 
-  /* =====================
-     UI / DESIGN
-     ===================== */
+ 
   {
     title: "Gabriel — UI System + Visual Polish",
     description:
@@ -349,7 +339,7 @@ const PROJECTS = [
   const NOTE_BASE = "assets/music/notes";
   const HOVER_COOLDOWN_MS = 120;
 
-  // --- animation knobs ---
+  
   const KEY_ANIM_MS = 520;
   const NOTE_ANIM_MS = 380;
 
@@ -384,15 +374,13 @@ const PROJECTS = [
     return NOTE_LETTERS[hash % NOTE_LETTERS.length];
   }
 
-  // black key pattern: 2, gap, 3, gap
+  
   function boundaryHasBlack(boundaryIndex) {
     const mod = boundaryIndex % 7;
     return mod === 0 || mod === 1 || mod === 3 || mod === 4 || mod === 5;
   }
 
-  /* -----------------------------
-     AUDIO
-     ----------------------------- */
+ 
   const audioCache = new Map();
   let audioUnlocked = false;
 
@@ -429,15 +417,13 @@ const PROJECTS = [
 
   root.addEventListener("pointerdown", unlockAudioOnce, { once: true });
 
-  /* -----------------------------
-     FILTER MENUS
-     ----------------------------- */
+ 
 function clearMenus() {
   clearMenusAnimated();
 }
 
 function openMenu(which) {
-  // close the other one instantly (no overlap), open target
+  
   if (which === "language") closeMenuAnimated(catFilter);
   if (which === "category") closeMenuAnimated(langFilter);
 
@@ -459,7 +445,7 @@ const MENU_ANIM_MS = 180;
 function closeMenuAnimated(filterEl) {
   if (!filterEl.classList.contains("is-open")) return;
 
-  // If already closing, don’t double-run
+  
   if (filterEl.classList.contains("is-closing")) return;
 
   filterEl.classList.add("is-closing");
@@ -475,7 +461,7 @@ function clearMenusAnimated() {
   closeMenuAnimated(catFilter);
 }
 function renderMenu(menuEl, items, onPick) {
-  // Keep the menu container stable; animate only the inner content.
+  
   menuEl.innerHTML = "";
 
   const inner = document.createElement("div");
@@ -521,20 +507,18 @@ catFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
   toggleMenu("category");
 });
 
-/* ✅ Close when clicking anywhere outside the filters (even outside #projects) */
+
 document.addEventListener("pointerdown", (e) => {
   if (langFilter.contains(e.target) || catFilter.contains(e.target)) return;
   clearMenusAnimated();
 });
 
-  /* -----------------------------
-     NOTE PANEL
-     ----------------------------- */
+ 
  function buildNotePanel(project) {
   const note = document.createElement("div");
   note.className = "note";
 
-  // slide RIGHT (from left → to position) + fade in
+  
   note.style.opacity = "0";
   note.style.transform = "translateX(-18px)";
   note.style.transition = `opacity ${NOTE_ANIM_MS}ms ease, transform ${NOTE_ANIM_MS}ms ease`;
@@ -589,7 +573,7 @@ document.addEventListener("pointerdown", (e) => {
   note.appendChild(title);
   note.appendChild(langs);
 
-  // trigger enter animation next frame
+  
   requestAnimationFrame(() => {
     note.style.opacity = "1";
     note.style.transform = "translateX(0)";
@@ -608,14 +592,11 @@ document.addEventListener("pointerdown", (e) => {
     return Math.max(filtered.length, baseline);
   }
 
-  /* -----------------------------
-     BLACK KEYS — extend to end
-     Fix: black layer width must match the FULL scroll width (not just visible area)
-     ----------------------------- */
+ 
   function syncBlackLayerSize(track) {
     const layer = track.querySelector(".blacklayer");
     if (!layer) return;
-    // Ensure layer spans entire piano track width
+    
     const fullW = track.scrollWidth || track.getBoundingClientRect().width;
     layer.style.width = `${fullW}px`;
   }
@@ -631,7 +612,7 @@ document.addEventListener("pointerdown", (e) => {
     const keyW = firstKey ? firstKey.getBoundingClientRect().width : 190;
     const blackW = 74;
 
-    // build keys all the way through the last boundary
+    
     for (let i = 0; i < keyCount - 1; i++) {
       if (!boundaryHasBlack(i)) continue;
 
@@ -647,7 +628,7 @@ document.addEventListener("pointerdown", (e) => {
 
     track.appendChild(layer);
 
-    // IMPORTANT: extend layer to full track length (so blacks reach the end)
+    
     syncBlackLayerSize(track);
   }
 
@@ -677,7 +658,7 @@ document.addEventListener("pointerdown", (e) => {
 
   function applyKeyTransitions(track) {
     track.querySelectorAll(".piano-key").forEach((k) => {
-      // smooth accordion open/close even if CSS changes widths/flex-basis
+      
       k.style.transition = `flex-basis ${KEY_ANIM_MS}ms ease, width ${KEY_ANIM_MS}ms ease, transform ${KEY_ANIM_MS}ms ease`;
       k.style.willChange = "flex-basis,width,transform";
     });
@@ -733,7 +714,7 @@ document.addEventListener("pointerdown", (e) => {
       buildBlackLayer(track, KEY_COUNT);
       hideBlackKeysInsideOpen(track);
 
-      // In case accordion changes scrollWidth after layout settles
+      
       requestAnimationFrame(() => {
         syncBlackLayerSize(track);
         hideBlackKeysInsideOpen(track);
@@ -741,9 +722,7 @@ document.addEventListener("pointerdown", (e) => {
     });
   }
 
-  /* -----------------------------
-     Hover sound
-     ----------------------------- */
+ 
   pianoHost.addEventListener("pointermove", (e) => {
     const el = document.elementFromPoint(e.clientX, e.clientY);
     const key = el?.closest?.(".piano-key");
@@ -770,9 +749,7 @@ document.addEventListener("pointerdown", (e) => {
     state.lastHoverSlot = null;
   });
 
-  /* -----------------------------
-     Click open/close + drag scroll
-     ----------------------------- */
+ 
   let isDown = false;
   let startX = 0;
   let startScrollLeft = 0;
@@ -817,11 +794,11 @@ document.addEventListener("pointerdown", (e) => {
 
     playNote(pickNoteLetter(project, slot));
 
-    // toggle open/close
+    
     state.openIndex = (state.openIndex === slot) ? null : slot;
     render();
 
-    // only scroll into view if opening
+    
     if (state.openIndex !== null) {
       const opened = pianoHost.querySelector(`.piano-key[data-slot="${slot}"]`);
       opened?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
@@ -840,18 +817,14 @@ document.addEventListener("pointerdown", (e) => {
     render();
   });
 
-  /* -----------------------------
-     Wheel behavior FIX
-     ----------------------------- */
+ 
   pianoHost.addEventListener("wheel", (e) => {
     const absX = Math.abs(e.deltaX);
     const absY = Math.abs(e.deltaY);
     if (absX > absY) return;
   }, { passive: true });
 
-  /* -----------------------------
-     Projects snap-to-center
-     ----------------------------- */
+ 
   let lastScrollY = window.scrollY;
   let snapLock = false;
   let lastSnapAt = 0;
@@ -890,14 +863,12 @@ document.addEventListener("pointerdown", (e) => {
 
   io.observe(root);
 
-  /* -----------------------------
-     INIT
-     ----------------------------- */
+ 
   langValueEl.textContent = state.language;
   catValueEl.textContent = state.category;
 
   render();
-// ✅ Allow other scripts (index.js) to set filters programmatically
+
 window.ProjectsPiano = window.ProjectsPiano || {};
 
 window.ProjectsPiano.setCategory = (cat) => {
@@ -928,10 +899,10 @@ window.ProjectsPiano.resetFilters = () => {
   render();
 };
 
-  // keep black layer stretched on resize (and after accordion layout changes)
+  
   window.addEventListener("resize", () => { render(); });
 
-  // optional: if your track width changes after fonts/images load, stretch black layer again
+  
   window.addEventListener("load", () => {
     const track = pianoHost.querySelector(".piano-track");
     if (!track) return;

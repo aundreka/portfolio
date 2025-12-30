@@ -1,17 +1,17 @@
-/* entrance-anim.css */
+
 :root{
   --drop-duration: 650ms;
   --bounce-duration: 520ms;
-  --stagger: 120ms;    /* ms between pianos */
-  --cat-extra: 220ms;  /* extra delay before cat */
+  --stagger: 120ms;   
+  --cat-extra: 220ms; 
   --bounce-1: -14px;
   --bounce-2: -6px;
 }
 
-/* Only active during the intro */
+
 @media (prefers-reduced-motion: no-preference) {
   .intro-active .intro-target {
-    /* JS sets: --startY (negative px above viewport), --finalTF (matrix/transform string) */
+   
     opacity: 0;
     transform: translate3d(0, var(--startY, -140px), 0) rotateX(6deg) var(--finalTF, none);
     will-change: transform, opacity;
@@ -37,7 +37,7 @@
   }
 }
 
-/* Respect reduced motion */
+
 @media (prefers-reduced-motion: reduce) {
   .intro-target { opacity: 1 !important; transform: none !important; }
 }

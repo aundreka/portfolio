@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aundreka Perez - Portfolio</title>
 
-    <!-- Styles -->
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/entrance.css" />
     <link rel="stylesheet" href="css/about.css" />
@@ -14,7 +13,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
 
-    <!-- model-viewer -->
     <script
       type="module"
       src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
@@ -24,7 +22,6 @@
   <body>
     <div class="background-wrapper">
 
-    <!-- FLOATING BUBBLE BACKGROUND (used by applyBackgroundTheme in js/index.js) -->
     <div class="background" aria-hidden="true">
       <span></span><span></span><span></span><span></span><span></span>
       <span></span><span></span><span></span><span></span><span></span>
@@ -32,7 +29,6 @@
       <span></span><span></span><span></span><span></span><span></span>
     </div>
 
-    <!-- (Optional) keep your previous gradient/gloss layer if you want -->
     <div class="bg-orbs" aria-hidden="true">
       <div class="bg-orbs__layer"></div>
       <div class="bg-orbs__gloss"></div>
@@ -78,13 +74,10 @@
     </main>
 
     <section id="about" class="about">
-      <!-- ONE horizontal scroller that contains everything -->
       <div class="about__scroller" id="aboutTrack">
         <div class="strip">
-          <!-- staff drawn across the whole strip -->
           <div class="staff-lines" aria-hidden="true"></div>
 
-          <!-- INTRO (text + photo) -->
           <div class="intro-block">
             <div class="intro-text">
               <p>
@@ -96,7 +89,6 @@
             <img src="assets/images/profile.png" alt="Aundreka Perez" class="intro-photo" />
           </div>
 
-          <!-- LONG STAFF CONTENT -->
          <div class="staff-track">
           <button
             class="note-block"
@@ -146,21 +138,17 @@
         </div>
       </div>
 
-            <!-- Enhanced Modal with better structure -->
       <div id="about-modal" class="about-modal" hidden>
         <div class="about-modal__backdrop"></div>
         <div class="about-modal__dialog">
           <button class="about-modal__close" aria-label="Close modal"></button>
-          <!-- Content will be dynamically inserted here by JavaScript -->
           <div id="about-modal-body"></div>
         </div>
       </div>
     </section>
 
-    <!-- Placeholder for projects section if needed -->
    <section id="projects" class="projects">
       <div class="projects__wrap">
-        <!-- Top filter bar -->
         <div class="projects__topbar">
           <div class="projects__dot"></div>
 
@@ -186,16 +174,13 @@
           </div>
         </div>
 
-        <!-- Piano area -->
         <div class="projects_piano" id="projectsPiano">
-          <!-- JS renders keys / open-note layout here -->
         </div>
       </div>
     </section>
 
 `
 
-    <!-- Scripts -->
     <script src="js/index.js"></script>
     <script src="js/entrance.js" defer></script>
     <script src="js/about.js" defer></script>
