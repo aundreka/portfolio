@@ -709,8 +709,8 @@ const strength = amp / AMP_MAX;
 const lift = Math.pow(strength, 0.8) * AMP_MAX * 0.85;
 
 // --- DRIFT (horizontal sway) ---
-const driftTarget = Math.max(-10, Math.min(10, mouseVX * 0.25)) * strength;
-const tiltTarget  = Math.max(-10, Math.min(10, mouseVX * 0.45)) * strength;
+const driftTarget = Math.max(-10, Math.min(10, mouseVX * 0.45)) * strength;
+const tiltTarget  = Math.max(-10, Math.min(10, mouseVX * 0.65)) * strength;
 driftVel += (driftTarget - driftPos) * 0.05;
 driftVel *= 0.88;
 driftPos += driftVel;

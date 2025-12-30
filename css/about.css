@@ -6,38 +6,35 @@
   --staff-gap: 48px;
   --staff-thick: 2px;
   --staff-start-mask: calc(28vw + 210px);
-  
+    --staff-runway-top: 120px;     /* ✅ reduce this */
+  --staff-runway-bottom: 180px;  /* bottom can stay larger */
+
 }
 
 /* Section container */
 .about{
-  position: relative;
-  height: 100vh;
-  background: #fff;
-  /* let tall content (bottom labels) be visible */
-  overflow: visible;
-  isolation: isolate;
-
-  /* spacing around section */
-  margin-top: 100px;
-  margin-bottom: 100px;
-
-  /* reserve space for the sticky scrubber bar */
+  display: block !important;        /* kills display:grid */
+  place-items: unset !important;     /* kills centering */
+  height: auto !important;
+  min-height: 100vh;
   padding-top: var(--scrubber-space);
-  /* inner breathing room so bottom labels don't kiss the edge */
-  padding-bottom: 102px;
+  padding-bottom: 260px;            /* actual runway */
+  position: relative;
 }
 
 /* The horizontal scroller fills the remaining height.
    Keep this simple and predictable. */
 .about__scroller{
   width: 100%;
-  height: 100%;
-  position: relative;
+  min-height: 100vh;
+
+  position: relative;     /* important */
   overflow-x: auto;
   overflow-y: visible;
+
   scrollbar-width: none;
   -ms-overflow-style: none;
+  
 }
 .about__scroller::-webkit-scrollbar{ display: none; }
 
@@ -45,21 +42,21 @@
 .strip{
   position: relative;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: clamp(120px, 12vw, 220px);
-  padding: 0 clamp(32px, 4vw, 64px);
-}
 
+  padding:
+    var(--staff-runway-top)
+    clamp(32px, 4vw, 64px)
+    var(--staff-runway-bottom);
+}
 /* ---------- STAFF LINES ---------- */
 /* ---------- STAFF LINES (EXTRA TALL SAFE ZONE) ---------- */
 .staff-lines{
   position: absolute;
   left: 0;
   right: 0;
-
-  /* increase BOTH top and bottom space */
-  top: -680px;
-  bottom: -680px;
+  inset: 0;
 
   z-index: 1;
   pointer-events: none;
@@ -263,7 +260,10 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity .25s ease;
-  padding-bottom: 100px;  /* space below bar */
+    margin: 0 auto;          /* ✅ centers it */
+  justify-self: center;    /* harmless if grid ever returns */
+  padding-top: 50px;    /* space from top edge */
+
 }
 .about-scrubber.visible{
   opacity: 1;
