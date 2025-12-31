@@ -530,10 +530,10 @@ document.addEventListener("DOMContentLoaded", () => {
     
     let waveHoverEl = null;
     let isWaveActive = false;
-let tiltVel = 0;
-let tiltPos = 0;
-let driftVel = 0;
-let driftPos = 0;
+    let releaseT = 0;          // 0..1
+let releasing = false;
+const RELEASE_MS = 520;    // match your CSS release duration
+
 
     let amp = 0;
     let ampTarget = 0;
@@ -583,11 +583,70 @@ let driftPos = 0;
       lastMouseX = clamped;
       mouseX = clamped;
     }
+    let W = 1;      
+let SIGMA0 = 60; 
 
-    function renderBulge() {
+const gauss = (x, c, sigma) => {
+  const d = x - c;
+  return Math.exp(-(d * d) / (2 * sigma * sigma));
+};
+
+const edgeFade = (x) => {
+  const t = x / W;
+  const s = Math.sin(t * Math.PI);
+  return Math.pow(s, 0.9);
+};
+function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+function releaseBounce(t){
+  const fall = 1 - easeOutCubic(t);             
+  const bounce = 0.32 * Math.sin((t * Math.PI) * 3) * (1 - t); 
+  return Math.max(0, fall + bounce);
+}
+
+function rippleProfile(x, lineIdx) {
+  const activeStrength = isWaveActive ? 1 : (releasing ? releaseBounce(releaseT) : 0);
+  if (activeStrength <= 0) return 0;
+
+  const center = mouseX;
+
+  const lineBias = (lineIdx - 2) * 5;
+  const sigma = SIGMA0 * (1 + Math.abs(lineIdx - 2) * 0.06);
+  const L = sigma * (3.5 + lineIdx * 0.05);
+  const c = center + lineBias * 6;
+
+  const w0 = 25.0;
+  const w1 = 5.95 - lineIdx * 0.03;
+  const w2 = 1.54 - Math.abs(lineIdx - 2) * 0.04;
+
+  const asym = 2 * (lineIdx % 2 === 0 ? 1 : -1);
+
+  const g0 = gauss(x, c, sigma);
+  const gL =
+    gauss(x, c - L * (1.0 + asym), sigma * 1.03) +
+    gauss(x, c + L * (1.0 - asym), sigma * 0.98);
+  const g2 =
+    gauss(x, c - 2 * L * (1.0 + asym * 0.6), sigma * 1.08) +
+    gauss(x, c + 2 * L * (1.0 - asym * 0.6), sigma * 1.02);
+
+  const raw = w0 * g0 + w1 * gL + w2 * g2;
+  const norm = w0 + 2 * w1 + 2 * w2;
+
+  const base = raw / norm;
+
+  const peak = gauss(x, c, sigma * 0.95);
+  const PEAK_BOOST = 0.85;
+
+  return (base + PEAK_BOOST * peak) * activeStrength;
+}
+
+  function renderBulge() {
   const rect = staffLinesEl.getBoundingClientRect();
   const w = Math.max(1, rect.width);
   const h = Math.max(1, rect.height);
+
+  W = w;
+  SIGMA0 = Math.max(42, w * 0.01);
 
   svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
   const baseYs = staffBaseYs(h);
@@ -595,81 +654,18 @@ let driftPos = 0;
   const step = Math.max(18, Math.min(40, w / 42));
   const count = Math.ceil(w / step);
 
-  
-  const SIGMA0 = Math.max(42, w * 0.01);
-
-  const gauss = (x, c, sigma) => {
-    const d = x - c;
-    return Math.exp(-(d * d) / (2 * sigma * sigma));
-  };
-
-  const edgeFade = (x) => {
-    const t = x / w;
-    const s = Math.sin(t * Math.PI);
-    return Math.pow(s, 0.9);
-  };
-
-  const center = isWaveActive ? mouseX : -999999;
-
-  
-  
-  
-  function rippleProfile(x, lineIdx) {
-    if (!isWaveActive) return 0;
-
-    
-    const lineBias = (lineIdx - 2) * 5;              
-    const sigma = SIGMA0 * (1 + Math.abs(lineIdx - 2) * 0.06);
-    const L = sigma * (3.5 + lineIdx * 0.05);          
-    const c = center + lineBias * 6;                    
-
-    
-    const w0 = 25.00;                                     
-    const w1 = 5.95 - lineIdx * 0.03;                    
-    const w2 = 1.54 - Math.abs(lineIdx - 2) * 0.04;      
-
-    
-    const asym = 2 * (lineIdx % 2 === 0 ? 1 : -1);    
-
-    
-    const g0 = gauss(x, c, sigma);
-    const gL = gauss(x, c - L * (1.00 + asym), sigma * 1.03) + gauss(x, c + L * (1.00 - asym), sigma * 0.98);
-    const g2 = gauss(x, c - 2 * L * (1.00 + asym * 0.6), sigma * 1.08) + gauss(x, c + 2 * L * (1.00 - asym * 0.6), sigma * 1.02);
-
-    
-    const raw = (w0 * g0) + (w1 * gL) + (w2 * g2);
-
-    
-    const norm = w0 + 2 * w1 + 2 * w2;
-
-const base = raw / norm;
-
-
-const peak = gauss(x, c, sigma * 0.95); 
-const PEAK_BOOST = 0.85;                
-
-return base + PEAK_BOOST * peak;  }
-
   for (let line = 0; line < 5; line++) {
     const y0 = baseYs[line];
-
-    
     const lineScale = 1 - (Math.abs(line - 2) * 0.07);
 
     const pts = [];
     for (let i = 0; i <= count; i++) {
       const x = (i / count) * w;
 
-      if (!isWaveActive) {
-        pts.push({ x, y: y0 });
-        continue;
-      }
+
 
       const env = rippleProfile(x, line) * edgeFade(x);
-
-      
       const y = y0 - (amp * lineScale * env);
-
       pts.push({ x, y });
     }
 
@@ -677,38 +673,98 @@ return base + PEAK_BOOST * peak;  }
   }
 }
 
+function wrapTitleLetters(titleEl){
+  if (!titleEl) return;
+  if (titleEl.dataset.lettersWrapped === "1") return;
+
+  const text = titleEl.textContent || "";
+  titleEl.textContent = "";
+
+  for (const ch of text) {
+    const span = document.createElement("span");
+    span.className = "letter";
+    // keep spaces visually
+    span.innerHTML = ch === " " ? "&nbsp;" : ch;
+    titleEl.appendChild(span);
+  }
+
+  titleEl.dataset.lettersWrapped = "1";
+}
+
+noteBlocks.forEach((b) => wrapTitleLetters(b.querySelector(".note-title")));
+
     function tick(now) {
       const dt = Math.min(0.05, (now - lastT) / 1000);
       lastT = now;
 
       amp += (ampTarget - amp) * (1 - Math.pow(1 - SMOOTH, dt * 60));
-
+if (!isWaveActive && releasing) {
+  releaseT += (dt * 1000) / RELEASE_MS;  
+  if (releaseT >= 1) {
+    releaseT = 1;
+    releasing = false;
+  }
+}
       renderBulge();
 
       if (waveHoverEl) {
+  const rect = staffLinesEl.getBoundingClientRect();
+  const w = Math.max(1, rect.width);
 
-const strength = amp / AMP_MAX;
+  const strength = amp / AMP_MAX;
 
-
-const lift = Math.pow(strength, 0.8) * AMP_MAX * 0.85;
-
-
-const driftTarget = Math.max(-10, Math.min(10, mouseVX * 0.45)) * strength;
-const tiltTarget  = Math.max(-10, Math.min(10, mouseVX * 0.65)) * strength;
-driftVel += (driftTarget - driftPos) * 0.05;
-driftVel *= 0.88;
-driftPos += driftVel;
+  const elCenterX = (el) => {
+    const r = el.getBoundingClientRect();
+    return (r.left + r.width / 2) - rect.left;
+  };
 
 
-tiltVel += (tiltTarget - tiltPos) * 0.045;
-tiltVel *= 0.90;
-tiltPos += tiltVel;
+const envAt = (x) => {
+  const clampedX = Math.max(0, Math.min(x, W));
+  return rippleProfile(clampedX, 2) * edgeFade(clampedX);
+};
+  const imgs = waveHoverEl.querySelectorAll(".note-img");
+  imgs.forEach((img) => {
+    const x = elCenterX(img);
+    const env = envAt(x);
 
-waveHoverEl.style.setProperty("--wave-lift", `${lift}px`);
-waveHoverEl.style.setProperty("--wave-drift-x", `${driftPos}px`);
-waveHoverEl.style.setProperty("--wave-tilt", `${tiltPos}deg`);
+    const lift = (amp * 0.85) * env;
 
-     }
+    const driftTarget = Math.max(-10, Math.min(10, mouseVX * 0.45)) * strength * env;
+    const tiltTarget  = Math.max(-10, Math.min(10, mouseVX * 0.65)) * strength * env;
+
+    const curD = parseFloat(img.style.getPropertyValue("--wave-drift-x")) || 0;
+    const curT = parseFloat((img.style.getPropertyValue("--wave-tilt") || "0").replace("deg","")) || 0;
+
+    const nextD = curD + (driftTarget - curD) * 0.18;
+    const nextT = curT + (tiltTarget  - curT) * 0.16;
+
+    img.style.setProperty("--wave-lift", `${lift}px`);
+    img.style.setProperty("--wave-drift-x", `${nextD}px`);
+    img.style.setProperty("--wave-tilt", `${nextT}deg`);
+  });
+
+  const letters = waveHoverEl.querySelectorAll(".note-title .letter");
+  letters.forEach((sp) => {
+    const x = elCenterX(sp);
+    const env = envAt(x);
+
+    const lift = (amp * 0.22) * env;
+
+    const driftTarget = Math.max(-8, Math.min(8, mouseVX * 0.30)) * strength * env;
+    const tiltTarget  = Math.max(-8, Math.min(8, mouseVX * 0.40)) * strength * env;
+
+    const curD = parseFloat(sp.style.getPropertyValue("--l-drift-x")) || 0;
+    const curT = parseFloat((sp.style.getPropertyValue("--l-tilt") || "0").replace("deg","")) || 0;
+
+    const nextD = curD + (driftTarget - curD) * 0.20;
+    const nextT = curT + (tiltTarget  - curT) * 0.18;
+
+    sp.style.setProperty("--l-lift", `${lift}px`);
+    sp.style.setProperty("--l-drift-x", `${nextD}px`);
+    sp.style.setProperty("--l-tilt", `${nextT}deg`);
+  });
+}
 
       requestAnimationFrame(tick);
     }
@@ -716,33 +772,47 @@ waveHoverEl.style.setProperty("--wave-tilt", `${tiltPos}deg`);
 
     
     noteBlocks.forEach((btn) => {
-      btn.addEventListener("mouseenter", (e) => {
-        isWaveActive = true;
-        ampTarget = AMP_MAX;
-        waveHoverEl = btn;
-        btn.classList.add("wave-active");
-        setMouseXFromEvent(e);
-      });
+     btn.addEventListener("pointerenter", (e) => {
+  isWaveActive = true;
+  releasing = false;
+  releaseT = 0;
 
-      btn.addEventListener("mousemove", (e) => {
+  ampTarget = AMP_MAX;
+  waveHoverEl = btn;
+  btn.classList.add("wave-active");
+  setMouseXFromEvent(e);
+});
+
+      btn.addEventListener("pointermove", (e) => {
         if (!isWaveActive) return;
         setMouseXFromEvent(e);
       });
 
-btn.addEventListener("mouseleave", () => {
+btn.addEventListener("pointerleave", () => {
   isWaveActive = false;
+  releasing = true;
+  releaseT = 0;
+
   ampTarget = 0;
 
   btn.classList.remove("wave-active");
   btn.classList.add("wave-releasing");
-
   
-  setTimeout(() => {
-    btn.classList.remove("wave-releasing");
-    btn.style.setProperty("--wave-lift", `0px`);
-    btn.style.setProperty("--wave-drift-x", `0px`);
-    btn.style.setProperty("--wave-tilt", `0deg`);
-  }, 520);
+ setTimeout(() => {
+  btn.classList.remove("wave-releasing");
+
+  btn.querySelectorAll(".note-img").forEach((img) => {
+    img.style.setProperty("--wave-lift", `0px`);
+    img.style.setProperty("--wave-drift-x", `0px`);
+    img.style.setProperty("--wave-tilt", `0deg`);
+  });
+
+  btn.querySelectorAll(".note-title .letter").forEach((sp) => {
+    sp.style.setProperty("--l-lift", `0px`);
+    sp.style.setProperty("--l-drift-x", `0px`);
+    sp.style.setProperty("--l-tilt", `0deg`);
+  });
+}, 520);
 
   if (waveHoverEl === btn) waveHoverEl = null;
 });
@@ -815,7 +885,7 @@ btn.addEventListener("mouseleave", () => {
   buttons.forEach((btn) => {
     if (btn.dataset.color) btn.style.setProperty("--note-color", btn.dataset.color);
 
-    btn.addEventListener("mouseenter", () => {
+    btn.addEventListener("pointerenter", () => {
       const src = btn.dataset.fx;
       if (!src) return;
 
