@@ -1,3 +1,7 @@
+/* ===============================
+   PROJECTS — Piano Section
+   =============================== */
+
 #projects.projects{
   position: relative;
   width: 100%;
@@ -6,14 +10,16 @@
   margin-top: 50px;
 }
 
-
+/* wrapper */
 #projects .projects__wrap{
   width: 100%;
   max-width: 100%;
   padding-bottom: 20px;
 }
 
-
+/* =========================
+   TOP BAR (dot + filters)
+   ========================= */
 #projects .projects__topbar{
   position: relative;
   height: 92px;
@@ -57,19 +63,36 @@
   letter-spacing: 0.06em;
 }
 
-#projects .filter__label{
-  font-size: 14px;
-  font-weight: 600;
-  color: #111;
-}
-
+#projects .filter__label,
 #projects .filter__value{
   font-size: 14px;
   font-weight: 600;
   color: #111;
 }
 
+/* hint */
+#projects .projects__hint{
+  margin-left: auto;
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: rgba(17,17,17,0.55);
 
+  user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
+
+  background: rgba(0,0,0,0.01);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 999px;
+  padding: 8px 12px;
+  margin-top: 30px;
+}
+
+/* =========================
+   FILTER MENU (fade open/close)
+   ========================= */
 #projects .filter__menu{
   position: absolute;
   top: calc(100% + 8px);
@@ -82,15 +105,30 @@
   box-shadow: 0 10px 0 rgba(0,0,0,0.06);
   z-index: 50;
 
- 
   display: block;
-
- 
-  pointer-events: none;
+  opacity: 0;
   visibility: hidden;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+  will-change: opacity;
 }
 
+#projects .filter[data-filter="category"] .filter__menu{
+  left: auto;
+  right: 0;
+}
 
+#projects .filter.is-open .filter__menu{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+#projects .filter.is-closing .filter__menu{
+  opacity: 0;
+  visibility: visible;
+  pointer-events: none;
+}
 
 #projects .filter__menu button,
 #projects .filter__menu .filter__item{
@@ -105,38 +143,21 @@
   font-size: 14px;
   border-bottom: 1px solid rgba(0,0,0,0.14);
 }
+
 #projects .filter__menu button:last-child,
 #projects .filter__menu .filter__item:last-child{
   border-bottom: 0;
 }
+
 #projects .filter__menu button:hover,
 #projects .filter__menu .filter__item:hover{
   background: #ffe266;
   font-weight: 700;
 }
-#projects .projects__hint{
-  margin-left: auto;       
-  align-self: flex-start;  
-  font-size: 12px;
-  font-weight: 300;
-  letter-spacing: 0.02em;
-  color: rgba(17,17,17,0.55);
 
-  user-select: none;
-  pointer-events: none;    
-  white-space: nowrap;
-}
-
-#projects .projects__hint{
-  background: rgba(0,0,0,0.01);
-  border: 1px solid rgba(0,0,0,0.05);
-  border-radius: 999px;
-  padding: 8px 12px;
-  margin-top: 30px;
-}
-
-
-
+/* =========================
+   PIANO SHELL
+   ========================= */
 #projects .projects_piano{
   position: relative;
   width: 100%;
@@ -145,25 +166,23 @@
   border-right: 2px solid #111;
   border-bottom: 2px solid #111;
 
-  overflow-x: auto;    
+  overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
   overscroll-behavior-x: contain;
-  touch-action: pan-x; 
+  touch-action: pan-x;
 }
 #projects .projects_piano::-webkit-scrollbar{ display:none; }
-
 
 #projects .piano-track{
   position: relative;
   display: flex;
   align-items: stretch;
   height: 760px;
-  width: max-content;    
-  min-width: 100%;       
+  width: max-content;
+  min-width: 100%;
 }
-
 
 #projects .piano-key{
   position: relative;
@@ -178,7 +197,6 @@
 
   transition: flex-basis 260ms ease, width 260ms ease, background-color 120ms ease;
 }
-
 #projects .piano-key:last-child{ border-right: 0; }
 
 #projects .key-title{
@@ -193,166 +211,297 @@
   white-space: pre-line;
 }
 
+#projects .piano-key.is-empty{ cursor: default; }
+#projects .piano-key.is-empty:hover{ background: #fff; }
+#projects .piano-key.is-empty .key-title{ opacity: 0; }
 
-#projects .piano-key.is-empty{
-  cursor: default;
-}
-#projects .piano-key.is-empty:hover{
-  background: #fff;
-}
-#projects .piano-key.is-empty .key-title{
-  opacity: 0;
-}
+#projects .piano-key:hover{ background: #ffe266; }
+#projects .piano-key:hover .key-title{ font-weight: 800; }
 
-
-#projects .piano-key:hover{
-  background: #ffe266;
-}
-#projects .piano-key:hover .key-title{
-  font-weight: 800;
-}
-
-
+/* accordion behavior */
 #projects .piano-track.is-accordion .piano-key{
   flex-basis: var(--key-w-small, 120px);
   width: var(--key-w-small, 120px);
 }
+
 #projects .piano-track.is-accordion .piano-key.is-open{
   flex-basis: var(--open-w, 70%);
   width: var(--open-w, 70%);
-  background: #fff;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(248, 248, 248, 0.96) 60%,
+    rgba(255, 255, 255, 1) 100%
+  );
 }
 
+#projects .piano-track.is-accordion .piano-key.is-open::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity: 0.06;
+  background-image: radial-gradient(rgba(0,0,0,0.35) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* =========================
+   HERO NOTE (OPEN KEY)
+   ========================= */
 #projects .note{
   position: relative;
   height: 100%;
   width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 0;
   background: #fff;
-  box-sizing: border-box;
-  padding: 22px 26px 22px 26px;
 }
 
-
-#projects .note__media{
-  height: 52%;                
-  margin: 0;
-  display: grid;
-  grid-template-columns: 1.55fr 0.7fr 0.55fr;
-  gap: 12px;
-}
-
-
-#projects .note__media .media--big,
-#projects .note__media .media--tall,
-#projects .note__media .media--mid > div{
-  border-radius: 18px;
-  background: #cbb4c0;
-  height: 100%;
-}
-#projects .note__media .media--mid{
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 12px;
-}
-
-
-#projects .note__desc{
-  position: absolute;
-  left: 26px;
-  right: 180px;    
-  bottom: 130px;    
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.5;
-  color: #111;
-  max-width: 760px;
-}
-
-#projects .note__title{
-  position: absolute;
-  left: 26px;
-  right: 180px;
-  bottom: 26px;
-  margin: 0;
-  font-size: 46px;
-  line-height: 1.05;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: #111;
-}
-
-
-#projects .note__langs{
-  position: absolute;
-  right: 26px;
-  bottom: 26px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-end;
-}
-#projects .note__langs img{
-  width: 34px;
-  height: 34px;
-  object-fit: contain;
-  display: block;
-}
-
-
-
-#projects .blacklayer{
+/* full image */
+#projects .note__bg{
   position: absolute;
   inset: 0;
-  pointer-events: none;  
-  z-index: 9;
+  background: #cbb4c0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1.02);
 }
 
-
-#projects .blacklayer .black-key{
-  position: absolute;
-  top: 0px;
-
-  width: 100px;
-  height: 430px;
-  border-radius: 18px;
-  background: #000;
+/* readability scrim */
+#projects .note__bg::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.58) 0%,
+    rgba(0,0,0,0.28) 48%,
+    rgba(0,0,0,0.10) 78%,
+    rgba(0,0,0,0.00) 100%
+  );
 }
 
+/* overlay layout */
+#projects .note__overlay{
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  padding: 22px 26px;
 
-
-@media (max-width: 1100px){
-  #projects .note,
-  #projects .project-note,
-  #projects .open-note{
-    width: 860px;
-  }
-  #projects .note__title,
-  #projects .project-note__title{
-    font-size: 40px;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
-@media (max-width: 900px){
-  #projects .piano-key,
-  #projects .piano,
-  #projects .projects_piano .key{
-    flex-basis: 108px;
-    width: 108px;
-  }
-  #projects .note,
-  #projects .project-note,
-  #projects .open-note{
-    left: 108px;
-    width: 760px;
-  }
+/* glass base */
+#projects .note__glass{
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.18),
+    inset 0 0 0 1px rgba(255,255,255,0.18);
 }
 
+/* row that holds left icons glass + right buttons */
+#projects .note__metaRow{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+/* =========================
+   ICONS GLASS (languages)
+   - less height (padding down)
+   - MORE rounded edges
+   - logos stay same size
+   ========================= */
+#projects .note__glass--icons{
+  padding: 6px 10px;                 /* less height */
+  background: rgba(20, 22, 26, 0.28);
+  border-radius: 30px;               /* more rounded */
+  flex: 0 0 auto;
+}
+
+#projects .note__icons{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 0;                    /* kills extra vertical whitespace */
+}
+
+#projects .note__iconItem{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+}
+
+#projects .note__iconImg{
+  width: 44px;                       /* logo size unchanged */
+  height: 44px;                      /* logo size unchanged */
+  object-fit: contain;
+  display: block;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.22));
+  -webkit-filter: drop-shadow(0 8px 14px rgba(0,0,0,0.22));
+}
+
+/* =========================
+   BUTTONS (GitHub/Docs/Website)
+   - remove the "half circle" artifact
+   - label only shows on hover (as a tooltip pill)
+   ========================= */
+#projects .note__btns{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* icon-only button (no pill/background when idle) */
+#projects .note__btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+
+  height: 44px;
+  min-width: 44px;          /* keeps icon-only size */
+  padding: 0;               /* no idle pill padding */
+  border-radius: 999px;
+
+  background: transparent;  /* no half-circle artifact */
+  text-decoration: none;
+  color: inherit;
+
+  overflow: hidden;         /* clean reveal */
+  transition: transform 160ms ease, opacity 160ms ease, padding 180ms ease;
+}
+
+/* icon image */
+#projects .note__btnIcon{
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
+  flex: 0 0 auto;
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+
+/* label behaves like a tooltip pill */
+#projects .note__btnLabel{
+  display: inline-block;
+  white-space: nowrap;
+
+  max-width: 0;             /* collapsed */
+  opacity: 0;
+  transform: translateX(-6px);
+
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.95);
+
+  background: rgba(20, 22, 26, 0.38);
+  border-radius: 999px;
+  padding: 8px 10px;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.18),
+    inset 0 0 0 1px rgba(255,255,255,0.14);
+
+  transition: max-width 220ms ease, opacity 160ms ease, transform 160ms ease;
+}
+
+#projects .note__btn:hover{
+  padding-right: 4px;       /* optional: small breathing room */
+  transform: translateY(-1px);
+}
+
+#projects .note__btn:hover .note__btnLabel{
+  max-width: 180px;         /* enough for “Website”, “Documentation”, etc. */
+  opacity: 1;
+  transform: translateX(0);
+}
+#projects .note__btn:active{
+  transform: translateY(0);
+  opacity: 0.95;
+}
+
+/* =========================
+   TEXT GLASS
+   ========================= */
+#projects .note__glass--text{
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  width: fit-content;
+  max-width: calc(100% - 52px);
+
+  padding: 20px 22px 18px 22px;
+  background: rgba(20, 22, 26, 0.32);
+  border-radius: 22px;
+  position: relative;
+}
+
+/* subtle highlight line */
+#projects .note__glass--text::before{
+  content:"";
+  position:absolute;
+  left: 18px;
+  right: 18px;
+  top: 12px;
+  height: 1px;
+  background: rgba(255,255,255,0.16);
+}
+
+/* title/desc */
+#projects .note__title{
+  margin: 0 0 10px 0;
+
+  font-family: "Abril Fatface", serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-size: 52px;
+  line-height: 1.02;
+  color: rgba(255,255,255,0.98);
+  text-shadow: 0 12px 26px rgba(0,0,0,0.40);
+
+  max-width: clamp(22ch, 48vw, 34ch);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+#projects .note__desc{
+  margin: 0;
+
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.92);
+  text-shadow: 0 10px 22px rgba(0,0,0,0.34);
+
+  max-width: clamp(36ch, 58vw, 62ch);
+}
+
+/* =========================
+   PROJECTS PIANO: background image hover
+   ========================= */
 #projects #projectsPiano.projects_piano{
   overflow-x: auto !important;
   overflow-y: hidden !important;
   touch-action: pan-x !important;
 }
-
 
 #projects #projectsPiano .piano-track{
   width: max-content !important;
@@ -368,66 +517,69 @@
   background-image: var(--hover-bg);
 }
 
-
 #projects #projectsPiano .piano-key.is-open{
   background-image: none !important;
+}
+
+/* =========================
+   BLACK KEYS LAYER
+   ========================= */
+#projects .blacklayer{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9;
+}
+
+#projects .blacklayer .black-key{
+  position: absolute;
+  top: 0px;
+  width: 100px;
+  height: 430px;
+  border-radius: 18px;
+  background: #000;
 }
 
 #projects .blacklayer .black-key.is-hidden{
   display: none !important;
 }
-#projects .filter{ position: relative; }
 
-#projects .filter__menu{
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  min-width: 220px;
-  max-height: 320px;
-  overflow: auto;
-  background: #fff;
-  border: 2px solid #111;
-  box-shadow: 0 10px 0 rgba(0,0,0,0.06);
-  z-index: 50;
-
-  display: block;
-
- 
-  opacity: 0;                
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 180ms ease;
-  will-change: opacity;
-}
-
-
-#projects .filter[data-filter="category"] .filter__menu{
-  left: auto;
-  right: 0;
-}
-
-
-#projects .filter__menuInner{
-  opacity: 1;
-  transform: none;
-}
-
-
-#projects .filter.is-open .filter__menu{
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-
-#projects .filter.is-closing .filter__menu{
+/* =========================
+   HERO GLASS ENTRANCE
+   ========================= */
+#projects .note--hero .note__glass{
   opacity: 0;
-  visibility: visible; 
-  pointer-events: none;
+  transform: translateY(14px);
+  transition: opacity 360ms ease, transform 360ms ease;
+  will-change: opacity, transform;
 }
 
+#projects .note--hero .note__glass--icons{ transition-delay: 70ms; }
+#projects .note--hero .note__glass--text{  transition-delay: 140ms; }
 
-#projects .filter__btn{
-  transition: none !important;
-  transform: none !important;
+#projects .note--hero .note__glass{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 1100px){
+  #projects .note__title{ font-size: 44px; }
+}
+
+@media (max-width: 900px){
+  #projects .note__overlay{ padding: 18px 18px; gap: 8px; }
+  #projects .note__title{ font-size: 36px; }
+  #projects .note__glass--text{ max-width: calc(100% - 36px); }
+}
+
+@media (max-width: 720px){
+  #projects .note__btns{ flex-wrap: wrap; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  #projects .note--hero .note__glass{
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

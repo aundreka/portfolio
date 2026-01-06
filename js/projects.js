@@ -27,18 +27,23 @@ document.addEventListener("DOMContentLoaded", () => {
 const PROJECTS = [
  
   {
-    title: "PRISM — Social Media Auto-Posting + Analytics",
+    title: "PRISM: Social Media Auto-Posting and Analytics",
     description:
       "A scheduling + analytics platform with a content calendar, performance tracking, and automation workflows.",
     language: "react native",
     category: "apps",
-    icons: ["react native", "expo", "javascript"],
+    icons: ["react native", "expo", "javascript", "sql", "ui/ux"],
     note: "c",
     keyBg: "assets/projects/prism/key.jpg",
-    media: { big: "", midTop: "", midBottom: "", tall: "" },
+    media: { big: "assets/projects/prism.jpg"},
+    links: {
+    github: "https://github.com/yourname/prism",
+    docs: "https://yourdomain.com/prism/docs",
+    website: "https://prism.yourdomain.com"
+  }
   },
   {
-    title: "SchedU — Teacher Assistant + Lesson Workflow Tool",
+    title: "SchedU: Teacher Assistant and Workflow Tool",
     description:
       "A school-focused productivity app for organizing lessons, generating classroom materials, and managing activities.",
     language: "react",
@@ -46,10 +51,10 @@ const PROJECTS = [
     icons: ["react", "javascript", "ui/ux"],
     note: "d",
     keyBg: "assets/projects/schedu/key.jpg",
-    media: { big: "", midTop: "", midBottom: "", tall: "" },
+    media: { big: "assets/projects/schedu.jpg"},
   },
   {
-    title: "iBotomo — Automation / Utility App",
+    title: "iBotomo: Automation and Utility App for Voting",
     description:
       "A utility-style app that streamlines repetitive tasks with simple flows, screens, and quick actions.",
     language: "kotlin",
@@ -352,7 +357,10 @@ const PROJECTS = [
   };
 
   const normalize = (s) => String(s || "").trim().toLowerCase();
-
+function isNoteInteractiveTarget(target) {
+  // anything clickable inside the opened note should not start drag capture
+  return !!target.closest(".note a, .note button, .note [role='button'], .note input, .note textarea, .note select");
+}
   function matchesFilters(project) {
     if (!project) return false;
     const langOk = state.language === "All" || normalize(project.language) === normalize(state.language);
@@ -514,66 +522,120 @@ document.addEventListener("pointerdown", (e) => {
 });
 
  
- function buildNotePanel(project) {
+function buildNotePanel(project) {
   const note = document.createElement("div");
-  note.className = "note";
+  note.className = "note note--hero";
 
-  
+  // keep your open animation
   note.style.opacity = "0";
   note.style.transform = "translateX(-18px)";
   note.style.transition = `opacity ${NOTE_ANIM_MS}ms ease, transform ${NOTE_ANIM_MS}ms ease`;
 
-  const media = document.createElement("div");
-  media.className = "note__media";
-
-  const big = document.createElement("div");
-  big.className = "media--big";
-
-  const mid = document.createElement("div");
-  mid.className = "media--mid";
-  const midTop = document.createElement("div");
-  const midBottom = document.createElement("div");
-  mid.appendChild(midTop);
-  mid.appendChild(midBottom);
-
-  const tall = document.createElement("div");
-  tall.className = "media--tall";
-
+  // pick ONE image (prefer media.big, fallback to keyBg)
   const m = project.media || {};
-  if (m.big) big.style.background = `url("${m.big}") center/cover no-repeat`;
-  if (m.midTop) midTop.style.background = `url("${m.midTop}") center/cover no-repeat`;
-  if (m.midBottom) midBottom.style.background = `url("${m.midBottom}") center/cover no-repeat`;
-  if (m.tall) tall.style.background = `url("${m.tall}") center/cover no-repeat`;
+  const heroSrc = m.big || project.keyBg || "";
 
-  media.appendChild(big);
-  media.appendChild(mid);
-  media.appendChild(tall);
+  const bg = document.createElement("div");
+  bg.className = "note__bg";
+  if (heroSrc) bg.style.backgroundImage = `url("${heroSrc}")`;
 
-  const desc = document.createElement("p");
-  desc.className = "note__desc";
-  desc.textContent = project.description || "This is the project description.";
+  const overlay = document.createElement("div");
+  overlay.className = "note__overlay";
+
+  const textGlass = document.createElement("div");
+  textGlass.className = "note__glass note__glass--text";
 
   const title = document.createElement("h2");
   title.className = "note__title";
   title.textContent = project.title || "This is the Project Title";
 
-  const langs = document.createElement("div");
-  langs.className = "note__langs";
+  const desc = document.createElement("p");
+  desc.className = "note__desc";
+  desc.textContent = project.description || "This is the project description.";
 
-  const icons = Array.isArray(project.icons) ? project.icons : [];
-  icons.slice(0, 6).forEach((iconKey) => {
-    const img = document.createElement("img");
-    img.alt = String(iconKey);
-    img.src = `assets/icons/${iconKey}.png`;
-    langs.appendChild(img);
+  textGlass.appendChild(title);
+  textGlass.appendChild(desc);
+
+// --- bottom row wrapper (two separate glasses) ---
+const metaRow = document.createElement("div");
+metaRow.className = "note__metaRow";
+
+/* LEFT: icons glass */
+const iconsGlass = document.createElement("div");
+iconsGlass.className = "note__glass note__glass--icons";
+
+const iconsWrap = document.createElement("div");
+iconsWrap.className = "note__icons";
+
+const icons = Array.isArray(project.icons) ? project.icons : [];
+icons.slice(0, 6).forEach((iconKey) => {
+  // each icon in its own container (no label hover)
+  const item = document.createElement("div");
+  item.className = "note__iconItem";
+
+  const img = document.createElement("img");
+  img.className = "note__iconImg";
+  img.alt = String(iconKey);
+  img.src = `assets/icons/${iconKey}.png`;
+
+  item.appendChild(img);
+  iconsWrap.appendChild(item);
+});
+
+iconsGlass.appendChild(iconsWrap);
+
+// buttons group (NO GLASS CONTAINER)
+const links = project.links || {};
+const btnWrap = document.createElement("div");
+btnWrap.className = "note__btns";
+
+const makeBtn = (label, href, iconSrc) => {
+  if (!href) return null;
+
+  const a = document.createElement("a");
+  a.className = "note__btn";
+  a.href = href;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  a.setAttribute("aria-label", label);
+
+  // IMPORTANT: prevent parent click handlers from hijacking the click
+  a.addEventListener("click", (e) => {
+    e.stopPropagation(); // don't let the piano key / note handlers eat it
+    // bulletproof open (in case something else prevents default)
+    window.open(href, "_blank", "noopener,noreferrer");
   });
 
-  note.appendChild(media);
-  note.appendChild(desc);
-  note.appendChild(title);
-  note.appendChild(langs);
+  const ic = document.createElement("img");
+  ic.className = "note__btnIcon";
+  ic.src = iconSrc;
+  ic.alt = "";
+  a.appendChild(ic);
 
-  
+  const t = document.createElement("span");
+  t.className = "note__btnLabel";
+  t.textContent = label;
+  a.appendChild(t);
+
+  return a;
+};
+
+
+const gh = makeBtn("GitHub", links.github, "assets/icons/github.png");
+const dc = makeBtn("Docs", links.docs, "assets/icons/document.png");
+const ws = makeBtn("Website", links.website, "assets/icons/website.png");
+[gh, dc, ws].forEach((b) => b && btnWrap.appendChild(b));
+
+// meta row: icons glass + buttons (no container)
+metaRow.appendChild(iconsGlass);
+if (btnWrap.childElementCount) metaRow.appendChild(btnWrap);
+
+// overlay order
+overlay.appendChild(metaRow);
+overlay.appendChild(textGlass);
+
+note.appendChild(bg);
+note.appendChild(overlay);
   requestAnimationFrame(() => {
     note.style.opacity = "1";
     note.style.transform = "translateX(0)";
@@ -756,54 +818,61 @@ document.addEventListener("pointerdown", (e) => {
   let moved = 0;
   const DRAG_THRESHOLD = 6;
 
-  pianoHost.addEventListener("pointerdown", (e) => {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
-    isDown = true;
-    startX = e.clientX;
-    startScrollLeft = pianoHost.scrollLeft;
-    moved = 0;
-    pianoHost.setPointerCapture?.(e.pointerId);
-  });
+pianoHost.addEventListener("pointerdown", (e) => {
+  // ✅ allow links/buttons inside note to work normally
+  if (isNoteInteractiveTarget(e.target)) return;
 
-  pianoHost.addEventListener("pointermove", (e) => {
-    if (!isDown) return;
-    const dx = e.clientX - startX;
-    moved = Math.max(moved, Math.abs(dx));
-    if (moved > DRAG_THRESHOLD) {
-      pianoHost.scrollLeft = startScrollLeft - dx;
-    }
-  });
+  if (e.pointerType === "mouse" && e.button !== 0) return;
+  isDown = true;
+  startX = e.clientX;
+  startScrollLeft = pianoHost.scrollLeft;
+  moved = 0;
+  pianoHost.setPointerCapture?.(e.pointerId);
+});
 
-  pianoHost.addEventListener("pointerup", (e) => {
-    if (!isDown) return;
+pianoHost.addEventListener("pointermove", (e) => {
+  if (!isDown) return;
+  const dx = e.clientX - startX;
+  moved = Math.max(moved, Math.abs(dx));
+  if (moved > DRAG_THRESHOLD) {
+    pianoHost.scrollLeft = startScrollLeft - dx;
+  }
+});
+
+pianoHost.addEventListener("pointerup", (e) => {
+  // ✅ if they clicked inside note (links/buttons), don't treat it as piano click
+  if (isNoteInteractiveTarget(e.target)) {
     isDown = false;
+    return;
+  }
 
-    if (moved > DRAG_THRESHOLD) return;
+  if (!isDown) return;
+  isDown = false;
 
-    const el = document.elementFromPoint(e.clientX, e.clientY);
-    if (!el) return;
-    if (el.closest(".note")) return;
+  if (moved > DRAG_THRESHOLD) return;
 
-    const key = el.closest(".piano-key");
-    if (!key || !pianoHost.contains(key)) return;
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  if (!el) return;
+  if (el.closest(".note")) return; // keep your existing behavior
 
-    const slot = Number(key.dataset.slot);
-    const filtered = getFilteredProjects();
-    const project = filtered[slot];
-    if (!project) return;
+  const key = el.closest(".piano-key");
+  if (!key || !pianoHost.contains(key)) return;
 
-    playNote(pickNoteLetter(project, slot));
+  const slot = Number(key.dataset.slot);
+  const filtered = getFilteredProjects();
+  const project = filtered[slot];
+  if (!project) return;
 
-    
-    state.openIndex = (state.openIndex === slot) ? null : slot;
-    render();
+  playNote(pickNoteLetter(project, slot));
 
-    
-    if (state.openIndex !== null) {
-      const opened = pianoHost.querySelector(`.piano-key[data-slot="${slot}"]`);
-      opened?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-    }
-  });
+  state.openIndex = (state.openIndex === slot) ? null : slot;
+  render();
+
+  if (state.openIndex !== null) {
+    const opened = pianoHost.querySelector(`.piano-key[data-slot="${slot}"]`);
+    opened?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }
+});
 
   pianoHost.addEventListener("pointercancel", () => { isDown = false; });
 

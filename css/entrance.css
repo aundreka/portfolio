@@ -18,10 +18,9 @@
   }
 
   .fall-in {
-    animation:
-      dropIn var(--drop-duration) cubic-bezier(.2,.9,.2,1) forwards,
-      landBounce var(--bounce-duration) ease-out var(--drop-duration) forwards;
-  }
+    animation:      dropIn var(--drop-duration) cubic-bezier(.2,.9,.2,1) forwards,      landBounce var(--bounce-duration) ease-out var(--drop-duration) forwards;
+    -webkit-animation:      dropIn var(--drop-duration) cubic-bezier(.2,.9,.2,1) forwards,      landBounce var(--bounce-duration) ease-out var(--drop-duration) forwards;
+}
 
   @keyframes dropIn {
     from { opacity: 0; transform: translate3d(0, var(--startY, -140px), 0) rotateX(6deg) var(--finalTF, none); }

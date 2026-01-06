@@ -380,7 +380,9 @@ model-viewer.piano {
   height: fit-content;
   padding: 8px 18px;
   border-radius: 999px;
-  font: 700 40px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Abril Fatface", serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
   text-transform: uppercase;
   letter-spacing: 0px;
   background: #000;
