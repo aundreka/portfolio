@@ -15,6 +15,15 @@ const catWrap = document.querySelector(".cat-wrap");
 const catBtn  = document.getElementById("cat-click");  
 const pianoClick = document.getElementById("piano-click");
 
+window.__suspendProjectsSnapUntil = 0;
+
+function suspendProjectsSnap(ms = 1200) {
+  window.__suspendProjectsSnapUntil = performance.now() + ms;
+}
+
+function projectsSnapSuspended() {
+  return performance.now() < (window.__suspendProjectsSnapUntil || 0);
+}
 
 const PROJECT_IDS = ["project-1","project-2","project-3","project-4","project-5"];
 
@@ -332,7 +341,8 @@ function positionCatClickOverlay(){
     r.bottom > 0 && r.right > 0 &&
     r.left < innerWidth && r.top < innerHeight;
 
-  catBtn.style.display = visible ? "block" : "none";
+catBtn.style.opacity = visible ? "1" : "0";
+catBtn.style.pointerEvents = visible ? "auto" : "none";
   if (!visible) return;
 
   
@@ -624,28 +634,40 @@ if (catEl) {
  * CAT-WRAP CLICK → ABOUT
  ***********************/
 function focusAboutScroll() {
-  const about = document.getElementById("about");
-  if (!about) return;
+  const about =
+    document.getElementById("about") ||
+    document.querySelector("section.about, .about");
+
+  if (!about) {
+    console.warn("[CatClick] About section not found. Add id='about' or class='about'.");
+    return;
+  }
+
+  // ✅ stop Projects snap from fighting this scroll
+  suspendProjectsSnap(1600);
+
   enterAboutFocus();
   about.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-
-catBtn?.addEventListener("click", (e) => { e.preventDefault(); focusAboutScroll(); });
-catWrap?.addEventListener("click", (e) => {
-  
-  if (catBtn) return;
+catBtn?.addEventListener("click", (e) => {
   e.preventDefault();
+  e.stopPropagation();
   focusAboutScroll();
 });
 
+catWrap?.addEventListener("click", (e) => {
+  if (catBtn) return; // if overlay button exists, let it handle it
+  e.preventDefault();
+  focusAboutScroll();
+});
 
 
 /***********************
  * Scroll sync: enter when at About; exit when above
  ***********************/
 window.addEventListener("scroll", () => {
-  const about = document.getElementById("about");
+const about = document.getElementById("about") || document.querySelector("section.about, .about");
   if (!about) return;
 
   const docTop = window.scrollY || document.documentElement.scrollTop;

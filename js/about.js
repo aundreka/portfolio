@@ -1,17 +1,29 @@
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
   const scroller = document.getElementById("aboutTrack");
   const aboutSection = document.querySelector(".about");
-  const projectsSection = document.getElementById("projects"); 
+  const projectsSection = document.getElementById("projects");
 
   if (!scroller || !aboutSection) {
     console.warn("[About] Missing #aboutTrack or .about");
     return;
   }
 
- 
+  /* --------------------------
+     Find NEXT section after About
+     -------------------------- */
+  const getNextSection = (el) => {
+    let n = el?.nextElementSibling;
+    while (n) {
+      if (n.matches?.("section, footer, main, header")) return n;
+      n = n.nextElementSibling;
+    }
+    return null;
+  };
+  const nextAfterAbout = getNextSection(aboutSection);
+
+  /* --------------------------
+     Scrubber + stars
+     -------------------------- */
   const scrubber = document.createElement("div");
   scrubber.className = "about-scrubber";
   scrubber.innerHTML = `
@@ -21,29 +33,35 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   aboutSection.prepend(scrubber);
 
+  const stars = document.createElement("div");
+  stars.className = "about-stars";
+  stars.innerHTML = `
+    <div class="stars s1"></div>
+    <div class="stars s2"></div>
+    <div class="stars s3"></div>
+  `;
+  aboutSection.prepend(stars);
+
   const track = scrubber.querySelector(".about-scrubber__track");
   const thumb = scrubber.querySelector(".about-scrubber__thumb");
 
-  
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
-          scrubber.classList.add("visible");
-        } else {
-          scrubber.classList.remove("visible");
-        }
+        // NOTE: you had threshold 0.9 but checked ratio >= 0.6
+        // Keeping your behavior but matching threshold to avoid "never visible" cases
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.6) scrubber.classList.add("visible");
+        else scrubber.classList.remove("visible");
       });
     },
-    { threshold: 0.9 }
+    { threshold: [0, 0.6, 0.9, 1] }
   );
   observer.observe(aboutSection);
 
-  
   function sizeThumb() {
     const view = scroller.clientWidth;
     const full = scroller.scrollWidth;
-    const ratio = Math.max(view / full, 0.08); 
+    const ratio = Math.max(view / full, 0.08);
     thumb.style.width = `${track.clientWidth * ratio}px`;
     syncThumb();
   }
@@ -55,10 +73,44 @@ document.addEventListener("DOMContentLoaded", () => {
     thumb.style.transform = `translateX(${pct * maxThumbTravel}px)`;
   }
 
-  
-  let dragging = false,
-    dragStartX = 0,
-    dragStartLeft = 0;
+  /* --------------------------
+     Theme swapping helpers
+     -------------------------- */
+  let modalPinnedTheme = false; // kept (you use it in clearAboutAccent)
+  let lastAccent = "#ffffff";
+  let activeThemeBtn = null;
+
+  const profileImg = aboutSection.querySelector(".intro-photo");
+
+  let setAboutAccent = () => {};
+  let clearAboutAccent = () => {};
+
+  const rememberOriginalSrc = (el) => {
+    if (!el) return;
+    if (!el.dataset.srcOriginal) el.dataset.srcOriginal = el.getAttribute("src") || "";
+  };
+
+  const toWhiteAsset = (src) => {
+    if (!src) return src;
+    if (src.includes("profile.png")) return src.replace("profile.png", "profile-white.png");
+    if (src.endsWith(".svg") && !src.endsWith("-white.svg")) return src.replace(".svg", "-white.svg");
+    return src;
+  };
+
+  const setThemeAssetsForBlock = (on, blockEl) => {
+    if (!blockEl) return;
+    const imgs = blockEl.querySelectorAll("img.note-img");
+    imgs.forEach((img) => {
+      rememberOriginalSrc(img);
+      const base = img.dataset.srcOriginal;
+      img.src = on ? toWhiteAsset(base) : base;
+    });
+  };
+
+  /* --------------------------
+     Scrubber drag
+     -------------------------- */
+  let dragging = false, dragStartX = 0, dragStartLeft = 0;
 
   thumb.addEventListener("pointerdown", (e) => {
     dragging = true;
@@ -72,8 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const dx = e.clientX - dragStartX;
     const maxThumbTravel = track.clientWidth - thumb.clientWidth;
     const maxScroll = scroller.scrollWidth - scroller.clientWidth;
-
-    
     if (maxThumbTravel <= 0) return;
 
     const scrollDelta = (dx / maxThumbTravel) * maxScroll;
@@ -85,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
     thumb.addEventListener(t, () => (dragging = false))
   );
 
-  
   track.addEventListener("pointerdown", (e) => {
     if (e.target === thumb) return;
     const rect = track.getBoundingClientRect();
@@ -100,10 +149,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("resize", sizeThumb);
 
- 
+  /* --------------------------
+     Snap helpers (Projects is now ABOVE About)
+     -------------------------- */
   const isAtFarLeft = () => scroller.scrollLeft <= 1;
-  const isAtFarRight = () =>
-    scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 1;
+  const isAtFarRight = () => scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 1;
 
   const isBottomAligned = () => {
     const rect = aboutSection.getBoundingClientRect();
@@ -114,9 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return rect.top >= -1;
   };
 
-  const snapToBottom = () => {
-    aboutSection.scrollIntoView({ block: "end", behavior: "smooth" });
-  };
+  const snapToBottom = () => aboutSection.scrollIntoView({ block: "end", behavior: "smooth" });
 
   const snapToCenter = () => {
     const top = aboutSection.offsetTop;
@@ -125,12 +173,18 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const snapToProjects = () => {
-    if (projectsSection) projectsSection.scrollIntoView({ behavior: "smooth" });
+    if (projectsSection) projectsSection.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  
-  const ENTER_RATIO_DOWN = 0.7; 
-  const ENTER_RATIO_UP = 0.6; 
+  const snapToNextAfterAbout = () => {
+    if (nextAfterAbout) nextAfterAbout.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  /* --------------------------
+     Vertical snapping into About
+     (works whether entering from Projects above OR from below)
+     -------------------------- */
+  const ENTER_RATIO = 0.6;     // your preferred value
   const CENTER_TOL = 10;
   const SNAP_LOCK_MS = 450;
   let centerSnapping = false;
@@ -157,120 +211,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.scrollTo({ top: centerTop, behavior });
 
-    setTimeout(() => {
-      centerSnapping = false;
-    }, SNAP_LOCK_MS);
+    setTimeout(() => (centerSnapping = false), SNAP_LOCK_MS);
   };
 
- 
-  const modal = document.getElementById("about-modal");
-  const modalBody = document.getElementById("about-modal-body");
-  const closeBtn = modal?.querySelector(".about-modal__close");
-  const dialog = modal?.querySelector(".about-modal__dialog");
-
-  
-  if (modal && modalBody && dialog) {
-    const contentWrapper = document.createElement("div");
-    contentWrapper.className = "about-modal__content";
-    contentWrapper.appendChild(modalBody);
-    dialog.appendChild(contentWrapper);
-  }
-
-  let isAnimating = false;
-
-  
-  let openModal = (html) => {
-    if (!modal || !modalBody) return;
-    if (isAnimating) return;
-
-    isAnimating = true;
-    modalBody.innerHTML = html;
-
-    modal.hidden = false;
-    aboutSection.classList.add("modal-open");
-
-    
-    modal.offsetHeight;
-
-    requestAnimationFrame(() => {
-      modal.classList.add("open");
-      setTimeout(() => {
-        isAnimating = false;
-      }, 600);
-    });
-  };
-
-  let closeModal = () => {
-    if (!modal) return;
-    if (isAnimating) return;
-
-    isAnimating = true;
-    modal.classList.add("closing");
-    modal.classList.remove("open");
-
-    setTimeout(() => {
-      modal.classList.remove("closing");
-      modal.hidden = true;
-      aboutSection.classList.remove("modal-open");
-      isAnimating = false;
-    }, 400);
-  };
-
-  
-  const originalOpenModal = openModal;
-  const originalCloseModal = closeModal;
-
-  openModal = (html) => {
-    document.body.style.overflow = "hidden";
-    originalOpenModal(html);
-  };
-
-  closeModal = () => {
-    setTimeout(() => {
-      document.body.style.overflow = "";
-    }, 400);
-    originalCloseModal();
-  };
-
- 
+  // Wheel-based snap into center (global)
   window.addEventListener(
     "wheel",
     (e) => {
-      
+      // ignore wheel when the user is intentionally horizontal scrolling inside aboutTrack
       if (e.target.closest("#aboutTrack")) return;
-      
-      if (modal && !modal.hidden) return;
 
       const ratio = aboutVisibleRatio();
 
-      
-      if (e.deltaY > 0) {
-        if (ratio >= ENTER_RATIO_DOWN && !isAboutCentered()) {
-          e.preventDefault();
-          snapAboutToCenter("smooth");
-        }
-        return;
-      }
-
-      
-      if (e.deltaY < 0) {
-        if (ratio >= ENTER_RATIO_UP && !isAboutCentered()) {
-          e.preventDefault();
-          snapAboutToCenter("smooth");
-        }
+      // If About is sufficiently visible but not centered, snap it in.
+      if (ratio >= ENTER_RATIO && !isAboutCentered()) {
+        e.preventDefault();
+        snapAboutToCenter("smooth");
       }
     },
     { passive: false }
   );
 
-  
+  // Scroll-end snap (touchpad/drag scroll) into center
   let scrollEndTimer = null;
   let lastScrollY = window.scrollY;
 
   window.addEventListener(
     "scroll",
     () => {
-      if (modal && !modal.hidden) return;
       if (centerSnapping) return;
 
       const nowY = window.scrollY;
@@ -279,41 +247,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
       clearTimeout(scrollEndTimer);
       scrollEndTimer = setTimeout(() => {
-        if (modal && !modal.hidden) return;
-
         const ratio = aboutVisibleRatio();
-
-        if (dirDown) {
-          if (ratio >= ENTER_RATIO_DOWN && !isAboutCentered()) snapAboutToCenter("smooth");
-          return;
-        }
-
-        if (ratio >= ENTER_RATIO_UP && !isAboutCentered()) snapAboutToCenter("smooth");
+        if (ratio >= ENTER_RATIO && !isAboutCentered()) snapAboutToCenter("smooth");
       }, 120);
     },
     { passive: true }
   );
 
- 
+  /* --------------------------
+     Horizontal wheel inside aboutTrack
+     - scrolls horizontally
+     - exits vertically to Projects (up) or next section (down)
+     -------------------------- */
   scroller.addEventListener(
     "wheel",
     (e) => {
       const delta = e.deltaY;
       if (delta === 0) return;
 
-      
-      if (delta < 0) {
-        if (isAtFarLeft()) {
-          if (!isTopAligned()) {
-            e.preventDefault();
-            snapToCenter();
-            return;
-          }
-          return; 
-        }
+      // Scroll UP while at far-left -> go back to Projects (since it's ABOVE About now)
+      if (delta < 0 && isAtFarLeft()) {
+        e.preventDefault();
+
+        // If About isn't aligned to top yet, align first so exit feels clean
+        if (!isTopAligned()) snapToCenter();
+        else snapToProjects();
+
+        return;
       }
 
-      
+      // Scroll DOWN while inside About:
+      // 1) if not bottom-aligned, align to bottom first
+      // 2) if bottom-aligned and far-right, exit to next section after About
       if (delta > 0) {
         if (!isBottomAligned()) {
           e.preventDefault();
@@ -322,12 +287,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (isAtFarRight()) {
           e.preventDefault();
-          snapToProjects();
+          snapToNextAfterAbout();
           return;
         }
       }
 
-      
+      // Otherwise: horizontal scroll
       e.preventDefault();
       scroller.scrollLeft += delta * 0.9;
       syncThumb();
@@ -335,15 +300,13 @@ document.addEventListener("DOMContentLoaded", () => {
     { passive: false }
   );
 
- 
-  let isDown = false,
-    startX = 0,
-    startLeft = 0;
+  /* --------------------------
+     Pointer-drag horizontal scroll
+     -------------------------- */
+  let isDown = false, startX = 0, startLeft = 0;
 
   scroller.addEventListener("pointerdown", (e) => {
-    
     if (e.target.closest('button, a, input, textarea, [role="button"]')) return;
-
     isDown = true;
     startX = e.clientX;
     startLeft = scroller.scrollLeft;
@@ -360,154 +323,9 @@ document.addEventListener("DOMContentLoaded", () => {
     scroller.addEventListener(t, () => (isDown = false))
   );
 
- 
-  const content = {
-    education: `
-      <h3>education</h3>
-      <article>
-        <h4>Lyceum of the Philippines University – Cavite</h4>
-        <p><strong>B.S. in Computer Science</strong> (2023–2027). Resident Scholar (S.Y. 2023–2025). GWA 1.18.</p>
-        <ul>
-          <li>Relevant coursework: Data Structures & Algorithms, Database Systems, Machine Learning,
-              Mobile Computing, Web Development.</li>
-        </ul>
-      </article>
-
-      <article>
-        <h4>Harvard University – Online / edX</h4>
-        <p><em>Non-degree online courses (2023–2025)</em></p>
-        <ul>
-          <li>Data Science: Building Machine Learning Models</li>
-          <li>Machine Learning and Artificial Intelligence with Python</li>
-          <li>CS50's Introduction to Artificial Intelligence with Python</li>
-          <li>CS50's Introduction to Cybersecurity</li>
-          <li>Introduction to Data Science with Python</li>
-          <li>Using Python for Research</li>
-          <li>CS50's Introduction to Computer Science</li>
-        </ul>
-      </article>
-
-      <article>
-        <h4>Cisco Networking Academy</h4>
-        <p><em>Certificates and training programs</em></p>
-        <ul>
-          <li><strong>Cisco Certified SQL Engineer</strong> (Aug 2025)</li>
-          <li>Computer Programming 1 and 2 (C/C++ and foundational programming concepts)</li>
-        </ul>
-      </article>
-    `,
-
-    skills: `
-      <h3>tech stack</h3>
-
-      <h4>Languages & Frameworks</h4>
-      <ul class="skills-grid">
-        <li><img src="assets/icons/java.png" alt="Java"></li>
-        <li><img src="assets/icons/php.png" alt="PHP"></li>
-        <li><img src="assets/icons/python.png" alt="Python"></li>
-        <li><img src="assets/icons/kotlin.png" alt="Kotlin"></li>
-        <li><img src="assets/icons/react.png" alt="React JS"></li>
-        <li><img src="assets/icons/flutter.png" alt="Flutter"></li>
-      </ul>
-
-      <h4>Web Technologies</h4>
-      <ul class="skills-grid">
-        <li><img src="assets/icons/html.png" alt="HTML5"></li>
-        <li><img src="assets/icons/css.png" alt="CSS3"></li>
-        <li><img src="assets/icons/sql.png" alt="MySQL"></li>
-        <li><img src="assets/icons/postgresql.png" alt="PostgreSQL"></li>
-        <li><img src="assets/icons/rest.png" alt="REST API"></li>
-      </ul>
-
-      <h4>Machine Learning / AI</h4>
-      <ul class="skills-grid">
-        <li><img src="assets/icons/tensorflow.png" alt="TensorFlow"></li>
-        <li><img src="assets/icons/pytorch.png" alt="PyTorch"></li>
-        <li><img src="assets/icons/scikit.png" alt="scikit-learn"></li>
-      </ul>
-
-      <h4>Core Competencies</h4>
-      <p>
-        Predictive modeling, cross-platform mobile development, full-stack web
-        development, database design and optimization, data preprocessing, and
-        model evaluation with a focus on creating scalable, efficient solutions.
-      </p>
-    `,
-
-    work: `
-      <h3>work experience</h3>
-
-      <article>
-        <h4>IT Service Helpdesk — Lyceum of the Philippines University – Cavite</h4>
-        <p><em>Internship | Sep 2024 – Mar 2025</em></p>
-        <p>Provided comprehensive technical support, troubleshooting, and user assistance at the IT Department, gaining hands-on experience in enterprise-level IT operations.</p>
-      </article>
-
-      <article>
-        <h4>PixelPulse — Web Solutions for Local SMEs</h4>
-        <p><em>Founder & Developer | 2025 – Present</em></p>
-        <p>Established a boutique digital agency offering custom websites for local schools, gyms, and restaurants, helping SMEs build their online presence with modern, responsive designs.</p>
-      </article>
-
-      <article>
-        <h4>Freelance Developer</h4>
-        <p><em>May 2023 – Present</em></p>
-        <p>Worked independently on diverse projects including web applications, mobile app prototypes, and database management systems for various clients across different industries.</p>
-      </article>
-
-      <article>
-        <h4>Creative & Business Roles</h4>
-        <p><em>2020 – Present</em></p>
-        <p>Built diverse experience through modeling collaborations, real estate sales, and social media management, developing strong communication, client relations, and creative problem-solving skills.</p>
-      </article>
-    `,
-
-    contact: `
-      <h3>contact</h3>
-      <article>
-        <h4>Get in Touch</h4>
-        <ul>
-          <li>Email: <a href="mailto:c.aundrekaperez@gmail.com">c.aundrekaperez@gmail.com</a></li>
-          <li>Phone: <a href="tel:09664701756">09664701756</a></li>
-          <li>GitHub: <a href="https:
-          <li>LinkedIn: <a href="https:
-            linkedin.com/in/aundreka-perez</a></li>
-          <li>Location: Dasmariñas City, Cavite</li>
-        </ul>
-
-        <h4>Professional Certification</h4>
-        <p><strong>Cisco Certified SQL Engineer</strong> (Aug 2025)</p>
-
-        <h4>Let's Collaborate</h4>
-        <p>Always interested in discussing new opportunities, innovative projects, and creative collaborations. Feel free to reach out!</p>
-      </article>
-    `,
-  };
-
-  
-  document.querySelectorAll(".note-block").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const key = btn.dataset.category;
-      if (content[key]) openModal(content[key]);
-    });
-  });
-
-  
-  closeBtn?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    closeModal();
-  });
-
-  modal?.addEventListener("click", (e) => {
-    if (e.target.classList.contains("about-modal__backdrop")) closeModal();
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modal && !modal.hidden && !isAnimating) closeModal();
-  });
-
- 
+  /* --------------------------
+     Staff SVG + wave stuff (unchanged)
+     -------------------------- */
   const noteBlocks = aboutSection.querySelectorAll(".note-block");
   const staffLinesEl = aboutSection.querySelector(".staff-lines");
 
@@ -527,13 +345,85 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     staffLinesEl.appendChild(svg);
 
-    
+    const defs = document.createElementNS(svgNS, "defs");
+    const grad = document.createElementNS(svgNS, "linearGradient");
+    grad.setAttribute("id", "staffGrad");
+    grad.setAttribute("x1", "0%");
+    grad.setAttribute("y1", "0%");
+    grad.setAttribute("x2", "100%");
+    grad.setAttribute("y2", "0%");
+
+    const s0 = document.createElementNS(svgNS, "stop");
+    s0.setAttribute("offset", "0%");
+    s0.setAttribute("stop-color", "#ffffff");
+    s0.setAttribute("stop-opacity", "0.95");
+
+    const s1 = document.createElementNS(svgNS, "stop");
+    s1.setAttribute("offset", "45%");
+    s1.setAttribute("stop-color", "#ffffff");
+    s1.setAttribute("stop-opacity", "0.95");
+
+    const s2 = document.createElementNS(svgNS, "stop");
+    s2.setAttribute("offset", "100%");
+    s2.setAttribute("stop-color", "#ffffff");
+    s2.setAttribute("stop-opacity", "0.95");
+
+    grad.appendChild(s0);
+    grad.appendChild(s1);
+    grad.appendChild(s2);
+    defs.appendChild(grad);
+    svg.insertBefore(defs, svg.firstChild);
+
+    const setProfileTheme = (on) => {
+      if (!profileImg) return;
+      rememberOriginalSrc(profileImg);
+      const base = profileImg.dataset.srcOriginal;
+      profileImg.src = on ? toWhiteAsset(base) : base;
+    };
+
+    setAboutAccent = (btn) => {
+      if (activeThemeBtn && activeThemeBtn !== btn) {
+        activeThemeBtn.classList.remove("theme-on");
+        setThemeAssetsForBlock(false, activeThemeBtn);
+      }
+
+      const accent = getComputedStyle(btn).getPropertyValue("--note-color").trim() || "#ffffff";
+      lastAccent = accent;
+      activeThemeBtn = btn;
+
+      aboutSection.classList.add("stars-on");
+      aboutSection.style.setProperty("--about-accent", accent);
+      setProfileTheme(true);
+
+      s2.setAttribute("stop-color", `color-mix(in srgb, ${accent} 55%, #ffffff)`);
+
+      btn.classList.add("theme-on");
+      setThemeAssetsForBlock(true, btn);
+    };
+
+    clearAboutAccent = () => {
+      if (modalPinnedTheme) return;
+
+      if (activeThemeBtn) {
+        activeThemeBtn.classList.remove("theme-on");
+        setThemeAssetsForBlock(false, activeThemeBtn);
+      }
+
+      activeThemeBtn = null;
+      lastAccent = "#ffffff";
+
+      aboutSection.classList.remove("stars-on");
+      aboutSection.style.setProperty("--about-accent", "#ffffff");
+      setProfileTheme(false);
+
+      s2.setAttribute("stop-color", "#ffffff");
+    };
+
     let waveHoverEl = null;
     let isWaveActive = false;
-    let releaseT = 0;          // 0..1
-let releasing = false;
-const RELEASE_MS = 520;    // match your CSS release duration
-
+    let releaseT = 0;
+    let releasing = false;
+    const RELEASE_MS = 520;
 
     let amp = 0;
     let ampTarget = 0;
@@ -543,13 +433,11 @@ const RELEASE_MS = 520;    // match your CSS release duration
     let mouseVX = 0;
     let lastMouseX = 0;
 
-    
     const AMP_MAX = 70;
     const SMOOTH = 0.12;
 
     function staffBaseYs(h) {
-      const gap =
-        parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--staff-gap")) || 48;
+      const gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--staff-gap")) || 48;
       const mid = h * 0.5;
       return [mid - 2 * gap, mid - 1 * gap, mid, mid + 1 * gap, mid + 2 * gap];
     }
@@ -583,246 +471,247 @@ const RELEASE_MS = 520;    // match your CSS release duration
       lastMouseX = clamped;
       mouseX = clamped;
     }
-    let W = 1;      
-let SIGMA0 = 60; 
 
-const gauss = (x, c, sigma) => {
-  const d = x - c;
-  return Math.exp(-(d * d) / (2 * sigma * sigma));
-};
+    let W = 1;
+    let SIGMA0 = 60;
 
-const edgeFade = (x) => {
-  const t = x / W;
-  const s = Math.sin(t * Math.PI);
-  return Math.pow(s, 0.9);
-};
-function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+    const gauss = (x, c, sigma) => {
+      const d = x - c;
+      return Math.exp(-(d * d) / (2 * sigma * sigma));
+    };
 
-function releaseBounce(t){
-  const fall = 1 - easeOutCubic(t);             
-  const bounce = 0.32 * Math.sin((t * Math.PI) * 3) * (1 - t); 
-  return Math.max(0, fall + bounce);
-}
+    const edgeFade = (x) => {
+      const t = x / W;
+      const s = Math.sin(t * Math.PI);
+      return Math.pow(s, 0.9);
+    };
 
-function rippleProfile(x, lineIdx) {
-  const activeStrength = isWaveActive ? 1 : (releasing ? releaseBounce(releaseT) : 0);
-  if (activeStrength <= 0) return 0;
-
-  const center = mouseX;
-
-  const lineBias = (lineIdx - 2) * 5;
-  const sigma = SIGMA0 * (1 + Math.abs(lineIdx - 2) * 0.06);
-  const L = sigma * (3.5 + lineIdx * 0.05);
-  const c = center + lineBias * 6;
-
-  const w0 = 25.0;
-  const w1 = 5.95 - lineIdx * 0.03;
-  const w2 = 1.54 - Math.abs(lineIdx - 2) * 0.04;
-
-  const asym = 2 * (lineIdx % 2 === 0 ? 1 : -1);
-
-  const g0 = gauss(x, c, sigma);
-  const gL =
-    gauss(x, c - L * (1.0 + asym), sigma * 1.03) +
-    gauss(x, c + L * (1.0 - asym), sigma * 0.98);
-  const g2 =
-    gauss(x, c - 2 * L * (1.0 + asym * 0.6), sigma * 1.08) +
-    gauss(x, c + 2 * L * (1.0 - asym * 0.6), sigma * 1.02);
-
-  const raw = w0 * g0 + w1 * gL + w2 * g2;
-  const norm = w0 + 2 * w1 + 2 * w2;
-
-  const base = raw / norm;
-
-  const peak = gauss(x, c, sigma * 0.95);
-  const PEAK_BOOST = 0.85;
-
-  return (base + PEAK_BOOST * peak) * activeStrength;
-}
-
-  function renderBulge() {
-  const rect = staffLinesEl.getBoundingClientRect();
-  const w = Math.max(1, rect.width);
-  const h = Math.max(1, rect.height);
-
-  W = w;
-  SIGMA0 = Math.max(42, w * 0.01);
-
-  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-  const baseYs = staffBaseYs(h);
-
-  const step = Math.max(18, Math.min(40, w / 42));
-  const count = Math.ceil(w / step);
-
-  for (let line = 0; line < 5; line++) {
-    const y0 = baseYs[line];
-    const lineScale = 1 - (Math.abs(line - 2) * 0.07);
-
-    const pts = [];
-    for (let i = 0; i <= count; i++) {
-      const x = (i / count) * w;
-
-
-
-      const env = rippleProfile(x, line) * edgeFade(x);
-      const y = y0 - (amp * lineScale * env);
-      pts.push({ x, y });
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function releaseBounce(t) {
+      const fall = 1 - easeOutCubic(t);
+      const bounce = 0.32 * Math.sin((t * Math.PI) * 3) * (1 - t);
+      return Math.max(0, fall + bounce);
     }
 
-    paths[line].setAttribute("d", catmullRomToBezier(pts));
-  }
-}
+    function rippleProfile(x, lineIdx) {
+      const activeStrength = isWaveActive ? 1 : (releasing ? releaseBounce(releaseT) : 0);
+      if (activeStrength <= 0) return 0;
 
-function wrapTitleLetters(titleEl){
-  if (!titleEl) return;
-  if (titleEl.dataset.lettersWrapped === "1") return;
+      const center = mouseX;
 
-  const text = titleEl.textContent || "";
-  titleEl.textContent = "";
+      const lineBias = (lineIdx - 2) * 5;
+      const sigma = SIGMA0 * (1 + Math.abs(lineIdx - 2) * 0.06);
+      const L = sigma * (3.5 + lineIdx * 0.05);
+      const c = center + lineBias * 6;
 
-  for (const ch of text) {
-    const span = document.createElement("span");
-    span.className = "letter";
-    // keep spaces visually
-    span.innerHTML = ch === " " ? "&nbsp;" : ch;
-    titleEl.appendChild(span);
-  }
+      const w0 = 25.0;
+      const w1 = 5.95 - lineIdx * 0.03;
+      const w2 = 1.54 - Math.abs(lineIdx - 2) * 0.04;
 
-  titleEl.dataset.lettersWrapped = "1";
-}
+      const asym = 2 * (lineIdx % 2 === 0 ? 1 : -1);
 
-noteBlocks.forEach((b) => wrapTitleLetters(b.querySelector(".note-title")));
+      const g0 = gauss(x, c, sigma);
+      const gL =
+        gauss(x, c - L * (1.0 + asym), sigma * 1.03) +
+        gauss(x, c + L * (1.0 - asym), sigma * 0.98);
+      const g2 =
+        gauss(x, c - 2 * L * (1.0 + asym * 0.6), sigma * 1.08) +
+        gauss(x, c + 2 * L * (1.0 - asym * 0.6), sigma * 1.02);
+
+      const raw = w0 * g0 + w1 * gL + w2 * g2;
+      const norm = w0 + 2 * w1 + 2 * w2;
+
+      const base = raw / norm;
+
+      const peak = gauss(x, c, sigma * 0.95);
+      const PEAK_BOOST = 0.85;
+
+      return (base + PEAK_BOOST * peak) * activeStrength;
+    }
+
+    function renderBulge() {
+      const rect = staffLinesEl.getBoundingClientRect();
+      const w = Math.max(1, rect.width);
+      const h = Math.max(1, rect.height);
+
+      W = w;
+      SIGMA0 = Math.max(42, w * 0.01);
+
+      svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+      const baseYs = staffBaseYs(h);
+
+      const step = Math.max(18, Math.min(40, w / 42));
+      const count = Math.ceil(w / step);
+
+      for (let line = 0; line < 5; line++) {
+        const y0 = baseYs[line];
+        const lineScale = 1 - (Math.abs(line - 2) * 0.07);
+
+        const pts = [];
+        for (let i = 0; i <= count; i++) {
+          const x = (i / count) * w;
+          const env = rippleProfile(x, line) * edgeFade(x);
+          const y = y0 - (amp * lineScale * env);
+          pts.push({ x, y });
+        }
+        paths[line].setAttribute("d", catmullRomToBezier(pts));
+      }
+    }
+
+    function wrapTitleLetters(titleEl) {
+      if (!titleEl) return;
+      if (titleEl.dataset.lettersWrapped === "1") return;
+
+      const text = titleEl.textContent || "";
+      titleEl.textContent = "";
+
+      for (const ch of text) {
+        const span = document.createElement("span");
+        span.className = "letter";
+        span.innerHTML = ch === " " ? "&nbsp;" : ch;
+        titleEl.appendChild(span);
+      }
+      titleEl.dataset.lettersWrapped = "1";
+    }
+
+    noteBlocks.forEach((b) => wrapTitleLetters(b.querySelector(".note-title")));
 
     function tick(now) {
       const dt = Math.min(0.05, (now - lastT) / 1000);
       lastT = now;
 
       amp += (ampTarget - amp) * (1 - Math.pow(1 - SMOOTH, dt * 60));
-if (!isWaveActive && releasing) {
-  releaseT += (dt * 1000) / RELEASE_MS;  
-  if (releaseT >= 1) {
-    releaseT = 1;
-    releasing = false;
-  }
-}
+
+      if (!isWaveActive && releasing) {
+        releaseT += (dt * 1000) / RELEASE_MS;
+        if (releaseT >= 1) {
+          releaseT = 1;
+          releasing = false;
+        }
+      }
+
       renderBulge();
 
       if (waveHoverEl) {
-  const rect = staffLinesEl.getBoundingClientRect();
-  const w = Math.max(1, rect.width);
+        const rect = staffLinesEl.getBoundingClientRect();
 
-  const strength = amp / AMP_MAX;
+        const elCenterX = (el) => {
+          const r = el.getBoundingClientRect();
+          return (r.left + r.width / 2) - rect.left;
+        };
 
-  const elCenterX = (el) => {
-    const r = el.getBoundingClientRect();
-    return (r.left + r.width / 2) - rect.left;
-  };
+        const envAt = (x) => {
+          const clampedX = Math.max(0, Math.min(x, W));
+          return rippleProfile(clampedX, 2) * edgeFade(clampedX);
+        };
 
+        const strength = amp / AMP_MAX;
 
-const envAt = (x) => {
-  const clampedX = Math.max(0, Math.min(x, W));
-  return rippleProfile(clampedX, 2) * edgeFade(clampedX);
-};
-  const imgs = waveHoverEl.querySelectorAll(".note-img");
-  imgs.forEach((img) => {
-    const x = elCenterX(img);
-    const env = envAt(x);
+        const imgs = waveHoverEl.querySelectorAll(".note-img");
+        imgs.forEach((img) => {
+          const x = elCenterX(img);
+          const env = envAt(x);
 
-    const lift = (amp * 0.85) * env;
+          const lift = (amp * 0.85) * env;
+          const driftTarget = Math.max(-10, Math.min(10, mouseVX * 0.45)) * strength * env;
+          const tiltTarget  = Math.max(-10, Math.min(10, mouseVX * 0.65)) * strength * env;
 
-    const driftTarget = Math.max(-10, Math.min(10, mouseVX * 0.45)) * strength * env;
-    const tiltTarget  = Math.max(-10, Math.min(10, mouseVX * 0.65)) * strength * env;
+          const curD = parseFloat(img.style.getPropertyValue("--wave-drift-x")) || 0;
+          const curT = parseFloat((img.style.getPropertyValue("--wave-tilt") || "0").replace("deg","")) || 0;
 
-    const curD = parseFloat(img.style.getPropertyValue("--wave-drift-x")) || 0;
-    const curT = parseFloat((img.style.getPropertyValue("--wave-tilt") || "0").replace("deg","")) || 0;
+          const nextD = curD + (driftTarget - curD) * 0.18;
+          const nextT = curT + (tiltTarget  - curT) * 0.16;
 
-    const nextD = curD + (driftTarget - curD) * 0.18;
-    const nextT = curT + (tiltTarget  - curT) * 0.16;
+          img.style.setProperty("--wave-lift", `${lift}px`);
+          img.style.setProperty("--wave-drift-x", `${nextD}px`);
+          img.style.setProperty("--wave-tilt", `${nextT}deg`);
+        });
 
-    img.style.setProperty("--wave-lift", `${lift}px`);
-    img.style.setProperty("--wave-drift-x", `${nextD}px`);
-    img.style.setProperty("--wave-tilt", `${nextT}deg`);
-  });
+        const letters = waveHoverEl.querySelectorAll(".note-title .letter");
+        letters.forEach((sp) => {
+          const x = elCenterX(sp);
+          const env = envAt(x);
 
-  const letters = waveHoverEl.querySelectorAll(".note-title .letter");
-  letters.forEach((sp) => {
-    const x = elCenterX(sp);
-    const env = envAt(x);
+          const lift = (amp * 0.22) * env;
+          const driftTarget = Math.max(-8, Math.min(8, mouseVX * 0.30)) * strength * env;
+          const tiltTarget  = Math.max(-8, Math.min(8, mouseVX * 0.40)) * strength * env;
 
-    const lift = (amp * 0.22) * env;
+          const curD = parseFloat(sp.style.getPropertyValue("--l-drift-x")) || 0;
+          const curT = parseFloat((sp.style.getPropertyValue("--l-tilt") || "0").replace("deg","")) || 0;
 
-    const driftTarget = Math.max(-8, Math.min(8, mouseVX * 0.30)) * strength * env;
-    const tiltTarget  = Math.max(-8, Math.min(8, mouseVX * 0.40)) * strength * env;
+          const nextD = curD + (driftTarget - curD) * 0.20;
+          const nextT = curT + (tiltTarget  - curT) * 0.18;
 
-    const curD = parseFloat(sp.style.getPropertyValue("--l-drift-x")) || 0;
-    const curT = parseFloat((sp.style.getPropertyValue("--l-tilt") || "0").replace("deg","")) || 0;
-
-    const nextD = curD + (driftTarget - curD) * 0.20;
-    const nextT = curT + (tiltTarget  - curT) * 0.18;
-
-    sp.style.setProperty("--l-lift", `${lift}px`);
-    sp.style.setProperty("--l-drift-x", `${nextD}px`);
-    sp.style.setProperty("--l-tilt", `${nextT}deg`);
-  });
-}
+          sp.style.setProperty("--l-lift", `${lift}px`);
+          sp.style.setProperty("--l-drift-x", `${nextD}px`);
+          sp.style.setProperty("--l-tilt", `${nextT}deg`);
+        });
+      }
 
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
 
-    
     noteBlocks.forEach((btn) => {
-     btn.addEventListener("pointerenter", (e) => {
-  isWaveActive = true;
-  releasing = false;
-  releaseT = 0;
+      btn.addEventListener("pointerenter", (e) => {
+        setAboutAccent(btn);
 
-  ampTarget = AMP_MAX;
-  waveHoverEl = btn;
-  btn.classList.add("wave-active");
-  setMouseXFromEvent(e);
-});
+        isWaveActive = true;
+        releasing = false;
+        releaseT = 0;
+
+        ampTarget = AMP_MAX;
+        waveHoverEl = btn;
+        btn.classList.add("wave-active");
+        setMouseXFromEvent(e);
+      });
 
       btn.addEventListener("pointermove", (e) => {
         if (!isWaveActive) return;
         setMouseXFromEvent(e);
       });
 
-btn.addEventListener("pointerleave", () => {
-  isWaveActive = false;
-  releasing = true;
-  releaseT = 0;
+      btn.addEventListener("pointerleave", () => {
+        isWaveActive = false;
+        releasing = true;
+        releaseT = 0;
 
-  ampTarget = 0;
+        ampTarget = 0;
 
-  btn.classList.remove("wave-active");
-  btn.classList.add("wave-releasing");
-  
- setTimeout(() => {
-  btn.classList.remove("wave-releasing");
+        btn.classList.remove("wave-active");
+        btn.classList.add("wave-releasing");
 
-  btn.querySelectorAll(".note-img").forEach((img) => {
-    img.style.setProperty("--wave-lift", `0px`);
-    img.style.setProperty("--wave-drift-x", `0px`);
-    img.style.setProperty("--wave-tilt", `0deg`);
-  });
+        clearAboutAccent();
 
-  btn.querySelectorAll(".note-title .letter").forEach((sp) => {
-    sp.style.setProperty("--l-lift", `0px`);
-    sp.style.setProperty("--l-drift-x", `0px`);
-    sp.style.setProperty("--l-tilt", `0deg`);
-  });
-}, 520);
+        setTimeout(() => {
+          btn.classList.remove("wave-releasing");
 
-  if (waveHoverEl === btn) waveHoverEl = null;
-});
+          btn.querySelectorAll(".note-img").forEach((img) => {
+            img.style.setProperty("--wave-lift", `0px`);
+            img.style.setProperty("--wave-drift-x", `0px`);
+            img.style.setProperty("--wave-tilt", `0deg`);
+          });
 
+          btn.querySelectorAll(".note-title .letter").forEach((sp) => {
+            sp.style.setProperty("--l-lift", `0px`);
+            sp.style.setProperty("--l-drift-x", `0px`);
+            sp.style.setProperty("--l-tilt", `0deg`);
+          });
+        }, 520);
+
+        if (waveHoverEl === btn) waveHoverEl = null;
+      });
+
+      // IMPORTANT: modal click removed (you said redesign)
+      // btn.addEventListener("click", ...)  <-- removed on purpose
     });
   } else {
     console.warn("[About] staff-lines not found or no .note-block elements.");
   }
 
- 
+  /* --------------------------
+     Init sizes
+     -------------------------- */
   sizeThumb();
   window.addEventListener("load", () => {
     sizeThumb();
@@ -833,7 +722,6 @@ btn.addEventListener("pointerleave", () => {
     syncThumb();
   });
 });
-
 
 (() => {
   const buttons = document.querySelectorAll(".note-block");

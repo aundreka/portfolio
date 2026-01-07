@@ -12,9 +12,21 @@
   --note-size: clamp(40px, 10.5vw, 80px);
 }
 
-
-
 .about{
+    --vignette-opacity: 0;
+
+  --dim-opacity: 0.28;
+  --dim-blur: 0.2px;
+  --dim-saturate: 0.78;
+  --space-opacity: 0;          /* 0..1 */
+  --stars-opacity: 0;          /* 0..1 */
+  --staff-opacity: 0;          /* 0..1 */
+  --about-accent: #ffffff;
+  background: #fff;
+  overflow: visible;
+  isolation: isolate;
+  transition: color 600ms ease;
+
   display: block !important;
   place-items: unset !important;
   height: auto !important;
@@ -23,7 +35,25 @@
   padding-bottom: 260px;
   position: relative;
 }
+.about::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
 
+  opacity: var(--space-opacity);
+  transition: opacity 900ms ease;
+
+  /* deep space, but not too contrasty */
+  background:
+    radial-gradient(
+      ellipse at bottom,
+      color-mix(in srgb, var(--about-accent) 12%, #1B2735) 0%,
+      #0b0f18 60%,
+      #07080d 100%
+    );
+}
 .about__scroller{
   width: 100%;
   min-height: 100vh;
@@ -61,14 +91,6 @@
 }
 
 
-.staff-lines::after{
-  content:"";
-  position:absolute;
-  top:0; left:0; bottom:0;
-  width: var(--staff-start-mask);
-  background:#fff;
-  z-index: 2;
-}
 
 .staff-svg{
   position:absolute;
@@ -76,6 +98,26 @@
   width:100%;
   height:100%;
   overflow: visible;
+
+  z-index: 1; /* above ::after */
+    -webkit-mask-image: linear-gradient(to right,
+    transparent 0%,
+    transparent 13%,
+    rgba(0,0,0,1) 16%,
+    rgba(0,0,0,1) 100%
+  );
+  mask-image: linear-gradient(to right,
+    transparent 0%,
+    transparent 13%,
+    rgba(0,0,0,1) 16%,
+    rgba(0,0,0,1) 100%
+  );
+
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+
 }
 
 .staff-svg path{
@@ -103,7 +145,8 @@
   align-items: center;
   gap: clamp(18px, 2.4vw, 28px);
   min-width: 1100px;
-  padding-left: 200px;
+  padding-left: 150px;
+  background:transparent;
 }
 
 .intro-text p{
@@ -323,57 +366,64 @@
 
 
 
-.about-modal[hidden]{ display:none; }
 
 .about-modal{
-  position:absolute; inset:0;
-  z-index:60;
-  display:grid;
-  place-items:center;
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: none;              /* hidden by default */
+  place-items: center;
+}
+/* open state */
+.about-modal.open{
+  display: grid;              /* shown only when open */
 }
 
+/* backdrop */
 .about-modal__backdrop{
-  position:absolute; inset:0;
-  background: transparent;
-  backdrop-filter: blur(3px);
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.18);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 260ms ease;
 }
 
+/* dialog */
 .about-modal__dialog{
-  position:relative;
-  width:min(1200px, 96vw);
-  max-height:min(86vh, 1100px);
-  overflow:auto;
+  position: relative;
+  width: min(1200px, 96vw);
+  max-height: min(86vh, 1100px);
+  overflow: auto;
 
-  background:#fff;
-  color:#141414;
-  border-radius:24px;
+  background: #fff;
+  color: #141414;
+  border-radius: 24px;
   box-shadow:
-    0 10px 20px rgba(0,0,0,.06),
-    0 40px 120px rgba(0,0,0,.10);
+    0 10px 20px rgba(0,0,0,.10),
+    0 40px 120px rgba(0,0,0,.22);
   padding: clamp(22px, 2.8vw, 40px);
 
-  opacity:0;
-  transform: translateY(12px) scale(.985);
-  animation: modal-in .28s cubic-bezier(.2,.7,.2,1) forwards;
+  opacity: 0;
+  transform: translateY(14px) scale(.985);
+  transition: opacity 260ms ease, transform 260ms ease;
 }
 
+/* animate in */
+.about-modal.open .about-modal__backdrop{ opacity: 1; }
+.about-modal.open .about-modal__dialog{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* animate out (when we add .closing) */
+.about-modal.closing .about-modal__backdrop{ opacity: 0; }
 .about-modal.closing .about-modal__dialog{
-  animation: modal-out .22s ease forwards;
+  opacity: 0;
+  transform: translateY(10px) scale(.985);
 }
 
-@media (prefers-reduced-motion: reduce){
-  .about-modal__dialog{ animation:none; opacity:1; transform:none; }
-  .about-modal.closing .about-modal__dialog{ animation:none; }
-}
 
-@keyframes modal-in{
-  from{ opacity:0; transform: translateY(12px) scale(.985); }
-  to  { opacity:1; transform: translateY(0) scale(1); }
-}
-@keyframes modal-out{
-  from{ opacity:1; transform: translateY(0) scale(1); }
-  to  { opacity:0; transform: translateY(8px) scale(.985); }
-}
 
 .about-modal__close{
   position:absolute;
@@ -575,4 +625,186 @@
 .note-block[data-category="education"] .note-img.edu-1{
 
   --note-y: 12px;  
+}
+
+.about .about-stars{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--stars-opacity);
+  transition: opacity 1100ms ease;
+}
+
+/* Each layer uses tiled radial-gradients (CSS-only “stars”) */
+.about .about-stars .stars{
+  position: absolute;
+  inset: -30%;
+  background-repeat: repeat;
+  background-position: 0 0;
+  will-change: transform, background-position;
+  transform: translate3d(0,0,0);
+}
+
+/* Tiny stars */
+.about .about-stars .stars.s1{
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.85) 0 1px, transparent 1px 100%),
+    radial-gradient(circle, rgba(255,255,255,.55) 0 1px, transparent 1px 100%);
+  background-size: 180px 180px, 260px 260px;
+  animation: starsDrift1 70s linear infinite;
+}
+
+/* Medium stars */
+.about .about-stars .stars.s2{
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.75) 0 1.5px, transparent 1.5px 100%),
+    radial-gradient(circle, rgba(255,255,255,.35) 0 1.5px, transparent 1.5px 100%);
+  background-size: 260px 260px, 420px 420px;
+  animation: starsDrift2 110s linear infinite;
+  filter: blur(.1px);
+}
+
+/* Big “sparkles” */
+.about .about-stars .stars.s3{
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.55) 0 2px, transparent 2px 100%),
+    radial-gradient(circle, rgba(255,255,255,.25) 0 2px, transparent 2px 100%);
+  background-size: 420px 420px, 680px 680px;
+  animation: starsDrift3 160s linear infinite;
+  filter: blur(.15px);
+}
+
+@keyframes starsDrift1{
+  from{ transform: translate3d(0,0,0); background-position: 0 0, 0 0; }
+  to  { transform: translate3d(0,-900px,0); background-position: 0 -900px, 0 -1200px; }
+}
+@keyframes starsDrift2{
+  from{ transform: translate3d(0,0,0); background-position: 0 0, 0 0; }
+  to  { transform: translate3d(0,-1200px,0); background-position: 0 -1200px, 0 -1600px; }
+}
+@keyframes starsDrift3{
+  from{ transform: translate3d(0,0,0); background-position: 0 0, 0 0; }
+  to  { transform: translate3d(0,-1600px,0); background-position: 0 -1600px, 0 -2200px; }
+}
+
+/* Theme ON (when hovering a note) */
+.about.stars-on{
+  --space-opacity: 1;
+  --stars-opacity: .32;   /* keep subtle */
+  --staff-opacity: 1;
+ 
+}
+
+
+/* reveal stars on theme */
+.about.stars-on .about-stars{
+  opacity: 1;
+}
+.note-block.theme-on .label,
+.note-block.theme-on .note-title{
+  color: #fff;
+}
+.about.stars-on .intro-text p{
+  color: rgba(255,255,255,0.88);
+}
+
+/* Optional: subtle glow only on active block */
+.note-block.theme-on .label{
+  text-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+/* OPTIONAL: small glow so text pops */
+.about.stars-on .label{
+  text-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+/* Staff lines: default stays black-ish */
+.staff-svg path{
+  stroke: rgba(0,0,0,.28);
+}
+
+/* When theme on, stroke becomes SVG gradient (set by JS in <defs>) */
+.about.stars-on .staff-svg path{
+  stroke: url(#staffGrad);
+  stroke-opacity: .75; /* subtle, not full white */
+}
+
+/* INTRO mask: hides staff lines behind the paragraph/photo area ONLY */
+.intro-block{
+  position: relative;
+  z-index: 3;              /* above staff lines */
+  background: transparent; /* base */
+}
+
+
+.about.stars-on .intro-block::before{
+  background: rgba(8, 10, 14, 0.42);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.22);
+  backdrop-filter: blur(8px);
+}
+
+
+#about-modal .about-modal__backdrop{
+  position:absolute !important;
+  inset:0 !important;
+  z-index: 0 !important;
+}
+
+#about-modal .about-modal__dialog{
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.background-wrapper{
+  position: fixed;
+  inset: 0;
+  z-index: -1;           /* key */
+  pointer-events: none;  /* key */
+}
+
+html, body{
+  isolation: isolate;
+}
+
+#about-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: none;           /* CLOSED = not rendered */
+  place-items: center;
+}
+
+#about-modal.open{
+  display: grid;           /* OPEN = visible */
+}
+body.modal-open{
+  overflow: hidden; /* harmless with position:fixed, keeps consistent */
+}
+.about::after{
+  content:"";
+  position:absolute;
+  inset:-6%;
+  z-index: 2;              /* above staff lines (z:1), below intro-block (z:2/3) */
+  pointer-events:none;
+  opacity: var(--vignette-opacity);
+  transition: opacity 700ms ease;
+
+  /* arced vignette */
+  background:
+    radial-gradient(
+      ellipse at 50% 58%,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,0) 42%,
+      rgba(0,0,0,0.35) 62%,
+      rgba(0,0,0,0.72) 78%,
+      rgba(0,0,0,0.92) 100%
+    );
+  filter: blur(0.2px);
+  transform: translateY(-2%) scale(1.06);
+}
+
+.about.stars-on{
+  --vignette-opacity: 1;
 }

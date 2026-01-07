@@ -892,45 +892,98 @@ pianoHost.addEventListener("pointerup", (e) => {
     const absY = Math.abs(e.deltaY);
     if (absX > absY) return;
   }, { passive: true });
+let lastScrollY = window.scrollY;
 
- 
-  let lastScrollY = window.scrollY;
-  let snapLock = false;
-  let lastSnapAt = 0;
+// measure user intent (fast scroll = pass-through)
+let lastWheelAt = 0;
+let lastWheelDY = 0;
+window.addEventListener("wheel", (e) => {
+  lastWheelAt = performance.now();
+  lastWheelDY = e.deltaY;
+}, { passive: true });
 
-  function centerProjectsSectionSmooth() {
-    const r = root.getBoundingClientRect();
-    const targetY = window.scrollY + r.top - (window.innerHeight / 2 - r.height / 2);
-    window.scrollTo({ top: targetY, behavior: "smooth" });
+// lock + one-snap-per-entry
+let snapLock = false;
+let lastSnapAt = 0;
+let hasSnappedThisEntry = false;
+
+// “near centered” tolerance so we don’t keep forcing center
+const CENTER_TOL = 90; // px
+function isProjectsNearCentered() {
+  const r = root.getBoundingClientRect();
+  const desiredTop = (window.innerHeight - r.height) / 2;
+  return Math.abs(r.top - desiredTop) <= CENTER_TOL;
+}
+
+// gentle center (still smooth but not fighty)
+function centerProjectsSectionSmooth() {
+  const r = root.getBoundingClientRect();
+  const targetY = window.scrollY + r.top - (window.innerHeight / 2 - r.height / 2);
+  window.scrollTo({ top: targetY, behavior: "smooth" });
+}
+
+// detect “pass-through” intent:
+// - recent wheel was strong
+// - or user is still actively scrolling fast
+function userIsPassingThrough() {
+  const now = performance.now();
+  const recentWheel = (now - lastWheelAt) < 140; // ms
+  const strongWheel = Math.abs(lastWheelDY) > 85; // tweak: higher = harder to trigger snap
+  return recentWheel && strongWheel;
+}
+
+// reset entry flag once Projects is mostly out of view
+function resetEntryIfLeft() {
+  const r = root.getBoundingClientRect();
+  // when Projects is well above or well below the viewport, allow snapping next time
+  if (r.bottom < 0 || r.top > window.innerHeight) {
+    hasSnappedThisEntry = false;
   }
+}
 
-  const io = new IntersectionObserver(
-    (entries) => {
-      const ent = entries[0];
-      if (!ent) return;
+const io = new IntersectionObserver(
+  (entries) => {
+    if (projectsSnapSuspended()) return;
 
-      const nowY = window.scrollY;
-      const goingDown = nowY > lastScrollY;
-      lastScrollY = nowY;
+    const ent = entries[0];
+    if (!ent) return;
 
-      if (!goingDown) return;
+    const nowY = window.scrollY;
+    const goingDown = nowY > lastScrollY;
+    lastScrollY = nowY;
 
-      if (ent.intersectionRatio >= 0.6) {
-        const now = performance.now();
-        if (snapLock) return;
-        if (now - lastSnapAt < 650) return;
+    resetEntryIfLeft();
 
-        snapLock = true;
-        lastSnapAt = now;
+    // only snap when scrolling down into Projects
+    if (!goingDown) return;
 
-        centerProjectsSectionSmooth();
-        setTimeout(() => { snapLock = false; }, 750);
-      }
-    },
-    { threshold: [0, 0.2, 0.35, 0.5, 0.6, 0.7, 0.85, 1] }
-  );
+    // if user is trying to fly past, do nothing
+    if (userIsPassingThrough()) return;
 
-  io.observe(root);
+    // if already centered-ish, don't snap
+    if (isProjectsNearCentered()) return;
+
+    // snap threshold (lower than 0.8 feels less "brick wall")
+    if (ent.intersectionRatio >= 0.62) {
+      const now = performance.now();
+      if (snapLock) return;
+      if (hasSnappedThisEntry) return;
+      if (now - lastSnapAt < 900) return;
+
+      snapLock = true;
+      lastSnapAt = now;
+      hasSnappedThisEntry = true;
+
+      centerProjectsSectionSmooth();
+
+      // short lock: prevents immediate re-trigger but allows continuing down
+      setTimeout(() => { snapLock = false; }, 420);
+    }
+  },
+  { threshold: [0, 0.35, 0.5, 0.62, 0.75, 0.9, 1] }
+);
+
+io.observe(root);
 
  
   langValueEl.textContent = state.language;

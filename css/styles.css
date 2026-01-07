@@ -517,3 +517,9 @@ model-viewer { overflow: visible !important; }
 .background span:nth-child(18){ top:94%; left:47%; animation-duration:14s; animation-delay:-17s; transform-origin:14vw -14vh; }
 .background span:nth-child(19){ top:85%; left:1%;  animation-duration:32s; animation-delay:-38s; transform-origin:12vw -4vh;  }
 
+#cat-click{
+  display: block;        /* always in DOM flow */
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 200ms ease;
+}

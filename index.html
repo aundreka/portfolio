@@ -73,76 +73,6 @@
       </div>
     </main>
 
-    <section id="about" class="about">
-      <div class="about__scroller" id="aboutTrack">
-        <div class="strip">
-          <div class="staff-lines" aria-hidden="true"></div>
-
-          <div class="intro-block">
-            <div class="intro-text">
-              <p>
-                Motivated Computer Science student with hands-on experience building cross-platform
-                mobile apps and full-stack websites. Cisco-certified SQL Engineer and Python
-                enthusiast with a strong foundation in predictive algorithms, AI, and deep learning.
-              </p>
-            </div>
-            <img src="assets/images/profile.png" alt="Aundreka Perez" class="intro-photo" />
-          </div>
-
-         <div class="staff-track">
-         <!-- EDUCATION (1 note) -->
-<button class="note-block" data-category="education" data-fx="assets/music/fx1.wav">
-  <div class="note-notes">
-    <img src="assets/notes/education1.svg" class="note-img edu-1"  alt="" />
-  </div>
-  <span class="label bottom note-title">Education</span>
-</button>
-
-<!-- SKILLS (4 notes) -->
-<button class="note-block" data-category="skills" data-fx="assets/music/fx2.wav">
-  <div class="note-notes">
-    <img src="assets/notes/skills1.svg" class="note-img" alt="" />
-    <img src="assets/notes/skills2.svg" class="note-img n1" alt="" />
-    <img src="assets/notes/skills3.svg" class="note-img" alt="" />
-    <img src="assets/notes/skills4.svg" class="note-img" alt="" />
-  </div>
-  <span class="label top note-title">Skills</span>
-</button>
-
-<!-- WORK (4 notes) -->
-<button class="note-block" data-category="work" data-fx="assets/music/fx3.wav">
-  <div class="note-notes">
-    <img src="assets/notes/work1.svg" class="note-img" alt="" />
-    <img src="assets/notes/work2.svg" class="note-img" alt="" />
-    <img src="assets/notes/work3.svg" class="note-img n2" alt="" />
-    <img src="assets/notes/work4.svg" class="note-img" alt="" />
-  </div>
-  <span class="label bottom note-title">Work</span>
-</button>
-
-<!-- CONTACT (5 notes) -->
-<button class="note-block" data-category="contact" data-fx="assets/music/fx4.wav">
-  <div class="note-notes">
-    <img src="assets/notes/contact1.svg" class="note-img n3" alt="" />
-    <img src="assets/notes/contact2.svg" class="note-img" alt="" />
-    <img src="assets/notes/contact3.svg" class="note-img" alt="" />
-    <img src="assets/notes/contact4.svg" class="note-img" alt="" />
-  </div>
-  <span class="label top note-title">Contact</span>
-</button>
-        </div>
-
-        </div>
-      </div>
-
-      <div id="about-modal" class="about-modal" hidden>
-        <div class="about-modal__backdrop"></div>
-        <div class="about-modal__dialog">
-          <button class="about-modal__close" aria-label="Close modal"></button>
-          <div id="about-modal-body"></div>
-        </div>
-      </div>
-    </section>
 
    <section id="projects" class="projects">
       <div class="projects__wrap">
@@ -177,6 +107,76 @@
     </section>
 
 `
+    <section id="about" class="about">
+      <div class="about__scroller" id="aboutTrack">
+        <div class="strip">
+          <div class="staff-lines" aria-hidden="true"></div>
+
+          <div class="intro-block">
+            <div class="intro-text">
+              <p>
+                Motivated Computer Science student with hands-on experience building cross-platform
+                mobile apps and full-stack websites. Cisco-certified SQL Engineer and Python
+                enthusiast with a strong foundation in predictive algorithms, AI, and deep learning.
+              </p>
+            </div>
+            <img src="assets/images/profile.png" alt="Aundreka Perez" class="intro-photo" />
+          </div>
+
+         <div class="staff-track">
+         <!-- EDUCATION (1 note) -->
+<button class="note-block" data-category="education" data-color="red" data-fx="assets/music/fx1.wav">
+  <div class="note-notes">
+    <img src="assets/notes/education1.svg" class="note-img edu-1"  alt="" />
+  </div>
+  <span class="label bottom note-title">Education</span>
+</button>
+
+<!-- SKILLS (4 notes) -->
+<button class="note-block" data-category="skills" data-color="yellow" data-fx="assets/music/fx2.wav">
+  <div class="note-notes">
+    <img src="assets/notes/skills1.svg" class="note-img" alt="" />
+    <img src="assets/notes/skills2.svg" class="note-img n1" alt="" />
+    <img src="assets/notes/skills3.svg" class="note-img" alt="" />
+    <img src="assets/notes/skills4.svg" class="note-img" alt="" />
+  </div>
+  <span class="label top note-title">Skills</span>
+</button>
+
+<!-- WORK (4 notes) -->
+<button class="note-block" data-category="work" data-color="purple" data-fx="assets/music/fx3.wav">
+  <div class="note-notes">
+    <img src="assets/notes/work1.svg" class="note-img" alt="" />
+    <img src="assets/notes/work2.svg" class="note-img" alt="" />
+    <img src="assets/notes/work3.svg" class="note-img n2" alt="" />
+    <img src="assets/notes/work4.svg" class="note-img" alt="" />
+  </div>
+  <span class="label bottom note-title">Work</span>
+</button>
+
+<!-- CONTACT (5 notes) -->
+<button class="note-block" data-category="contact" data-color="blue" data-fx="assets/music/fx4.wav">
+  <div class="note-notes">
+    <img src="assets/notes/contact1.svg" class="note-img n3" alt="" />
+    <img src="assets/notes/contact2.svg" class="note-img" alt="" />
+    <img src="assets/notes/contact3.svg" class="note-img" alt="" />
+    <img src="assets/notes/contact4.svg" class="note-img" alt="" />
+  </div>
+  <span class="label top note-title">Contact</span>
+</button>
+        </div>
+
+        </div>
+      </div>
+<div id="about-modal" class="about-modal">
+  <div class="about-modal__backdrop"></div>
+  <div class="about-modal__dialog">
+    <button class="about-modal__close" type="button" aria-label="Close modal">×</button>
+    <div id="about-modal-body"></div>
+  </div>
+</div>
+
+    </section>
 
     <script src="js/index.js"></script>
     <script src="js/entrance.js" defer></script>
