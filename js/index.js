@@ -628,6 +628,10 @@ if (catEl) {
       catEl.play();
     }
   });
+ catEl.addEventListener("load", () => {
+  positionCatClickOverlay();
+  keepCatFullyOnscreen();
+}); 
 }
 
 /***********************
@@ -657,11 +661,16 @@ catBtn?.addEventListener("click", (e) => {
 });
 
 catWrap?.addEventListener("click", (e) => {
-  if (catBtn) return; // if overlay button exists, let it handle it
+  // If the overlay button is currently clickable, let it handle clicks.
+  if (catBtn) {
+    const pe = getComputedStyle(catBtn).pointerEvents;
+    const op = parseFloat(getComputedStyle(catBtn).opacity || "0");
+    if (pe !== "none" && op > 0.05) return;
+  }
+
   e.preventDefault();
   focusAboutScroll();
 });
-
 
 /***********************
  * Scroll sync: enter when at About; exit when above

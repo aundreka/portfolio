@@ -523,3 +523,12 @@ model-viewer { overflow: visible !important; }
   pointer-events: auto;
   transition: opacity 200ms ease;
 }
+.cat-wrap,
+.cat-wrap * {
+  cursor: pointer !important;
+}
+
+/* Make sure the invisible overlay also shows pointer when it becomes active */
+#cat-click {
+  cursor: pointer !important;
+}
