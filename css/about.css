@@ -785,24 +785,14 @@ body.modal-open{
 .about::after{
   content:"";
   position:absolute;
-  inset:-6%;
-  z-index: 2;              /* above staff lines (z:1), below intro-block (z:2/3) */
-  pointer-events:none;
+  z-index: 99;
+  /*abovestafflines(z:;
+  1),belowintro-block(z:;
+  2/3)*/pointer-events:none;
   opacity: var(--vignette-opacity);
   transition: opacity 700ms ease;
-
-  /* arced vignette */
-  background:
-    radial-gradient(
-      ellipse at 50% 58%,
-      rgba(0,0,0,0) 0%,
-      rgba(0,0,0,0) 42%,
-      rgba(0,0,0,0.35) 62%,
-      rgba(0,0,0,0.72) 78%,
-      rgba(0,0,0,0.92) 100%
-    );
+  /*arcedvignette*/background:    radial-gradient(      ellipse at 50% 58%,      rgba(0,0,0,0) 0%,      rgba(0,0,0,0) 42%,      rgba(0,0,0,0.35) 62%,      rgba(0,0,0,0.72) 78%,      rgba(0,0,0,0.92) 100%    );
   filter: blur(0.2px);
-  transform: translateY(-2%) scale(1.06);
 }
 
 .about.stars-on{
