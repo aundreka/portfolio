@@ -256,72 +256,97 @@ if (scroller && (e.target === scroller || scroller.contains(e.target))) return;
     { passive: true }
   );
 
-  /* --------------------------
-     Horizontal wheel inside aboutTrack
-     - scrolls horizontally
-     - exits vertically to Projects (up) or next section (down)
-     -------------------------- */
-// ---- Trackpad-safe wheel routing for #aboutTrack ----
+// ---- Trackpad + mouse-safe wheel routing for #aboutTrack ----
 let wheelRaf = 0;
 let wheelAccum = 0;
-let lastWheelT = 0;
 
 function wheelToPixels(e) {
-  // deltaMode: 0=pixel, 1=line, 2=page
   const LINE = 16;
   const PAGE = window.innerHeight;
   const mul = e.deltaMode === 1 ? LINE : (e.deltaMode === 2 ? PAGE : 1);
   return { dx: e.deltaX * mul, dy: e.deltaY * mul };
 }
 
-scroller.addEventListener("wheel", (e) => {
-  // If your cursor is over a clickable UI inside the scroller, don't hijack.
-  if (e.target.closest('button, a, input, textarea, [role="button"]')) return;
+// Heuristic: mouse wheels usually have dx==0 and dy in big steps (80–120+).
+function isLikelyMouseWheel(dx, dy) {
+  return Math.abs(dx) < 0.5 && Math.abs(dy) >= 40;
+}
 
-  // Kill bubbling early so the window-level wheel snap doesn't fight us
-  e.stopPropagation();
-  e.preventDefault();
-centerSnapping = true;
-setTimeout(() => (centerSnapping = false), 220);
+scroller.addEventListener("wheel", (e) => {
+  // Don't hijack wheel over interactive elements
+  if (e.target.closest('button, a, input, textarea, [role="button"]')) return;
 
   const { dx, dy } = wheelToPixels(e);
 
-  // Trackpads often provide both dx and dy. Decide intent by magnitude.
-  const intentHorizontal = Math.abs(dx) > Math.abs(dy) * 0.75;
+  const atLeft  = scroller.scrollLeft <= 1;
+  const atRight = scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 1;
 
-  // Use horizontal intent when present, otherwise map vertical to horizontal (your design)
-  const delta = intentHorizontal ? dx : dy;
+  const mouseWheel = isLikelyMouseWheel(dx, dy);
 
-  // Accumulate and apply in rAF to avoid jitter from high-frequency wheel events
+  // SHIFT+wheel is a strong "I want horizontal" signal on mouse
+  const wantsHorizontal = e.shiftKey || Math.abs(dx) > Math.abs(dy) * 0.75;
+
+  // --- Case A: regular mouse wheel (no shift, mostly dy) ---
+  // Let the page scroll normally, but still support your edge exits.
+  if (mouseWheel && !wantsHorizontal) {
+    // If the user is trying to go up while at far-left: exit to Projects/center.
+    if (dy < 0 && atLeft) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      centerSnapping = true;
+      setTimeout(() => (centerSnapping = false), 220);
+
+      if (!isTopAligned()) snapToCenter();
+      else snapToProjects();
+    }
+
+    // If trying to go down while at far-right: exit to next section/bottom.
+    else if (dy > 0 && atRight) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      centerSnapping = true;
+      setTimeout(() => (centerSnapping = false), 220);
+
+      if (!isBottomAligned()) snapToBottom();
+      else snapToNextAfterAbout();
+    }
+
+    // Otherwise: allow normal vertical page scroll
+    return;
+  }
+
+  // --- Case B: trackpad OR mouse with shift OR user has dx intent ---
+  // We hijack and scroll the track horizontally.
+  e.preventDefault();
+  e.stopPropagation();
+
+  centerSnapping = true;
+  setTimeout(() => (centerSnapping = false), 220);
+
+  // If it's trackpad and mostly dy, map dy->horizontal (your design).
+  const delta = wantsHorizontal ? (Math.abs(dx) > 0 ? dx : dy) : dy;
+
   wheelAccum += delta;
-
-  const now = performance.now();
-  lastWheelT = now;
 
   if (!wheelRaf) {
     wheelRaf = requestAnimationFrame(() => {
       wheelRaf = 0;
 
-      // apply scroll
       scroller.scrollLeft += wheelAccum;
       wheelAccum = 0;
 
       syncThumb();
 
-      // ---- Edge exit rules (same idea as yours, but AFTER applying scroll) ----
-      const atLeft  = scroller.scrollLeft <= 1;
-      const atRight = scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 1;
+      const atLeft2  = scroller.scrollLeft <= 1;
+      const atRight2 = scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 1;
 
-      // If user is trying to go "up" (negative dy) and they're at far-left, allow exit to Projects
-      if (dy < 0 && atLeft) {
-        // Let the page handle the next wheel moment after we finish this frame
-        // (we already prevented this event, so do a clean exit ourselves)
+      // Edge exits based on dy direction (vertical intention)
+      if (dy < 0 && atLeft2) {
         if (!isTopAligned()) snapToCenter();
         else snapToProjects();
-      }
-
-      // If user is trying to go "down" (positive dy) and they are at far-right AND bottom aligned, exit to next section
-      if (dy > 0 && atRight) {
+      } else if (dy > 0 && atRight2) {
         if (!isBottomAligned()) snapToBottom();
         else snapToNextAfterAbout();
       }
