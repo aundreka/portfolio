@@ -93,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const toWhiteAsset = (src) => {
     if (!src) return src;
     if (src.includes("profile.png")) return src.replace("profile.png", "profile-white.png");
+
     if (src.endsWith(".svg") && !src.endsWith("-white.svg")) return src.replace(".svg", "-white.svg");
     return src;
   };
@@ -219,13 +220,14 @@ document.addEventListener("DOMContentLoaded", () => {
     "wheel",
     (e) => {
       // ignore wheel when the user is intentionally horizontal scrolling inside aboutTrack
-      if (e.target.closest("#aboutTrack")) return;
+if (scroller && (e.target === scroller || scroller.contains(e.target))) return;
 
       const ratio = aboutVisibleRatio();
 
       // If About is sufficiently visible but not centered, snap it in.
       if (ratio >= ENTER_RATIO && !isAboutCentered()) {
         e.preventDefault();
+
         snapAboutToCenter("smooth");
       }
     },
@@ -259,46 +261,74 @@ document.addEventListener("DOMContentLoaded", () => {
      - scrolls horizontally
      - exits vertically to Projects (up) or next section (down)
      -------------------------- */
-  scroller.addEventListener(
-    "wheel",
-    (e) => {
-      const delta = e.deltaY;
-      if (delta === 0) return;
+// ---- Trackpad-safe wheel routing for #aboutTrack ----
+let wheelRaf = 0;
+let wheelAccum = 0;
+let lastWheelT = 0;
 
-      // Scroll UP while at far-left -> go back to Projects (since it's ABOVE About now)
-      if (delta < 0 && isAtFarLeft()) {
-        e.preventDefault();
+function wheelToPixels(e) {
+  // deltaMode: 0=pixel, 1=line, 2=page
+  const LINE = 16;
+  const PAGE = window.innerHeight;
+  const mul = e.deltaMode === 1 ? LINE : (e.deltaMode === 2 ? PAGE : 1);
+  return { dx: e.deltaX * mul, dy: e.deltaY * mul };
+}
 
-        // If About isn't aligned to top yet, align first so exit feels clean
+scroller.addEventListener("wheel", (e) => {
+  // If your cursor is over a clickable UI inside the scroller, don't hijack.
+  if (e.target.closest('button, a, input, textarea, [role="button"]')) return;
+
+  // Kill bubbling early so the window-level wheel snap doesn't fight us
+  e.stopPropagation();
+  e.preventDefault();
+centerSnapping = true;
+setTimeout(() => (centerSnapping = false), 220);
+
+  const { dx, dy } = wheelToPixels(e);
+
+  // Trackpads often provide both dx and dy. Decide intent by magnitude.
+  const intentHorizontal = Math.abs(dx) > Math.abs(dy) * 0.75;
+
+  // Use horizontal intent when present, otherwise map vertical to horizontal (your design)
+  const delta = intentHorizontal ? dx : dy;
+
+  // Accumulate and apply in rAF to avoid jitter from high-frequency wheel events
+  wheelAccum += delta;
+
+  const now = performance.now();
+  lastWheelT = now;
+
+  if (!wheelRaf) {
+    wheelRaf = requestAnimationFrame(() => {
+      wheelRaf = 0;
+
+      // apply scroll
+      scroller.scrollLeft += wheelAccum;
+      wheelAccum = 0;
+
+      syncThumb();
+
+      // ---- Edge exit rules (same idea as yours, but AFTER applying scroll) ----
+      const atLeft  = scroller.scrollLeft <= 1;
+      const atRight = scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 1;
+
+      // If user is trying to go "up" (negative dy) and they're at far-left, allow exit to Projects
+      if (dy < 0 && atLeft) {
+        // Let the page handle the next wheel moment after we finish this frame
+        // (we already prevented this event, so do a clean exit ourselves)
         if (!isTopAligned()) snapToCenter();
         else snapToProjects();
-
-        return;
       }
 
-      // Scroll DOWN while inside About:
-      // 1) if not bottom-aligned, align to bottom first
-      // 2) if bottom-aligned and far-right, exit to next section after About
-      if (delta > 0) {
-        if (!isBottomAligned()) {
-          e.preventDefault();
-          snapToBottom();
-          return;
-        }
-        if (isAtFarRight()) {
-          e.preventDefault();
-          snapToNextAfterAbout();
-          return;
-        }
+      // If user is trying to go "down" (positive dy) and they are at far-right AND bottom aligned, exit to next section
+      if (dy > 0 && atRight) {
+        if (!isBottomAligned()) snapToBottom();
+        else snapToNextAfterAbout();
       }
+    });
+  }
+}, { passive: false });
 
-      // Otherwise: horizontal scroll
-      e.preventDefault();
-      scroller.scrollLeft += delta * 0.9;
-      syncThumb();
-    },
-    { passive: false }
-  );
 
   /* --------------------------
      Pointer-drag horizontal scroll
@@ -740,28 +770,34 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   
-  let audioUnlocked = false;
-  const unlockAudio = () => {
-    if (audioUnlocked) return;
-    audioUnlocked = true;
+let audioUnlocked = false;
+const unlockAudio = () => {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
 
-    buttons.forEach((btn) => {
-      const src = btn.dataset.fx;
-      if (!src) return;
-      const a = getAudio(src);
-      a.muted = true;
-      a.play()
-        .then(() => {
-          a.pause();
-          a.currentTime = 0;
-          a.muted = false;
-        })
-        .catch(() => {});
-    });
+  buttons.forEach((btn) => {
+    const src = btn.dataset.fx;
+    if (!src) return;
 
-    window.removeEventListener("pointerdown", unlockAudio);
-    window.removeEventListener("keydown", unlockAudio);
-  };
+    const a = getAudio(src);
+
+    // prime silently — NEVER unmute here
+    const oldVol = a.volume;
+    a.volume = 0;      // extra safety
+    a.muted = true;
+
+    a.play().then(() => {
+      a.pause();
+      a.currentTime = 0;
+      // keep muted; restore volume (still muted)
+      a.volume = oldVol;
+    }).catch(() => {});
+  });
+
+  window.removeEventListener("pointerdown", unlockAudio);
+  window.removeEventListener("keydown", unlockAudio);
+};
+
 
   window.addEventListener("pointerdown", unlockAudio, { once: true });
   window.addEventListener("keydown", unlockAudio, { once: true });
@@ -773,22 +809,24 @@ document.addEventListener("DOMContentLoaded", () => {
   buttons.forEach((btn) => {
     if (btn.dataset.color) btn.style.setProperty("--note-color", btn.dataset.color);
 
-    btn.addEventListener("pointerenter", () => {
-      const src = btn.dataset.fx;
-      if (!src) return;
+btn.addEventListener("pointerenter", () => {
+  const src = btn.dataset.fx;
+  if (!src) return;
 
-      const now = performance.now();
-      const last = lastPlay.get(btn) || 0;
-      if (now - last < COOLDOWN_MS) return;
-      lastPlay.set(btn, now);
+  const now = performance.now();
+  const last = lastPlay.get(btn) || 0;
+  if (now - last < COOLDOWN_MS) return;
+  lastPlay.set(btn, now);
 
-      const a = getAudio(src);
-      try {
-        a.currentTime = 0;
-      } catch (e) {}
+  const a = getAudio(src);
 
-      a.play().catch(() => {});
-    });
+  a.muted = false;      // ✅ only unmute for real playback
+  a.volume = 0.75;
+
+  try { a.currentTime = 0; } catch (_) {}
+  a.play().catch(() => {});
+});
+
   });
 })();
 

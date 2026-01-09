@@ -179,21 +179,21 @@
   position: relative;
   display: flex;
   align-items: stretch;
-  height: 760px;
+  height: 660px;
   width: max-content;
   min-width: 100%;
 }
 
 #projects .piano-key{
   position: relative;
-  height: 760px;
+  height: 660px;
   background: #fff;
   border-right: 2px solid #111;
   box-sizing: border-box;
   user-select: none;
 
-  flex: 0 0 var(--key-w, 200px);
-  width: var(--key-w, 200px);
+  flex: 0 0 var(--key-w, 150px);
+  width: var(--key-w, 150px);
 
   transition: flex-basis 260ms ease, width 260ms ease, background-color 120ms ease;
 }
@@ -503,9 +503,7 @@
   touch-action: pan-x !important;
 }
 
-#projects #projectsPiano .piano-track{
-  width: max-content !important;
-}
+
 
 #projects #projectsPiano .piano-key{
   background-size: cover;
@@ -534,8 +532,8 @@
 #projects .blacklayer .black-key{
   position: absolute;
   top: 0px;
-  width: 100px;
-  height: 430px;
+  width: 80px;
+  height: 400px;
   border-radius: 18px;
   background: #000;
 }

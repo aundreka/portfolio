@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
  
-  pianoHost.style.setProperty("--open-w", "1300px");
-  pianoHost.style.setProperty("--key-w", "190px");
+  pianoHost.style.setProperty("--open-w", "1200px");
+  pianoHost.style.setProperty("--key-w", "150px");
   pianoHost.style.setProperty("--key-w-small", "120px");
 
   const LANGUAGES = ["All","python","html css js","php sql","react native","react","next","expo","kotlin","java","c++","flutter"];

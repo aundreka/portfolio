@@ -19,6 +19,11 @@
 html, body, button, input, textarea, select, #piano-label {
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif !important;
 }
+html, body{
+  width: 100%;
+  max-width: 100%;
+  overscroll-behavior-x: none;
+}
 
 html {
   scroll-behavior: smooth;
@@ -531,4 +536,10 @@ model-viewer { overflow: visible !important; }
 /* Make sure the invisible overlay also shows pointer when it becomes active */
 #cat-click {
   cursor: pointer !important;
+}
+
+
+body{
+  position: relative;
+  touch-action: pan-y;
 }

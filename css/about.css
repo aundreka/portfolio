@@ -798,3 +798,34 @@ body.modal-open{
 .about.stars-on{
   --vignette-opacity: 1;
 }
+
+#aboutTrack{
+  overscroll-behavior: contain; /* prevents momentum from bubbling to page */
+  scroll-behavior: auto;        /* avoid smooth + wheel = jitter */
+  -webkit-overflow-scrolling: touch;
+}
+.about .about-scrubber__track{
+  background: rgba(20,20,20,0.14);
+  border: 1px solid rgba(20,20,20,0.20);
+}
+
+.about .about-scrubber__thumb{
+  background: rgba(20,20,20,0.85);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+}
+
+/* Dark mode when stars are on */
+.about.stars-on .about-scrubber__track{
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.30);
+}
+
+.about.stars-on .about-scrubber__thumb{
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.22);
+}
+
+/* Optional: make the whole scrubber container glow a bit in dark mode */
+.about.stars-on .about-scrubber{
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,0.20));
+}
