@@ -93,7 +93,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const toWhiteAsset = (src) => {
     if (!src) return src;
     if (src.includes("profile.png")) return src.replace("profile.png", "profile-white.png");
-
     if (src.endsWith(".svg") && !src.endsWith("-white.svg")) return src.replace(".svg", "-white.svg");
     return src;
   };
@@ -220,14 +219,13 @@ document.addEventListener("DOMContentLoaded", () => {
     "wheel",
     (e) => {
       // ignore wheel when the user is intentionally horizontal scrolling inside aboutTrack
-if (scroller && (e.target === scroller || scroller.contains(e.target))) return;
+      if (e.target.closest("#aboutTrack")) return;
 
       const ratio = aboutVisibleRatio();
 
       // If About is sufficiently visible but not centered, snap it in.
       if (ratio >= ENTER_RATIO && !isAboutCentered()) {
         e.preventDefault();
-
         snapAboutToCenter("smooth");
       }
     },
@@ -256,104 +254,51 @@ if (scroller && (e.target === scroller || scroller.contains(e.target))) return;
     { passive: true }
   );
 
-// ---- Trackpad + mouse-safe wheel routing for #aboutTrack ----
-let wheelRaf = 0;
-let wheelAccum = 0;
+  /* --------------------------
+     Horizontal wheel inside aboutTrack
+     - scrolls horizontally
+     - exits vertically to Projects (up) or next section (down)
+     -------------------------- */
+  scroller.addEventListener(
+    "wheel",
+    (e) => {
+      const delta = e.deltaY;
+      if (delta === 0) return;
 
-function wheelToPixels(e) {
-  const LINE = 16;
-  const PAGE = window.innerHeight;
-  const mul = e.deltaMode === 1 ? LINE : (e.deltaMode === 2 ? PAGE : 1);
-  return { dx: e.deltaX * mul, dy: e.deltaY * mul };
-}
+      // Scroll UP while at far-left -> go back to Projects (since it's ABOVE About now)
+      if (delta < 0 && isAtFarLeft()) {
+        e.preventDefault();
 
-// Heuristic: mouse wheels usually have dx==0 and dy in big steps (80–120+).
-function isLikelyMouseWheel(dx, dy) {
-  return Math.abs(dx) < 0.5 && Math.abs(dy) >= 40;
-}
-
-scroller.addEventListener("wheel", (e) => {
-  // Don't hijack wheel over interactive elements
-  if (e.target.closest('button, a, input, textarea, [role="button"]')) return;
-
-  const { dx, dy } = wheelToPixels(e);
-
-  const atLeft  = scroller.scrollLeft <= 1;
-  const atRight = scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 1;
-
-  const mouseWheel = isLikelyMouseWheel(dx, dy);
-
-  // SHIFT+wheel is a strong "I want horizontal" signal on mouse
-  const wantsHorizontal = e.shiftKey || Math.abs(dx) > Math.abs(dy) * 0.75;
-
-  // --- Case A: regular mouse wheel (no shift, mostly dy) ---
-  // Let the page scroll normally, but still support your edge exits.
-  if (mouseWheel && !wantsHorizontal) {
-    // If the user is trying to go up while at far-left: exit to Projects/center.
-    if (dy < 0 && atLeft) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      centerSnapping = true;
-      setTimeout(() => (centerSnapping = false), 220);
-
-      if (!isTopAligned()) snapToCenter();
-      else snapToProjects();
-    }
-
-    // If trying to go down while at far-right: exit to next section/bottom.
-    else if (dy > 0 && atRight) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      centerSnapping = true;
-      setTimeout(() => (centerSnapping = false), 220);
-
-      if (!isBottomAligned()) snapToBottom();
-      else snapToNextAfterAbout();
-    }
-
-    // Otherwise: allow normal vertical page scroll
-    return;
-  }
-
-  // --- Case B: trackpad OR mouse with shift OR user has dx intent ---
-  // We hijack and scroll the track horizontally.
-  e.preventDefault();
-  e.stopPropagation();
-
-  centerSnapping = true;
-  setTimeout(() => (centerSnapping = false), 220);
-
-  // If it's trackpad and mostly dy, map dy->horizontal (your design).
-  const delta = wantsHorizontal ? (Math.abs(dx) > 0 ? dx : dy) : dy;
-
-  wheelAccum += delta;
-
-  if (!wheelRaf) {
-    wheelRaf = requestAnimationFrame(() => {
-      wheelRaf = 0;
-
-      scroller.scrollLeft += wheelAccum;
-      wheelAccum = 0;
-
-      syncThumb();
-
-      const atLeft2  = scroller.scrollLeft <= 1;
-      const atRight2 = scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 1;
-
-      // Edge exits based on dy direction (vertical intention)
-      if (dy < 0 && atLeft2) {
+        // If About isn't aligned to top yet, align first so exit feels clean
         if (!isTopAligned()) snapToCenter();
         else snapToProjects();
-      } else if (dy > 0 && atRight2) {
-        if (!isBottomAligned()) snapToBottom();
-        else snapToNextAfterAbout();
-      }
-    });
-  }
-}, { passive: false });
 
+        return;
+      }
+
+      // Scroll DOWN while inside About:
+      // 1) if not bottom-aligned, align to bottom first
+      // 2) if bottom-aligned and far-right, exit to next section after About
+      if (delta > 0) {
+        if (!isBottomAligned()) {
+          e.preventDefault();
+          snapToBottom();
+          return;
+        }
+        if (isAtFarRight()) {
+          e.preventDefault();
+          snapToNextAfterAbout();
+          return;
+        }
+      }
+
+      // Otherwise: horizontal scroll
+      e.preventDefault();
+      scroller.scrollLeft += delta * 0.9;
+      syncThumb();
+    },
+    { passive: false }
+  );
 
   /* --------------------------
      Pointer-drag horizontal scroll
@@ -795,34 +740,28 @@ scroller.addEventListener("wheel", (e) => {
   };
 
   
-let audioUnlocked = false;
-const unlockAudio = () => {
-  if (audioUnlocked) return;
-  audioUnlocked = true;
+  let audioUnlocked = false;
+  const unlockAudio = () => {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
 
-  buttons.forEach((btn) => {
-    const src = btn.dataset.fx;
-    if (!src) return;
+    buttons.forEach((btn) => {
+      const src = btn.dataset.fx;
+      if (!src) return;
+      const a = getAudio(src);
+      a.muted = true;
+      a.play()
+        .then(() => {
+          a.pause();
+          a.currentTime = 0;
+          a.muted = false;
+        })
+        .catch(() => {});
+    });
 
-    const a = getAudio(src);
-
-    // prime silently — NEVER unmute here
-    const oldVol = a.volume;
-    a.volume = 0;      // extra safety
-    a.muted = true;
-
-    a.play().then(() => {
-      a.pause();
-      a.currentTime = 0;
-      // keep muted; restore volume (still muted)
-      a.volume = oldVol;
-    }).catch(() => {});
-  });
-
-  window.removeEventListener("pointerdown", unlockAudio);
-  window.removeEventListener("keydown", unlockAudio);
-};
-
+    window.removeEventListener("pointerdown", unlockAudio);
+    window.removeEventListener("keydown", unlockAudio);
+  };
 
   window.addEventListener("pointerdown", unlockAudio, { once: true });
   window.addEventListener("keydown", unlockAudio, { once: true });
@@ -834,24 +773,22 @@ const unlockAudio = () => {
   buttons.forEach((btn) => {
     if (btn.dataset.color) btn.style.setProperty("--note-color", btn.dataset.color);
 
-btn.addEventListener("pointerenter", () => {
-  const src = btn.dataset.fx;
-  if (!src) return;
+    btn.addEventListener("pointerenter", () => {
+      const src = btn.dataset.fx;
+      if (!src) return;
 
-  const now = performance.now();
-  const last = lastPlay.get(btn) || 0;
-  if (now - last < COOLDOWN_MS) return;
-  lastPlay.set(btn, now);
+      const now = performance.now();
+      const last = lastPlay.get(btn) || 0;
+      if (now - last < COOLDOWN_MS) return;
+      lastPlay.set(btn, now);
 
-  const a = getAudio(src);
+      const a = getAudio(src);
+      try {
+        a.currentTime = 0;
+      } catch (e) {}
 
-  a.muted = false;      // ✅ only unmute for real playback
-  a.volume = 0.75;
-
-  try { a.currentTime = 0; } catch (_) {}
-  a.play().catch(() => {});
-});
-
+      a.play().catch(() => {});
+    });
   });
 })();
 

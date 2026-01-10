@@ -786,6 +786,7 @@ body.modal-open{
   content:"";
   position:absolute;
   z-index: 99;
+  inset:0;
   /*abovestafflines(z:;
   1),belowintro-block(z:;
   2/3)*/pointer-events:none;
@@ -800,9 +801,9 @@ body.modal-open{
 }
 
 #aboutTrack{
-  overscroll-behavior: contain; /* prevents momentum from bubbling to page */
-  scroll-behavior: auto;        /* avoid smooth + wheel = jitter */
+  overscroll-behavior-y: auto;    /* allow mouse wheel to scroll the page */
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: auto;
 }
 .about .about-scrubber__track{
   background: rgba(20,20,20,0.14);

@@ -45,4 +45,15 @@ portfolio concept:
         Visual Search Suggestions – As you type, suggested projects appear as floating piano keys that you can directly click.
 
 
+    education section content:
+2023-2027 lyceum of the philippines university - cavite
+bachelor of science in computer science
+continuous resident scholarship
+continuous dean's lister
+
+placeholder for certificates
+placeholder for online courses
+
+skills section content:
+soft sk
     
