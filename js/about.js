@@ -285,6 +285,9 @@ document.addEventListener("DOMContentLoaded", () => {
           snapToBottom();
           return;
         }
+        if (!isAtFarRight()) {
+          return;
+        }
         if (isAtFarRight()) {
           e.preventDefault();
           snapToNextAfterAbout();
@@ -292,7 +295,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Otherwise: horizontal scroll
+      // Otherwise: horizontal scroll (only if we're not trying to scroll down past About)
+      if (delta > 0 && isBottomAligned()) return;
       e.preventDefault();
       scroller.scrollLeft += delta * 0.9;
       syncThumb();
@@ -655,6 +659,8 @@ document.addEventListener("DOMContentLoaded", () => {
     noteBlocks.forEach((btn) => {
       btn.addEventListener("pointerenter", (e) => {
         setAboutAccent(btn);
+        btn.classList.add("is-turned");
+        if (btn.dataset.category === "contact") btn.classList.add("panel-pinned");
 
         isWaveActive = true;
         releasing = false;
@@ -680,6 +686,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         btn.classList.remove("wave-active");
         btn.classList.add("wave-releasing");
+        btn.classList.remove("is-turned");
 
         clearAboutAccent();
 
@@ -791,4 +798,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 })();
-

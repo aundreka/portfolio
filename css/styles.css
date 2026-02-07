@@ -543,3 +543,84 @@ body{
   position: relative;
   touch-action: pan-y;
 }
+
+.contact{
+  position: relative;
+  background: #ffffff;
+  color: #111;
+  padding: clamp(72px, 12vh, 140px) clamp(20px, 6vw, 96px);
+  overflow: hidden;
+}
+
+.contact__bg{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 50% at 85% 15%, rgba(0,0,0,.06), transparent 70%),
+    radial-gradient(45% 55% at 10% 80%, rgba(0,0,0,.05), transparent 70%);
+}
+
+.contact__wrap{
+  position: relative;
+  z-index: 1;
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(20px, 4vw, 40px);
+}
+
+.contact__eyebrow{
+  margin: 0 0 10px;
+  font: 600 12px "Inter", system-ui;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.55);
+}
+
+.contact__title{
+  margin: 0 0 12px;
+  font-family: "Abril Fatface", serif;
+  font-size: clamp(28px, 4.4vw, 56px);
+  letter-spacing: -0.5px;
+  line-height: 1.02;
+  color: #0b0b0f;
+}
+
+.contact__desc{
+  margin: 0;
+  font: 400 clamp(14px, 1.4vw, 18px) "Inter", system-ui;
+  color: rgba(0,0,0,.68);
+}
+
+.contact__actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.contact__btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: #fff;
+  color: #111;
+  text-decoration: none;
+  font: 600 14px "Inter", system-ui;
+  letter-spacing: 0.02em;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.contact__btn.primary{
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.contact__btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0,0,0,.12);
+}

@@ -106,7 +106,6 @@
       </div>
     </section>
 
-`
     <section id="about" class="about">
       <div class="about__scroller" id="aboutTrack">
         <div class="strip">
@@ -124,13 +123,7 @@
           </div>
 
          <div class="staff-track">
-         <!-- EDUCATION (1 note) -->
-<button class="note-block" data-category="education" data-color="red" data-fx="assets/music/fx1.wav">
-  <div class="note-notes">
-    <img src="assets/notes/education1.svg" class="note-img edu-1"  alt="" />
-  </div>
-  <span class="label bottom note-title">Education</span>
-</button>
+
 
 <!-- SKILLS (4 notes) -->
 <button class="note-block" data-category="skills" data-color="yellow" data-fx="assets/music/fx2.wav">
@@ -141,7 +134,11 @@
     <img src="assets/notes/skills4.svg" class="note-img" alt="" />
   </div>
   <span class="label top note-title">Skills</span>
+  <div class="note-panel" aria-hidden="true">
+    <img src="assets/about/1.png" alt="Skills placeholder" />
+  </div>
 </button>
+
 
 <!-- WORK (4 notes) -->
 <button class="note-block" data-category="work" data-color="purple" data-fx="assets/music/fx3.wav">
@@ -152,9 +149,23 @@
     <img src="assets/notes/work4.svg" class="note-img" alt="" />
   </div>
   <span class="label bottom note-title">Work</span>
+  <div class="note-panel" aria-hidden="true">
+    <img src="assets/about/2.png" alt="Work placeholder" />
+  </div>
 </button>
 
-<!-- CONTACT (5 notes) -->
+<!-- EDUCATION (1 note) -->
+<button class="note-block" data-category="education" data-color="red" data-fx="assets/music/fx1.wav">
+  <div class="note-notes">
+    <img src="assets/notes/education1.svg" class="note-img edu-1"  alt="" />
+  </div>
+  <span class="label bottom note-title">Education</span>
+  <div class="note-panel" aria-hidden="true">
+    <img src="assets/about/3.png" alt="Education placeholder" />
+  </div>
+</button>
+
+<!-- INTERESTS (5 notes) -->
 <button class="note-block" data-category="contact" data-color="blue" data-fx="assets/music/fx4.wav">
   <div class="note-notes">
     <img src="assets/notes/contact1.svg" class="note-img n3" alt="" />
@@ -162,20 +173,33 @@
     <img src="assets/notes/contact3.svg" class="note-img" alt="" />
     <img src="assets/notes/contact4.svg" class="note-img" alt="" />
   </div>
-  <span class="label top note-title">Contact</span>
+  <span class="label top note-title">Interests</span>
+  <div class="note-panel" aria-hidden="true">
+    <img src="assets/about/4.png" alt="Interests placeholder" />
+  </div>
 </button>
         </div>
 
         </div>
       </div>
-<div id="about-modal" class="about-modal">
-  <div class="about-modal__backdrop"></div>
-  <div class="about-modal__dialog">
-    <button class="about-modal__close" type="button" aria-label="Close modal">×</button>
-    <div id="about-modal-body"></div>
-  </div>
-</div>
+    </section>
 
+    <section id="contact" class="contact">
+      <div class="contact__bg" aria-hidden="true"></div>
+      <div class="contact__wrap">
+        <div class="contact__intro">
+          <p class="contact__eyebrow">CONTACT ME</p>
+          <h2 class="contact__title">Let's build something clean, fast, and beautiful.</h2>
+          <p class="contact__desc">
+            Reach out for collabs, freelance work, or just to say hi.
+          </p>
+        </div>
+        <div class="contact__actions">
+          <a class="contact__btn primary" href="mailto:c.aundrekaperez@gmail.com">Email Me</a>
+          <a class="contact__btn" href="https://github.com/aundreka" target="_blank" rel="noreferrer">GitHub</a>
+          <a class="contact__btn" href="https://www.linkedin.com/in/aundreka" target="_blank" rel="noreferrer">LinkedIn</a>
+        </div>
+      </div>
     </section>
 
     <script src="js/index.js"></script>
