@@ -694,6 +694,74 @@ const about = document.getElementById("about") || document.querySelector("sectio
   }
 }, { passive: true });
 
+const navEl = document.querySelector(".nav");
+const aboutSectionEl = document.getElementById("about");
+const updateNavTheme = () => {
+  if (!navEl || !aboutSectionEl) return;
+  navEl.classList.toggle("nav--dark", aboutSectionEl.classList.contains("stars-on"));
+};
+if (aboutSectionEl) {
+  const navObserver = new MutationObserver(updateNavTheme);
+  navObserver.observe(aboutSectionEl, { attributes: true, attributeFilter: ["class"] });
+  updateNavTheme();
+}
+
+const navDropdown = document.querySelector(".nav__dropdown");
+const navToggle = document.querySelector(".nav__toggle");
+const navMenu = document.querySelector(".nav__menu");
+if (navDropdown && navToggle && navMenu) {
+  navToggle.addEventListener("click", () => {
+    const open = navDropdown.classList.toggle("is-open");
+    navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!navDropdown.contains(e.target)) {
+      navDropdown.classList.remove("is-open");
+      navToggle.setAttribute("aria-expanded", "false");
+    }
+  });
+}
+
+const navAnchorLinks = document.querySelectorAll('.nav a[href^="#"]');
+navAnchorLinks.forEach((link) => {
+  link.addEventListener("click", (e) => {
+    const href = link.getAttribute("href");
+    if (!href || href === "#") return;
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    e.preventDefault();
+    suspendProjectsSnap(2000);
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+
+const aboutTrack = document.getElementById("aboutTrack");
+const aboutMenuLinks = document.querySelectorAll(".nav__menu-item[data-about-target]");
+aboutMenuLinks.forEach((link) => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    const target = link.dataset.aboutTarget;
+    const aboutSection = document.getElementById("about");
+    if (!aboutSection || !aboutTrack) return;
+
+    aboutSection.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    const note = aboutSection.querySelector(`.note-block[data-category="${target}"]`);
+    if (note) {
+      const noteRect = note.getBoundingClientRect();
+      const trackRect = aboutTrack.getBoundingClientRect();
+      const offset = noteRect.left - trackRect.left;
+      const targetLeft = Math.max(0, aboutTrack.scrollLeft + offset - aboutTrack.clientWidth * 0.2);
+      aboutTrack.scrollTo({ left: targetLeft, behavior: "smooth" });
+    }
+
+    navDropdown?.classList.remove("is-open");
+    navToggle?.setAttribute("aria-expanded", "false");
+  });
+});
+
 /***********************
  * Intro heading + audio
  ***********************/
@@ -755,7 +823,7 @@ document.addEventListener("DOMContentLoaded", () => {
     svg.appendChild(defs);
   }
 
-function makeHint({
+  function makeHint({
   id, text, targetGetter,
   side = "left",
   gap = 44,
@@ -767,7 +835,7 @@ function makeHint({
   
   smooth = false,
   smoothK = 0.16, 
-}) {
+  }) {
   const hint = document.createElement("div");
   hint.className = "intro-hint";
   hint.id = id;
@@ -796,6 +864,21 @@ function makeHint({
     const r = el.getBoundingClientRect();
     if (r.width < 2 || r.height < 2) return null;
     return r;
+  }
+
+  const contactForm = document.getElementById("contactForm");
+  if (contactForm) {
+    contactForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const subjectEl = document.getElementById("contactSubject");
+      const bodyEl = document.getElementById("contactBody");
+
+      const subject = subjectEl?.value?.trim() || "";
+      const message = bodyEl?.value?.trim() || "";
+
+      const mailto = `mailto:c.aundrekaperez@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+      window.location.href = mailto;
+    });
   }
 
   function rectsOverlap(a, b) {

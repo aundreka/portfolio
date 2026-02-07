@@ -32,7 +32,6 @@
   height: auto !important;
   min-height: 100vh;
   padding-top: var(--scrubber-space);
-  padding-bottom: 260px;
   position: relative;
 }
 .about::before{

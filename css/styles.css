@@ -30,12 +30,9 @@ html {
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   width: 100vw;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
   overflow-x: hidden;
   overflow-y: auto;
   background-color: var(--light);
@@ -44,30 +41,150 @@ body {
 
 
 .nav {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
-  height: 56px;
+  height: 64px;
   display: grid;
-  grid-template-columns: 160px 1fr 160px;
+  grid-template-columns: minmax(140px, 1fr) minmax(280px, 2fr) minmax(200px, 1fr);
   align-items: center;
   gap: 12px;
-  padding: 0 16px;
+  padding: 0 clamp(16px, 5vw, 48px);
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.30);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: #0f0f10;
 }
-.nav__spacer { width: 160px; }
-.nav__actions {
-  display: grid;
-  grid-auto-flow: column;
+
+.nav--dark{
+  background: rgba(10, 12, 16, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f6f6f9;
+}
+
+.nav__brand{
+  font-family: "Abril Fatface", serif;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+}
+
+.nav__links{
+  display: flex;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 26px);
   align-items: center;
-  justify-content: end;
-  gap: 8px;
+}
+
+.nav__link{
+  font: 500 14px "Inter", system-ui;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: inherit;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.nav__link:hover{
+  opacity: 0.7;
+}
+
+.nav__cta{
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font: 600 13px "Inter", system-ui;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: inherit;
+  border: 1px solid currentColor;
+  text-decoration: none;
+}
+
+.nav__dropdown{
+  position: relative;
+}
+
+.nav__toggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav__chevron{
+  font-size: 12px;
+}
+
+.nav__menu{
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 180px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.12);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 160ms ease, transform 160ms ease;
+  color: #111;
+}
+
+.nav--dark .nav__menu{
+  background: rgba(16,18,24,0.92);
+  border-color: rgba(255,255,255,.12);
+  color: #f5f5f8;
+}
+
+.nav__menu-item{
+  display: block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  font: 500 14px "Inter", system-ui;
+}
+
+.nav__menu-item:hover{
+  background: rgba(0,0,0,.06);
+}
+
+.nav--dark .nav__menu-item:hover{
+  background: rgba(255,255,255,.08);
+}
+
+.nav__dropdown:hover .nav__menu,
+.nav__dropdown:focus-within .nav__menu,
+.nav__dropdown.is-open .nav__menu{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px){
+  .nav{
+    grid-template-columns: 1fr;
+    height: auto;
+    padding: 12px clamp(16px, 5vw, 32px);
+  }
+  .nav__links{
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  .nav__cta{
+    justify-self: start;
+    margin-top: 6px;
+  }
 }
 
 #intro-hints {
@@ -544,60 +661,6 @@ body{
   touch-action: pan-y;
 }
 
-.contact{
-  position: relative;
-  background: #ffffff;
-  color: #111;
-  padding: clamp(72px, 12vh, 140px) clamp(20px, 6vw, 96px);
-  overflow: hidden;
-}
-
-.contact__bg{
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(40% 50% at 85% 15%, rgba(0,0,0,.06), transparent 70%),
-    radial-gradient(45% 55% at 10% 80%, rgba(0,0,0,.05), transparent 70%);
-}
-
-.contact__wrap{
-  position: relative;
-  z-index: 1;
-  max-width: 980px;
-  margin: 0 auto;
-  display: grid;
-  gap: clamp(20px, 4vw, 40px);
-}
-
-.contact__eyebrow{
-  margin: 0 0 10px;
-  font: 600 12px "Inter", system-ui;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(0,0,0,.55);
-}
-
-.contact__title{
-  margin: 0 0 12px;
-  font-family: "Abril Fatface", serif;
-  font-size: clamp(28px, 4.4vw, 56px);
-  letter-spacing: -0.5px;
-  line-height: 1.02;
-  color: #0b0b0f;
-}
-
-.contact__desc{
-  margin: 0;
-  font: 400 clamp(14px, 1.4vw, 18px) "Inter", system-ui;
-  color: rgba(0,0,0,.68);
-}
-
-.contact__actions{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
 
 .contact__btn{
   display: inline-flex;

@@ -214,12 +214,22 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => (centerSnapping = false), SNAP_LOCK_MS);
   };
 
+  const isEnteringAbout = (dir) => {
+    const r = aboutSection.getBoundingClientRect();
+    if (dir > 0) return r.top >= 0; // scrolling down into About
+    if (dir < 0) return r.bottom <= window.innerHeight; // scrolling up into About
+    return false;
+  };
+
   // Wheel-based snap into center (global)
   window.addEventListener(
     "wheel",
     (e) => {
-      // ignore wheel when the user is intentionally horizontal scrolling inside aboutTrack
-      if (e.target.closest("#aboutTrack")) return;
+      // ignore wheel when inside About; handled by the About scroller
+      if (e.target.closest(".about")) return;
+
+      const dir = Math.sign(e.deltaY);
+      if (!isEnteringAbout(dir)) return;
 
       const ratio = aboutVisibleRatio();
 
@@ -248,7 +258,9 @@ document.addEventListener("DOMContentLoaded", () => {
       clearTimeout(scrollEndTimer);
       scrollEndTimer = setTimeout(() => {
         const ratio = aboutVisibleRatio();
-        if (ratio >= ENTER_RATIO && !isAboutCentered()) snapAboutToCenter("smooth");
+        if (ratio >= ENTER_RATIO && !isAboutCentered() && isEnteringAbout(dirDown ? 1 : -1)) {
+          snapAboutToCenter("smooth");
+        }
       }, 120);
     },
     { passive: true }
@@ -262,41 +274,20 @@ document.addEventListener("DOMContentLoaded", () => {
   scroller.addEventListener(
     "wheel",
     (e) => {
-      const delta = e.deltaY;
+      const absX = Math.abs(e.deltaX);
+      const absY = Math.abs(e.deltaY);
+      const hasHorizontalIntent = absX > absY || e.shiftKey;
+
+      const delta = hasHorizontalIntent ? e.deltaX : e.deltaY;
       if (delta === 0) return;
 
-      // Scroll UP while at far-left -> go back to Projects (since it's ABOVE About now)
-      if (delta < 0 && isAtFarLeft()) {
-        e.preventDefault();
-
-        // If About isn't aligned to top yet, align first so exit feels clean
-        if (!isTopAligned()) snapToCenter();
-        else snapToProjects();
-
-        return;
+      // Allow vertical exit only at edges.
+      if (!hasHorizontalIntent) {
+        if (delta > 0 && isAtFarRight()) return; // exit down to next section
+        if (delta < 0 && isAtFarLeft()) return;  // exit up to previous section
       }
 
-      // Scroll DOWN while inside About:
-      // 1) if not bottom-aligned, align to bottom first
-      // 2) if bottom-aligned and far-right, exit to next section after About
-      if (delta > 0) {
-        if (!isBottomAligned()) {
-          e.preventDefault();
-          snapToBottom();
-          return;
-        }
-        if (!isAtFarRight()) {
-          return;
-        }
-        if (isAtFarRight()) {
-          e.preventDefault();
-          snapToNextAfterAbout();
-          return;
-        }
-      }
-
-      // Otherwise: horizontal scroll (only if we're not trying to scroll down past About)
-      if (delta > 0 && isBottomAligned()) return;
+      // Otherwise, convert wheel to horizontal scroll.
       e.preventDefault();
       scroller.scrollLeft += delta * 0.9;
       syncThumb();
@@ -310,7 +301,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let isDown = false, startX = 0, startLeft = 0;
 
   scroller.addEventListener("pointerdown", (e) => {
-    if (e.target.closest('button, a, input, textarea, [role="button"]')) return;
+    const isInteractive = e.target.closest('button, a, input, textarea, [role="button"]');
+    if (isInteractive && e.pointerType === "mouse") return;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
     isDown = true;
     startX = e.clientX;
     startLeft = scroller.scrollLeft;

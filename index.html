@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/entrance.css" />
     <link rel="stylesheet" href="css/about.css" />
     <link rel="stylesheet" href="css/projects.css" />
+    <link rel="stylesheet" href="css/contact.css" />
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
@@ -19,7 +20,7 @@
     ></script>
   </head>
 
-  <body>
+  <body id="home">
     <div class="background-wrapper">
 
     <div class="background" aria-hidden="true">
@@ -36,6 +37,28 @@
     </div>
 
 
+
+    <nav class="nav" aria-label="Primary">
+      <div class="nav__brand">Aundreka</div>
+      <div class="nav__links">
+        <a class="nav__link" href="#home">Home</a>
+        <a class="nav__link" href="#projects">Projects</a>
+          <div class="nav__dropdown">
+            <button class="nav__link nav__toggle" type="button" aria-haspopup="true" aria-expanded="false">
+              About
+              <span class="nav__chevron" aria-hidden="true">▾</span>
+            </button>
+            <div class="nav__menu" role="menu">
+              <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="skills">Skills</a>
+              <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="work">Work</a>
+              <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="education">Education</a>
+              <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="contact">Interests</a>
+            </div>
+          </div>
+        <a class="nav__link" href="#contact">Contact</a>
+      </div>
+      <a class="nav__cta" href="assets/resume.pdf" download>Download Resume</a>
+    </nav>
 
     <h1 id="hero-heading"></h1>
 
@@ -193,11 +216,62 @@
           <p class="contact__desc">
             Reach out for collabs, freelance work, or just to say hi.
           </p>
+          <div class="contact__social">
+            <a class="contact__icon" href="https://github.com/aundreka" target="_blank" rel="noreferrer" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M12 2a10 10 0 0 0-3.16 19.48c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.2-3.37-1.2-.46-1.15-1.12-1.46-1.12-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.36 1.08 2.94.82.09-.64.35-1.08.63-1.33-2.22-.25-4.56-1.1-4.56-4.9 0-1.08.4-1.96 1.03-2.65-.1-.25-.45-1.27.1-2.64 0 0 .84-.26 2.75 1.01a9.6 9.6 0 0 1 5 0c1.9-1.27 2.74-1.01 2.74-1.01.56 1.37.21 2.39.1 2.64.64.69 1.03 1.57 1.03 2.65 0 3.81-2.34 4.64-4.57 4.89.36.31.68.92.68 1.86v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/>
+              </svg>
+            </a>
+            <a class="contact__icon" href="https://www.linkedin.com/in/aundreka" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M20.45 20.45h-3.56v-5.35c0-1.28-.03-2.93-1.78-2.93-1.78 0-2.05 1.39-2.05 2.83v5.45H9.5V9h3.42v1.56h.05c.48-.9 1.63-1.85 3.35-1.85 3.58 0 4.24 2.36 4.24 5.43v6.31zM5.49 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.27 20.45H3.71V9h3.56v11.45z"/>
+              </svg>
+            </a>
+            <a class="contact__icon" href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M13.5 8.5V6.9c0-.76.5-1.1 1.24-1.1h1.46V3h-2.2C11.4 3 10 4.42 10 6.84V8.5H8v3h2v9h3.5v-9h2.35l.38-3H13.5z"/>
+              </svg>
+            </a>
+            <a class="contact__icon" href="mailto:c.aundrekaperez@gmail.com" aria-label="Email">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm0 2 8 5 8-5H4zm0 10h16v-7l-8 5-8-5v7z"/>
+              </svg>
+            </a>
+          </div>
         </div>
         <div class="contact__actions">
-          <a class="contact__btn primary" href="mailto:c.aundrekaperez@gmail.com">Email Me</a>
-          <a class="contact__btn" href="https://github.com/aundreka" target="_blank" rel="noreferrer">GitHub</a>
-          <a class="contact__btn" href="https://www.linkedin.com/in/aundreka" target="_blank" rel="noreferrer">LinkedIn</a>
+          <form class="contact__form" id="contactForm">
+            <div class="contact__form-header">
+              <p class="contact__label">Send a message</p>
+              <p class="contact__hint">I usually reply within 1–2 days.</p>
+            </div>
+
+            <label class="contact__field" for="contactSubject">
+              <span class="contact__field-label">Subject</span>
+              <input
+                class="contact__input"
+                id="contactSubject"
+                name="subject"
+                type="text"
+                placeholder="Let’s build something together"
+                required
+              />
+            </label>
+
+            <label class="contact__field" for="contactBody">
+              <span class="contact__field-label">Message</span>
+              <textarea
+                class="contact__input contact__textarea"
+                id="contactBody"
+                name="body"
+                placeholder="Tell me a bit about your idea…"
+                rows="5"
+                required
+              ></textarea>
+            </label>
+
+            <button class="contact__btn primary contact__submit" type="submit">Send Email</button>
+          </form>
         </div>
       </div>
     </section>
