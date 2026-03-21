@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const scroller = document.getElementById("aboutTrack");
   const aboutSection = document.querySelector(".about");
   const projectsSection = document.getElementById("projects");
+  const compactAboutQuery = window.matchMedia("(max-width: 768px)");
 
   if (!scroller || !aboutSection) {
     console.warn("[About] Missing #aboutTrack or .about");
@@ -44,14 +45,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const track = scrubber.querySelector(".about-scrubber__track");
   const thumb = scrubber.querySelector(".about-scrubber__thumb");
+  const isCompactAbout = () => compactAboutQuery.matches;
 
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         // NOTE: you had threshold 0.9 but checked ratio >= 0.6
         // Keeping your behavior but matching threshold to avoid "never visible" cases
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.6) scrubber.classList.add("visible");
-        else scrubber.classList.remove("visible");
+        if (!isCompactAbout() && entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+          scrubber.classList.add("visible");
+        } else {
+          scrubber.classList.remove("visible");
+        }
       });
     },
     { threshold: [0, 0.6, 0.9, 1] }
@@ -59,6 +64,13 @@ document.addEventListener("DOMContentLoaded", () => {
   observer.observe(aboutSection);
 
   function sizeThumb() {
+    if (isCompactAbout()) {
+      scrubber.classList.remove("visible");
+      thumb.style.width = "";
+      thumb.style.transform = "translateX(0)";
+      return;
+    }
+
     const view = scroller.clientWidth;
     const full = scroller.scrollWidth;
     const ratio = Math.max(view / full, 0.08);
@@ -113,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let dragging = false, dragStartX = 0, dragStartLeft = 0;
 
   thumb.addEventListener("pointerdown", (e) => {
+    if (isCompactAbout()) return;
     dragging = true;
     dragStartX = e.clientX;
     dragStartLeft = scroller.scrollLeft;
@@ -120,6 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   thumb.addEventListener("pointermove", (e) => {
+    if (isCompactAbout()) return;
     if (!dragging) return;
     const dx = e.clientX - dragStartX;
     const maxThumbTravel = track.clientWidth - thumb.clientWidth;
@@ -136,6 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   track.addEventListener("pointerdown", (e) => {
+    if (isCompactAbout()) return;
     if (e.target === thumb) return;
     const rect = track.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -148,6 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   window.addEventListener("resize", sizeThumb);
+  compactAboutQuery.addEventListener?.("change", sizeThumb);
 
   /* --------------------------
      Snap helpers (Projects is now ABOVE About)
@@ -225,6 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener(
     "wheel",
     (e) => {
+      if (isCompactAbout()) return;
       // ignore wheel when inside About; handled by the About scroller
       if (e.target.closest(".about")) return;
 
@@ -274,6 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
   scroller.addEventListener(
     "wheel",
     (e) => {
+      if (isCompactAbout()) return;
       const absX = Math.abs(e.deltaX);
       const absY = Math.abs(e.deltaY);
       const hasHorizontalIntent = absX > absY || e.shiftKey;
@@ -301,6 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let isDown = false, startX = 0, startLeft = 0;
 
   scroller.addEventListener("pointerdown", (e) => {
+    if (isCompactAbout()) return;
     const isInteractive = e.target.closest('button, a, input, textarea, [role="button"]');
     if (isInteractive && e.pointerType === "mouse") return;
     if (e.pointerType === "mouse" && e.button !== 0) return;
@@ -311,6 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   scroller.addEventListener("pointermove", (e) => {
+    if (isCompactAbout()) return;
     if (!isDown) return;
     scroller.scrollLeft = startLeft - (e.clientX - startX);
     syncThumb();
@@ -651,6 +671,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     noteBlocks.forEach((btn) => {
       btn.addEventListener("pointerenter", (e) => {
+        if (isCompactAbout()) return;
         setAboutAccent(btn);
         btn.classList.add("is-turned");
         if (btn.dataset.category === "contact") btn.classList.add("panel-pinned");
@@ -666,11 +687,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       btn.addEventListener("pointermove", (e) => {
+        if (isCompactAbout()) return;
         if (!isWaveActive) return;
         setMouseXFromEvent(e);
       });
 
       btn.addEventListener("pointerleave", () => {
+        if (isCompactAbout()) return;
         isWaveActive = false;
         releasing = true;
         releaseT = 0;
@@ -790,4 +813,162 @@ document.addEventListener("DOMContentLoaded", () => {
       a.play().catch(() => {});
     });
   });
+})();
+
+(function() {
+ 
+ 
+  /* ── Data ───────────────────────────────────────────────────── */
+  const iconFiles = {
+    php: "php.png",
+    mysql: "mysql.png",
+    python: "python.png",
+    js: "javascript.png",
+    ts: "typescript.png",
+    cpp: "cpp.png",
+    java: "java.png",
+    dart: "dart.png",
+    htmlcss: "css.png",
+    react: "react.png",
+    rn: "rn.png",
+    flutter: "flutter.png",
+    laravel: "laravel.png",
+    nodejs: "nodejs.png",
+    supabase: "supabase.png",
+    gce: "gce.png",
+    vercel: "vercel.svg",
+    restapi: "restapi.svg",
+    tableau: "tableau.svg",
+    powerbi: "powerbi.png",
+    git: "git.svg",
+    docker: "docker.svg",
+    figma: "figma.png",
+  };
+
+  const legend = [
+    { label: 'Languages', cat: 'lang' },
+    { label: 'Frontend', cat: 'frontend' },
+    { label: 'Backend & Cloud', cat: 'backend' },
+    { label: 'Data Visualization', cat: 'data' },
+    { label: 'Tools', cat: 'tools' },
+  ];
+
+  const rows = [
+    {
+      indent: '0px',
+      keys: [
+        { label: 'PHP',        icon: 'php',      cat: 'lang', filterType: 'language', filterValue: 'php sql' },
+        { label: 'SQL',        icon: 'mysql',      cat: 'lang', filterType: 'language', filterValue: 'php sql' },
+        { label: 'Python',     icon: 'python',   cat: 'lang', filterType: 'language', filterValue: 'python' },
+        { label: 'JS',         icon: 'js',       cat: 'lang', filterType: 'language', filterValue: 'html css js' },
+        { label: 'TypeScript', icon: 'ts',       cat: 'lang', filterType: 'tool', filterValue: 'React Native' },
+      ]
+    },
+    {
+      indent: '24px',
+      keys: [
+        { label: 'C++',      icon: 'cpp',      cat: 'lang', filterType: 'language', filterValue: 'c++' },
+        { label: 'Java',     icon: 'java',     cat: 'lang', filterType: 'language', filterValue: 'java' },
+        { label: 'Dart',     icon: 'dart',     cat: 'lang', filterType: 'language', filterValue: 'flutter' },
+        { label: 'HTML/CSS', icon: 'htmlcss',  cat: 'lang', filterType: 'language', filterValue: 'html css js' },
+        { label: 'React',    icon: 'react',    cat: 'frontend', filterType: 'language', filterValue: 'react' },
+        { label: 'Flutter',  icon: 'flutter',  cat: 'frontend', filterType: 'language', filterValue: 'flutter' },
+      ]
+    },
+    {
+      indent: '56px',
+      keys: [
+        { label: 'React Native', icon: 'rn',       cat: 'frontend', wide: true, filterType: 'language', filterValue: 'react native' },
+        { label: 'Laravel',      icon: 'laravel',  cat: 'backend', filterType: 'tool', filterValue: 'Laravel' },
+        { label: 'Node.js',      icon: 'nodejs',   cat: 'backend', filterType: 'tool', filterValue: 'Node.js' },
+        { label: 'Supabase',     icon: 'supabase', cat: 'backend', filterType: 'tool', filterValue: 'Supabase' },
+        { label: 'GCE',          icon: 'gce',      cat: 'backend', filterType: 'tool', filterValue: 'GCE' },
+        { label: 'Vercel',       icon: 'vercel',   cat: 'backend', filterType: 'tool', filterValue: 'Vercel' },
+      ]
+    },
+    {
+      indent: '18px',
+      keys: [
+        { label: 'REST APIs', icon: 'restapi', cat: 'backend', wide: true, filterType: 'tool', filterValue: 'REST APIs' },
+        { label: 'Tableau',   icon: 'tableau', cat: 'data',    wide: true, filterType: 'tool', filterValue: 'Tableau' },
+        { label: 'Power BI',  icon: 'powerbi', cat: 'data',    wide: true, filterType: 'tool', filterValue: 'Power BI' },
+        { label: 'Git',       icon: 'git',     cat: 'tools', filterType: 'tool', filterValue: 'Git' },
+        { label: 'Docker',    icon: 'docker',  cat: 'tools', filterType: 'tool', filterValue: 'Docker' },
+        { label: 'Figma',     icon: 'figma',   cat: 'tools', filterType: 'tool', filterValue: 'Figma' },
+      ]
+    }
+  ];
+ 
+  /* ── Build DOM ─────────────────────────────────────────────── */
+  const kb = document.getElementById('skills-keyboard');
+  const projectsSection = document.getElementById('projects');
+  if (!kb) return;
+
+  const focusProjectsWithFilter = (filterType, filterValue) => {
+    window.ProjectsPiano?.resetFilters?.();
+
+    if (filterType === 'language') {
+      window.ProjectsPiano?.setLanguage?.(filterValue);
+    } else if (filterType === 'tool') {
+      window.ProjectsPiano?.setTool?.(filterValue);
+    }
+
+    projectsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+ 
+  const legendEl = document.createElement('div');
+  legendEl.className = 'skb-legend';
+
+  legend.forEach(item => {
+    const pill = document.createElement('div');
+    pill.className = `skb-legend-pill ${item.cat}`;
+    pill.textContent = item.label;
+    legendEl.appendChild(pill);
+  });
+
+  kb.appendChild(legendEl);
+
+  rows.forEach(rowData => {
+    const row = document.createElement('div');
+    row.className = 'skb-row';
+    row.style.setProperty('--skb-indent', rowData.indent);
+
+    rowData.keys.forEach(k => {
+      const key = document.createElement('div');
+      const wideClass = k.wide ? ' wide' : k.xwide ? ' xwide' : '';
+      key.className = `skb-key ${k.cat}${wideClass}`;
+      key.tabIndex = 0;
+      key.setAttribute('aria-label', k.label);
+
+      key.innerHTML = `
+        <div class="skb-face">
+          <div class="skb-icon">
+            <img src="assets/icons/${iconFiles[k.icon] || `${k.icon}.png`}" alt="${k.label}">
+          </div>
+          <div class="skb-label">${k.label}</div>
+        </div>`;
+
+      key.addEventListener('pointerdown', () => {
+        key.classList.add('skb-pressed');
+      });
+      key.addEventListener('click', () => {
+        focusProjectsWithFilter(k.filterType, k.filterValue);
+      });
+      key.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        focusProjectsWithFilter(k.filterType, k.filterValue);
+      });
+      ['pointerup', 'pointerleave', 'pointercancel'].forEach(evt =>
+        key.addEventListener(evt, () => {
+          setTimeout(() => key.classList.remove('skb-pressed'), 80);
+        })
+      );
+
+      row.appendChild(key);
+    });
+
+    kb.appendChild(row);
+  });
+ 
 })();

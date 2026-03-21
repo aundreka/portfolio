@@ -4,24 +4,76 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!root) return;
 
   const pianoHost   = root.querySelector("#projectsPiano");
+  const filtersPanelEl = root.querySelector("#projectsFiltersPanel");
+  const filterToggleBtn = root.querySelector("#projectsFiltersToggle");
   const langValueEl = root.querySelector("#langValue");
+  const toolValueEl = root.querySelector("#toolValue");
   const catValueEl  = root.querySelector("#catValue");
   const langMenuEl  = root.querySelector("#langMenu");
+  const toolMenuEl  = root.querySelector("#toolMenu");
   const catMenuEl   = root.querySelector("#catMenu");
   const langFilter  = root.querySelector('.filter[data-filter="language"]');
+  const toolFilter  = root.querySelector('.filter[data-filter="tool"]');
   const catFilter   = root.querySelector('.filter[data-filter="category"]');
 
-  if (!pianoHost || !langValueEl || !catValueEl || !langMenuEl || !catMenuEl || !langFilter || !catFilter) {
+  if (!pianoHost || !filtersPanelEl || !filterToggleBtn || !langValueEl || !toolValueEl || !catValueEl || !langMenuEl || !toolMenuEl || !catMenuEl || !langFilter || !toolFilter || !catFilter) {
     console.warn("[ProjectsPiano] Missing required DOM elements inside #projects.");
     return;
   }
 
- 
-  pianoHost.style.setProperty("--open-w", "1200px");
-  pianoHost.style.setProperty("--key-w", "150px");
-  pianoHost.style.setProperty("--key-w-small", "120px");
+  function getResponsivePianoMetrics() {
+    const viewportW = window.innerWidth || document.documentElement.clientWidth || 1440;
+
+    if (viewportW <= 560) {
+      return {
+        openWidth: "94vw",
+        keyWidth: "108px",
+        keyWidthSmall: "84px",
+        approxKeyWidth: 124,
+        blackWidth: 52,
+      };
+    }
+
+    if (viewportW <= 820) {
+      return {
+        openWidth: "88vw",
+        keyWidth: "132px",
+        keyWidthSmall: "96px",
+        approxKeyWidth: 150,
+        blackWidth: 64,
+      };
+    }
+
+    return {
+      openWidth: "1200px",
+      keyWidth: "150px",
+      keyWidthSmall: "120px",
+      approxKeyWidth: 190,
+      blackWidth: 74,
+    };
+  }
+
+  function applyResponsivePianoMetrics() {
+    const metrics = getResponsivePianoMetrics();
+    pianoHost.style.setProperty("--open-w", metrics.openWidth);
+    pianoHost.style.setProperty("--key-w", metrics.keyWidth);
+    pianoHost.style.setProperty("--key-w-small", metrics.keyWidthSmall);
+  }
+
+  function isCompactProjectsViewport() {
+    return window.matchMedia("(max-width: 900px)").matches;
+  }
+
+  function setFiltersTrayOpen(isOpen) {
+    root.classList.toggle("filters-open", isOpen);
+    filterToggleBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    if (!isOpen) clearMenusAnimated();
+  }
+
+  applyResponsivePianoMetrics();
 
   const LANGUAGES = ["All","python","html css js","php sql","react native","react","next","expo","kotlin","java","c++","flutter"];
+  const TOOLS = ["All","React","React Native","Flutter","Laravel","Node.js","Supabase","GCE","Vercel","REST APIs","Tableau","Power BI","Git","Docker","Figma"];
   const CATEGORIES = ["All","apps","websites","games","ai/ml","ui/ux"];
 
 const PROJECTS = [
@@ -350,6 +402,7 @@ const PROJECTS = [
 
   const state = {
     language: "All",
+    tool: "All",
     category: "All",
     openIndex: null,
     lastHoverAt: 0,
@@ -357,6 +410,60 @@ const PROJECTS = [
   };
 
   const normalize = (s) => String(s || "").trim().toLowerCase();
+  const hasNormalized = (items, needle) => items.some((item) => normalize(item) === normalize(needle));
+
+  function getProjectToolTags(project) {
+    const tags = new Set();
+    const add = (value) => {
+      if (value) tags.add(normalize(value));
+    };
+
+    const language = normalize(project?.language);
+    const category = normalize(project?.category);
+    const title = normalize(project?.title);
+    const description = normalize(project?.description);
+
+    add(project?.language);
+    (project?.icons || []).forEach(add);
+    (project?.tools || []).forEach(add);
+
+    if (language === "react") {
+      add("React");
+      add("Vercel");
+      add("REST APIs");
+      add("Figma");
+    }
+
+    if (language === "react native") {
+      add("React Native");
+      add("REST APIs");
+      add("Figma");
+    }
+
+    if (language === "flutter") add("Flutter");
+
+    if (language === "php sql") {
+      add("Laravel");
+      add("REST APIs");
+    }
+
+    if (language === "html css js") {
+      add("Git");
+      add("Figma");
+    }
+
+    if (category === "ui/ux") add("Figma");
+    if (category === "apps" || category === "websites") add("Git");
+
+    if (category === "ai/ml" || title.includes("analytics") || description.includes("analytics")) {
+      add("Tableau");
+      add("Power BI");
+    }
+
+    if (title.includes("dashboard") || description.includes("dashboard")) add("Power BI");
+
+    return [...tags];
+  }
 function isNoteInteractiveTarget(target) {
   // anything clickable inside the opened note should not start drag capture
   return !!target.closest(".note a, .note button, .note [role='button'], .note input, .note textarea, .note select");
@@ -364,8 +471,9 @@ function isNoteInteractiveTarget(target) {
   function matchesFilters(project) {
     if (!project) return false;
     const langOk = state.language === "All" || normalize(project.language) === normalize(state.language);
+    const toolOk = state.tool === "All" || hasNormalized(getProjectToolTags(project), state.tool);
     const catOk  = state.category === "All" || normalize(project.category) === normalize(state.category);
-    return langOk && catOk;
+    return langOk && toolOk && catOk;
   }
 
   function getFilteredProjects() {
@@ -433,15 +541,25 @@ function clearMenus() {
 function openMenu(which) {
   
   if (which === "language") closeMenuAnimated(catFilter);
+  if (which === "language") closeMenuAnimated(toolFilter);
+  if (which === "tool") closeMenuAnimated(langFilter);
+  if (which === "tool") closeMenuAnimated(catFilter);
   if (which === "category") closeMenuAnimated(langFilter);
+  if (which === "category") closeMenuAnimated(toolFilter);
 
-  const target = (which === "language") ? langFilter : catFilter;
+  const target =
+    which === "language" ? langFilter :
+    which === "tool" ? toolFilter :
+    catFilter;
   target.classList.remove("is-closing");
   target.classList.add("is-open");
 }
 
 function toggleMenu(which) {
-  const target = (which === "language") ? langFilter : catFilter;
+  const target =
+    which === "language" ? langFilter :
+    which === "tool" ? toolFilter :
+    catFilter;
   if (target.classList.contains("is-open")) {
     closeMenuAnimated(target);
   } else {
@@ -466,6 +584,7 @@ function closeMenuAnimated(filterEl) {
 
 function clearMenusAnimated() {
   closeMenuAnimated(langFilter);
+  closeMenuAnimated(toolFilter);
   closeMenuAnimated(catFilter);
 }
 function renderMenu(menuEl, items, onPick) {
@@ -492,6 +611,16 @@ renderMenu(langMenuEl, LANGUAGES, (picked) => {
   langValueEl.textContent = picked;
   state.openIndex = null;
   clearMenus();
+  setFiltersTrayOpen(false);
+  render();
+});
+
+renderMenu(toolMenuEl, TOOLS, (picked) => {
+  state.tool = picked;
+  toolValueEl.textContent = picked;
+  state.openIndex = null;
+  clearMenus();
+  setFiltersTrayOpen(false);
   render();
 });
 
@@ -500,13 +629,26 @@ renderMenu(catMenuEl, CATEGORIES, (picked) => {
   catValueEl.textContent = picked;
   state.openIndex = null;
   clearMenus();
+  setFiltersTrayOpen(false);
   render();
+});
+
+filterToggleBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  setFiltersTrayOpen(!root.classList.contains("filters-open"));
 });
 
 langFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
   toggleMenu("language");
+});
+
+toolFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  toggleMenu("tool");
 });
 
 catFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
@@ -517,8 +659,9 @@ catFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
 
 
 document.addEventListener("pointerdown", (e) => {
-  if (langFilter.contains(e.target) || catFilter.contains(e.target)) return;
+  if (filterToggleBtn.contains(e.target) || filtersPanelEl.contains(e.target)) return;
   clearMenusAnimated();
+  setFiltersTrayOpen(false);
 });
 
  
@@ -631,8 +774,13 @@ metaRow.appendChild(iconsGlass);
 if (btnWrap.childElementCount) metaRow.appendChild(btnWrap);
 
 // overlay order
-overlay.appendChild(metaRow);
-overlay.appendChild(textGlass);
+if (isCompactProjectsViewport()) {
+  overlay.appendChild(textGlass);
+  overlay.appendChild(metaRow);
+} else {
+  overlay.appendChild(metaRow);
+  overlay.appendChild(textGlass);
+}
 
 note.appendChild(bg);
 note.appendChild(overlay);
@@ -647,8 +795,8 @@ note.appendChild(overlay);
   function computeKeyCount() {
     const filtered = getFilteredProjects();
     const hostW = pianoHost.clientWidth || window.innerWidth || 1200;
-
-    const approxKeyW = 190;
+    const { approxKeyWidth } = getResponsivePianoMetrics();
+    const approxKeyW = approxKeyWidth;
     const fit = Math.ceil(hostW / approxKeyW);
     const baseline = Math.max(12, fit + 6);
     return Math.max(filtered.length, baseline);
@@ -672,7 +820,8 @@ note.appendChild(overlay);
 
     const firstKey = track.querySelector(".piano-key");
     const keyW = firstKey ? firstKey.getBoundingClientRect().width : 190;
-    const blackW = 74;
+    const { blackWidth } = getResponsivePianoMetrics();
+    const blackW = blackWidth;
 
     
     for (let i = 0; i < keyCount - 1; i++) {
@@ -712,9 +861,10 @@ note.appendChild(overlay);
     layer.querySelectorAll(".black-key").forEach((bk) => {
       const x = parseFloat(bk.style.left || "0");
       const w = bk.getBoundingClientRect().width || 74;
-      const center = x + w / 2;
+      const blackLeft = x;
+      const blackRight = x + w;
 
-      if (center > left && center < right) bk.classList.add("is-hidden");
+      if (blackRight > left && blackLeft < right) bk.classList.add("is-hidden");
     });
   }
 
@@ -769,6 +919,13 @@ note.appendChild(overlay);
     }
 
     pianoHost.appendChild(track);
+
+    if (filtered.length === 0) {
+      const emptyHint = document.createElement("div");
+      emptyHint.className = "projects-empty";
+      emptyHint.textContent = "No projects found";
+      pianoHost.appendChild(emptyHint);
+    }
 
     requestAnimationFrame(() => {
       applyKeyTransitions(track);
@@ -943,6 +1100,7 @@ function resetEntryIfLeft() {
 
 const io = new IntersectionObserver(
   (entries) => {
+    if (isCompactProjectsViewport()) return;
     if (projectsSnapSuspended()) return;
 
     const ent = entries[0];
@@ -987,6 +1145,7 @@ io.observe(root);
 
  
   langValueEl.textContent = state.language;
+  toolValueEl.textContent = state.tool;
   catValueEl.textContent = state.category;
 
   render();
@@ -1011,10 +1170,21 @@ window.ProjectsPiano.setLanguage = (lang) => {
   render();
 };
 
-window.ProjectsPiano.resetFilters = () => {
+window.ProjectsPiano.setTool = (tool) => {
+  const normalized = String(tool || "All");
+  state.tool = normalized;
+  toolValueEl.textContent = normalized;
+  state.openIndex = null;
+  clearMenus();
+  render();
+};
+
+  window.ProjectsPiano.resetFilters = () => {
   state.language = "All";
+  state.tool = "All";
   state.category = "All";
   langValueEl.textContent = "All";
+  toolValueEl.textContent = "All";
   catValueEl.textContent = "All";
   state.openIndex = null;
   clearMenus();
@@ -1022,7 +1192,13 @@ window.ProjectsPiano.resetFilters = () => {
 };
 
   
-  window.addEventListener("resize", () => { render(); });
+  window.addEventListener("resize", () => {
+    applyResponsivePianoMetrics();
+    if (!isCompactProjectsViewport()) {
+      clearMenusAnimated();
+    }
+    render();
+  });
 
   
   window.addEventListener("load", () => {

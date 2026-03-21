@@ -40,24 +40,37 @@
 
     <nav class="nav" aria-label="Primary">
       <div class="nav__brand">Aundreka</div>
-      <div class="nav__links">
-        <a class="nav__link" href="#home">Home</a>
-        <a class="nav__link" href="#projects">Projects</a>
-          <div class="nav__dropdown">
-            <button class="nav__link nav__toggle" type="button" aria-haspopup="true" aria-expanded="false">
-              About
-              <span class="nav__chevron" aria-hidden="true">▾</span>
-            </button>
-            <div class="nav__menu" role="menu">
-              <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="skills">Skills</a>
-              <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="work">Work</a>
-              <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="education">Education</a>
-              <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="contact">Interests</a>
+      <button
+        class="nav__mobile-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="primary-nav-panel"
+        aria-label="Open navigation menu"
+      >
+        <span class="nav__mobile-toggle-line" aria-hidden="true"></span>
+        <span class="nav__mobile-toggle-line" aria-hidden="true"></span>
+        <span class="nav__mobile-toggle-line" aria-hidden="true"></span>
+      </button>
+      <div class="nav__panel" id="primary-nav-panel">
+        <div class="nav__links">
+          <a class="nav__link" href="#home">Home</a>
+          <a class="nav__link" href="#projects">Projects</a>
+            <div class="nav__dropdown">
+              <button class="nav__link nav__toggle" type="button" aria-haspopup="true" aria-expanded="false">
+                About
+                <span class="nav__chevron" aria-hidden="true">▾</span>
+              </button>
+              <div class="nav__menu" role="menu">
+                <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="skills">Skills</a>
+                <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="work">Work</a>
+                <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="education">Education</a>
+                <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="contact">Interests</a>
+              </div>
             </div>
-          </div>
-        <a class="nav__link" href="#contact">Contact</a>
+          <a class="nav__link" href="#contact">Contact</a>
+        </div>
+        <a class="nav__cta" href="assets/resume.pdf" download>Download Resume</a>
       </div>
-      <a class="nav__cta" href="assets/resume.pdf" download>Download Resume</a>
     </nav>
 
     <h1 id="hero-heading"></h1>
@@ -101,14 +114,31 @@
       <div class="projects__wrap">
         <div class="projects__topbar">
           <div class="projects__dot"></div>
+          <button
+            class="projects__filterToggle"
+            id="projectsFiltersToggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="projectsFiltersPanel"
+          >
+            Filters
+          </button>
 
-          <div class="projects__filters">
+          <div class="projects__filters" id="projectsFiltersPanel">
             <div class="filter" data-filter="language">
               <button class="filter__btn" type="button">
                 <span class="filter__label">LANGUAGE</span>
                 <span class="filter__value" id="langValue">All</span>
               </button>
               <div class="filter__menu" id="langMenu"></div>
+            </div>
+
+            <div class="filter" data-filter="tool">
+              <button class="filter__btn" type="button">
+                <span class="filter__label">TOOL</span>
+                <span class="filter__value" id="toolValue">All</span>
+              </button>
+              <div class="filter__menu" id="toolMenu"></div>
             </div>
 
             <div class="filter" data-filter="category">
@@ -158,7 +188,7 @@
   </div>
   <span class="label top note-title">Skills</span>
   <div class="note-panel" aria-hidden="true">
-    <img src="assets/about/1.png" alt="Skills placeholder" />
+<div class="skills-keyboard" id="skills-keyboard"></div>
   </div>
 </button>
 

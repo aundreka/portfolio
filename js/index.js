@@ -40,22 +40,93 @@ const GLOW_MAP = {
  ***********************/
 let currentIndex = 0;
 const angleStep    = 360 / totalPianos;
-const radius       = 520;
-const heightFactor = 60;
-const offsetFactor = 60;
+let radius       = 520;
+let heightFactor = 60;
+let offsetFactor = 60;
 const duration     = 800; 
 const colors       = ["red", "blue", "green", "yellow", "purple"];
+
+function computeResponsiveCarouselMetrics() {
+  const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 1440;
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 900;
+  const compactHeight = viewportHeight < 760;
+
+  if (viewportWidth <= 480) {
+    return {
+      radius: 290,
+      heightFactor: compactHeight ? 18 : 22,
+      offsetFactor: 8,
+      frontLift: 12,
+      clickYOffset: 20,
+      mobileDepth: true,
+    };
+  }
+
+  if (viewportWidth <= 700) {
+    return {
+      radius: 360,
+      heightFactor: compactHeight ? 22 : 28,
+      offsetFactor: 10,
+      frontLift: 16,
+      clickYOffset: 24,
+      mobileDepth: true,
+    };
+  }
+
+  if (viewportWidth <= 900) {
+    return {
+      radius: 310,
+      heightFactor: 44,
+      offsetFactor: 34,
+      frontLift: 22,
+      clickYOffset: 34,
+      mobileDepth: false,
+    };
+  }
+
+  if (viewportWidth <= 1200) {
+    return {
+      radius: 430,
+      heightFactor: 54,
+      offsetFactor: 48,
+      frontLift: 26,
+      clickYOffset: 42,
+      mobileDepth: false,
+    };
+  }
+
+  return {
+    radius: 520,
+    heightFactor: 60,
+    offsetFactor: 60,
+    frontLift: 30,
+    clickYOffset: 50,
+    mobileDepth: false,
+  };
+}
+
+function updateResponsiveCarouselMetrics() {
+  const metrics = computeResponsiveCarouselMetrics();
+  radius = metrics.radius;
+  heightFactor = metrics.heightFactor;
+  offsetFactor = metrics.offsetFactor;
+  document.documentElement.style.setProperty("--front-piano-lift", `${metrics.frontLift}px`);
+  document.documentElement.style.setProperty("--piano-click-y-offset", `${metrics.clickYOffset}px`);
+  document.documentElement.style.setProperty("--hero-mobile-depth", metrics.mobileDepth ? "1" : "0");
+}
 
 /***********************
  * ABOUT FOCUS HELPERS
  ***********************/
 function enterAboutFocus() {
   document.body.classList.add("about-focus");
+  document.body.classList.remove("about-focus--nav-visible");
   keepCatFullyOnscreen();
 }
 
 function exitAboutFocus() {
   document.body.classList.remove("about-focus");
+  document.body.classList.remove("about-focus--nav-visible");
   document.querySelector(".piano-carousel")?.classList.remove("piano-lift");
   catWrap?.classList.remove("cat-fixed-left");
   
@@ -81,8 +152,16 @@ function keepCatFullyOnscreen() {
   }
 }
 
+updateResponsiveCarouselMetrics();
+
 window.addEventListener("resize", keepCatFullyOnscreen, { passive: true });
-window.addEventListener("orientationchange", keepCatFullyOnscreen, { passive: true });
+window.addEventListener("orientationchange", () => {
+  updateResponsiveCarouselMetrics();
+  keepCatFullyOnscreen();
+  animateRotation(currentIndex);
+  positionFrontClickOverlay();
+  positionCatClickOverlay();
+}, { passive: true });
 /***********************
  * BACKGROUND PALETTE SYNC
  ***********************/
@@ -383,7 +462,9 @@ function positionFrontClickOverlay(){
   pianoClick.style.display = visible ? "block" : "none";
   if (!visible) return;
 
-  const yOffset = 50; 
+  const yOffset = parseFloat(
+    getComputedStyle(document.documentElement).getPropertyValue("--piano-click-y-offset")
+  ) || 50;
 
   pianoClick.style.left = `${r.left}px`;
   pianoClick.style.top = `${r.top + yOffset}px`;
@@ -413,6 +494,8 @@ function animateRotation(targetIndex) {
     const baseAngle = index * angleStep;
     let effectiveAngle = normalizeDeg(baseAngle - targetAngle);
     const rad = (effectiveAngle * Math.PI) / 180;
+    const mobileDepthMode =
+      getComputedStyle(document.documentElement).getPropertyValue("--hero-mobile-depth").trim() === "1";
 
     let x = Math.sin(rad) * radius;
     let z = Math.cos(rad) * radius;
@@ -426,10 +509,25 @@ function animateRotation(targetIndex) {
 
     const orbitX = -effectiveAngle; 
     piano.setAttribute("camera-orbit", `${orbitX}deg 90deg 90deg`);
-    piano.style.transform =
-      `translateX(${x + offsetX}px) translateZ(${z}px) translateY(${-y}px)`;
-
     const depth = Math.cos(rad);
+    let scale = 1;
+    let opacity = 1;
+    let blur = 0;
+
+    if (mobileDepthMode) {
+      const distanceFromFront = Math.abs(effectiveAngle);
+      scale = distanceFromFront < 30 ? 1.18 : distanceFromFront < 95 ? 0.66 : 0.48;
+      opacity = distanceFromFront < 30 ? 1 : distanceFromFront < 95 ? 0.28 : 0.12;
+      blur = distanceFromFront < 30 ? 0 : distanceFromFront < 95 ? 0.5 : 1.2;
+      x *= distanceFromFront < 30 ? 1 : 0.78;
+      y *= 0.7;
+    }
+
+    piano.style.transform =
+      `translateX(${x + offsetX}px) translateZ(${z}px) translateY(${-y}px) scale(${scale})`;
+    piano.style.setProperty("--piano-opacity", `${opacity}`);
+    piano.style.setProperty("--piano-visual-filter", blur > 0 ? `blur(${blur}px)` : "none");
+
     piano.style.zIndex = String(Math.round((depth + 1) * 100));
   });
 
@@ -486,6 +584,8 @@ pianoClick?.addEventListener("click", (e) => {
 
 });
 window.addEventListener("resize", () => {
+  updateResponsiveCarouselMetrics();
+  animateRotation(currentIndex);
   positionFrontClickOverlay();
   positionCatClickOverlay();
 }, { passive: true });
@@ -525,6 +625,12 @@ setTimeout(() => {
 let isDragging = false;
 let startX = 0, startY = 0;
 let lastOrbitX = 90, lastOrbitY = 90;
+let touchSwipeMode = false;
+let dragCurrentX = 0, dragCurrentY = 0;
+
+function isTouchSwipeCarousel() {
+  return window.matchMedia("(max-width: 900px)").matches;
+}
 
 function startDrag(event) {
     if (event.target && event.target.id === "piano-click") return;
@@ -534,6 +640,9 @@ function startDrag(event) {
 
   startX = event.clientX || event.touches?.[0]?.clientX || 0;
   startY = event.clientY || event.touches?.[0]?.clientY || 0;
+  dragCurrentX = startX;
+  dragCurrentY = startY;
+  touchSwipeMode = Boolean(event.touches?.length) && isTouchSwipeCarousel();
 
   const centerPiano = getCenterPiano();
   const orbit = (centerPiano.getAttribute("camera-orbit") || "0deg 90deg 90deg").split(" ");
@@ -548,9 +657,18 @@ function drag(event) {
 
   const clientX = event.clientX || event.touches?.[0]?.clientX || 0;
   const clientY = event.clientY || event.touches?.[0]?.clientY || 0;
+  dragCurrentX = clientX;
+  dragCurrentY = clientY;
 
   const deltaX = clientX - startX;
   const deltaY = clientY - startY;
+
+  if (touchSwipeMode) {
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      event.preventDefault?.();
+    }
+    return;
+  }
 
   const sensitivityX = 0.2;
   const sensitivityY = 0.15;
@@ -565,7 +683,33 @@ function drag(event) {
   centerPiano.setAttribute("camera-orbit", `${newOrbitX}deg ${newOrbitY}deg 90deg`);
 }
 
-function stopDrag() {
+function stopDrag(event) {
+  const endX = event?.changedTouches?.[0]?.clientX ?? dragCurrentX;
+  const endY = event?.changedTouches?.[0]?.clientY ?? dragCurrentY;
+  const deltaX = endX - startX;
+  const deltaY = endY - startY;
+
+  if (touchSwipeMode) {
+    isDragging = false;
+    touchSwipeMode = false;
+
+    const swipeThreshold = 42;
+    if (Math.abs(deltaX) > swipeThreshold && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        animateRotation((currentIndex + 1) % totalPianos);
+      } else {
+        animateRotation((currentIndex - 1 + totalPianos) % totalPianos);
+      }
+      playCatOnceThenIdle();
+      setTimeout(positionFrontClickOverlay, 60);
+      return;
+    }
+
+    setTimeout(() => showLabelForIndex(currentIndex), duration * 0.3);
+    setTimeout(positionFrontClickOverlay, 60);
+    return;
+  }
+
   isDragging = false;
   setTimeout(() => {
   const centerPiano = getCenterPiano();
@@ -578,7 +722,7 @@ function stopDrag() {
 carousel?.addEventListener("mousedown", startDrag);
 carousel?.addEventListener("touchstart", startDrag, { passive: false });
 window.addEventListener("mousemove", drag, { passive: true });
-window.addEventListener("touchmove", drag, { passive: true });
+window.addEventListener("touchmove", drag, { passive: false });
 window.addEventListener("mouseup", stopDrag, { passive: true });
 window.addEventListener("touchend", stopDrag, { passive: true });
 pianoClick?.addEventListener("click", () => console.log("PIANO CLICKED", currentIndex));
@@ -694,7 +838,29 @@ const about = document.getElementById("about") || document.querySelector("sectio
   }
 }, { passive: true });
 
+let lastAboutFocusScrollY = window.scrollY;
+window.addEventListener("scroll", () => {
+  const currentY = window.scrollY || document.documentElement.scrollTop;
+  const delta = currentY - lastAboutFocusScrollY;
+
+  if (!document.body.classList.contains("about-focus")) {
+    document.body.classList.remove("about-focus--nav-visible");
+    lastAboutFocusScrollY = currentY;
+    return;
+  }
+
+  if (delta < -3) {
+    document.body.classList.add("about-focus--nav-visible");
+  } else if (delta > 3) {
+    document.body.classList.remove("about-focus--nav-visible");
+  }
+
+  lastAboutFocusScrollY = currentY;
+}, { passive: true });
+
 const navEl = document.querySelector(".nav");
+const navMobileToggle = document.querySelector(".nav__mobile-toggle");
+const navPanel = document.querySelector(".nav__panel");
 const aboutSectionEl = document.getElementById("about");
 const updateNavTheme = () => {
   if (!navEl || !aboutSectionEl) return;
@@ -709,6 +875,39 @@ if (aboutSectionEl) {
 const navDropdown = document.querySelector(".nav__dropdown");
 const navToggle = document.querySelector(".nav__toggle");
 const navMenu = document.querySelector(".nav__menu");
+const isMobileNav = () => window.matchMedia("(max-width: 900px)").matches;
+const closeNavMenu = () => {
+  navEl?.classList.remove("is-menu-open");
+  navMobileToggle?.setAttribute("aria-expanded", "false");
+  navMobileToggle?.setAttribute("aria-label", "Open navigation menu");
+};
+
+const openNavMenu = () => {
+  navEl?.classList.add("is-menu-open");
+  navMobileToggle?.setAttribute("aria-expanded", "true");
+  navMobileToggle?.setAttribute("aria-label", "Close navigation menu");
+};
+
+const closeAboutDropdown = () => {
+  navDropdown?.classList.remove("is-open");
+  navToggle?.setAttribute("aria-expanded", "false");
+};
+
+if (navEl && navMobileToggle && navPanel) {
+  navMobileToggle.addEventListener("click", () => {
+    const open = navEl.classList.contains("is-menu-open");
+    if (open) closeNavMenu();
+    else openNavMenu();
+  });
+
+  window.addEventListener("resize", () => {
+    if (!isMobileNav()) {
+      closeNavMenu();
+      closeAboutDropdown();
+    }
+  }, { passive: true });
+}
+
 if (navDropdown && navToggle && navMenu) {
   navToggle.addEventListener("click", () => {
     const open = navDropdown.classList.toggle("is-open");
@@ -717,8 +916,11 @@ if (navDropdown && navToggle && navMenu) {
 
   document.addEventListener("click", (e) => {
     if (!navDropdown.contains(e.target)) {
-      navDropdown.classList.remove("is-open");
-      navToggle.setAttribute("aria-expanded", "false");
+      closeAboutDropdown();
+    }
+
+    if (isMobileNav() && navEl && navMobileToggle && !navEl.contains(e.target)) {
+      closeNavMenu();
     }
   });
 }
@@ -734,6 +936,10 @@ navAnchorLinks.forEach((link) => {
     e.preventDefault();
     suspendProjectsSnap(2000);
     target.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (isMobileNav()) {
+      closeNavMenu();
+      closeAboutDropdown();
+    }
   });
 });
 
@@ -757,8 +963,8 @@ aboutMenuLinks.forEach((link) => {
       aboutTrack.scrollTo({ left: targetLeft, behavior: "smooth" });
     }
 
-    navDropdown?.classList.remove("is-open");
-    navToggle?.setAttribute("aria-expanded", "false");
+    closeAboutDropdown();
+    if (isMobileNav()) closeNavMenu();
   });
 });
 
@@ -801,26 +1007,29 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(hintsRoot);
   }
 
-  function ensureArrowDefs(svg) {
+  function ensureArrowDefs(svg, markerId) {
     let defs = svg.querySelector("defs");
-    if (defs) return;
+    if (defs) return markerId;
 
     defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
     const marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
-    marker.setAttribute("id", "introArrowHead");
+    marker.setAttribute("id", markerId);
+    marker.setAttribute("viewBox", "0 0 10 10");
     marker.setAttribute("markerWidth", "10");
     marker.setAttribute("markerHeight", "10");
     marker.setAttribute("refX", "8");
-    marker.setAttribute("refY", "3");
+    marker.setAttribute("refY", "5");
     marker.setAttribute("orient", "auto");
+    marker.setAttribute("markerUnits", "strokeWidth");
 
     const poly = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    poly.setAttribute("d", "M0,0 L9,3 L0,6 Z");
+    poly.setAttribute("d", "M0,1 L9,5 L0,9 Z");
     poly.setAttribute("fill", "rgba(40,40,40,0.75)");
 
     marker.appendChild(poly);
     defs.appendChild(marker);
     svg.appendChild(defs);
+    return markerId;
   }
 
   function makeHint({
@@ -848,12 +1057,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.classList.add("intro-hint__arrow");
   svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
-  ensureArrowDefs(svg);
+  svg.setAttribute("width", String(window.innerWidth));
+  svg.setAttribute("height", String(window.innerHeight));
+  svg.setAttribute("overflow", "visible");
 
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
   path.classList.add("intro-hint__path");
-  path.setAttribute("marker-end", "url(#introArrowHead)");
   svg.appendChild(path);
+
+  const head = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  head.classList.add("intro-hint__head");
+  svg.appendChild(head);
 
   hintsRoot.appendChild(svg);
   hintsRoot.appendChild(hint);
@@ -908,6 +1122,8 @@ hint.style.opacity = "0";
 svg.style.opacity = "0";
 return;
     }
+
+    const mobileHintLayout = window.innerWidth <= 700;
     
     svg.style.opacity  = enabled ? "1" : "0";
     hint.style.opacity = enabled ? "1" : "0";
@@ -920,11 +1136,9 @@ return;
 
     
     const hintRect = hint.getBoundingClientRect();
-
     const tx = tr.left + tr.width / 2;
     const ty = tr.top + tr.height / 2;
 
-    
     let hx;
     if (side === "left")  hx = tr.left - hintRect.width - gap;
     if (side === "right") hx = tr.right + gap;
@@ -936,6 +1150,20 @@ return;
 
     hx += shiftX;
     hy += shiftY;
+
+    if (mobileHintLayout && id === "intro-hint-cat") {
+      const navPanel = document.querySelector(".nav__panel");
+      const navRect = navPanel?.getBoundingClientRect?.();
+      const navBottom = navRect ? navRect.bottom : 0;
+      const headingBottom = heading?.getBoundingClientRect?.().bottom || 0;
+      hx = tr.left - hintRect.width * 0.08;
+      hy = Math.max(headingBottom + 52, navBottom + 28);
+    }
+
+    if (mobileHintLayout && id === "intro-hint-piano") {
+      hx = tr.left + tr.width * 0.5 - hintRect.width * 0.18;
+      hy = tr.bottom + 8;
+    }
 
     
     hx = Math.max(padding, Math.min(window.innerWidth - hintRect.width - padding, hx));
@@ -978,15 +1206,25 @@ return;
     desiredStartY += arrowStartDY;
 
     
-    const marginFromTarget = 26;
+    const marginFromTarget = mobileHintLayout ? 16 : 26;
     let desiredEndX, desiredEndY;
 
     if (id === "intro-hint-cat") {
-      desiredEndX = tr.left - marginFromTarget;
-      desiredEndY = tr.top + tr.height * 0.48;
+      if (mobileHintLayout) {
+        desiredEndX = tr.left + tr.width * 0.46;
+        desiredEndY = tr.top + 18;
+      } else {
+        desiredEndX = tr.left - marginFromTarget;
+        desiredEndY = tr.top + tr.height * 0.48;
+      }
     } else if (id === "intro-hint-piano") {
-      desiredEndX = tr.right + marginFromTarget;
-      desiredEndY = tr.top + tr.height * 0.65;
+      if (mobileHintLayout) {
+        desiredEndX = tr.left + tr.width * 0.58;
+        desiredEndY = tr.bottom + marginFromTarget + 10;
+      } else {
+        desiredEndX = tr.right + marginFromTarget;
+        desiredEndY = tr.top + tr.height * 0.65;
+      }
     } else {
       desiredEndX = (side === "left") ? (tr.left - marginFromTarget) : (tr.right + marginFromTarget);
       desiredEndY = tr.top + tr.height * 0.55;
@@ -998,10 +1236,28 @@ return;
     
     const midX = (desiredStartX + desiredEndX) / 2;
     const midY = (desiredStartY + desiredEndY) / 2;
-    const curve = 110;
+    const curve = mobileHintLayout ? 34 : 110;
 
     let desiredCtrlX = midX + (side === "left" ? -curve : curve);
     let desiredCtrlY = midY - curve * 0.35;
+
+    if (mobileHintLayout && id === "intro-hint-cat") {
+      desiredStartX = b.right + 26;
+      desiredStartY = b.top + b.height * 1.02;
+      desiredEndX = tr.left + tr.width * 0.48;
+      desiredEndY = tr.top + tr.height * 0.16;
+      desiredCtrlX = desiredStartX + 46;
+      desiredCtrlY = desiredStartY - 30;
+    }
+
+    if (mobileHintLayout && id === "intro-hint-piano") {
+      desiredStartX = b.left - 34;
+      desiredStartY = b.top + b.height * 0.42;
+      desiredEndX = tr.left + tr.width * 0.52;
+      desiredEndY = tr.bottom - 22;
+      desiredCtrlX = desiredEndX - 10;
+      desiredCtrlY = (desiredStartY + desiredEndY) / 2 + 14;
+    }
 
     
     if (smooth) {
@@ -1028,15 +1284,53 @@ hint.style.left = `${cur.hx}px`;
 hint.style.top  = `${cur.hy}px`;
 
 svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
+svg.setAttribute("width", String(window.innerWidth));
+svg.setAttribute("height", String(window.innerHeight));
 path.setAttribute(
   "d",
   `M ${cur.startX} ${cur.startY} Q ${cur.ctrlX} ${cur.ctrlY} ${cur.endX} ${cur.endY}`
+);
+const tipX = cur.endX;
+const tipY = cur.endY;
+const vx = cur.endX - cur.ctrlX;
+const vy = cur.endY - cur.ctrlY;
+const mag = Math.hypot(vx, vy) || 1;
+const ux = vx / mag;
+const uy = vy / mag;
+const arrowSize = 9;
+const baseX = tipX - ux * arrowSize;
+const baseY = tipY - uy * arrowSize;
+const px = -uy;
+const py = ux;
+const wing = arrowSize * 0.45;
+head.setAttribute(
+  "d",
+  `M ${tipX} ${tipY} L ${baseX + px * wing} ${baseY + py * wing} L ${baseX - px * wing} ${baseY - py * wing} Z`
 );
     } else {
       
       hint.style.transform = "";
       svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
+      svg.setAttribute("width", String(window.innerWidth));
+      svg.setAttribute("height", String(window.innerHeight));
       path.setAttribute("d", `M ${desiredStartX} ${desiredStartY} Q ${desiredCtrlX} ${desiredCtrlY} ${desiredEndX} ${desiredEndY}`);
+      const tipX = desiredEndX;
+      const tipY = desiredEndY;
+      const vx = desiredEndX - desiredCtrlX;
+      const vy = desiredEndY - desiredCtrlY;
+      const mag = Math.hypot(vx, vy) || 1;
+      const ux = vx / mag;
+      const uy = vy / mag;
+      const arrowSize = 9;
+      const baseX = tipX - ux * arrowSize;
+      const baseY = tipY - uy * arrowSize;
+      const px = -uy;
+      const py = ux;
+      const wing = arrowSize * 0.45;
+      head.setAttribute(
+        "d",
+        `M ${tipX} ${tipY} L ${baseX + px * wing} ${baseY + py * wing} L ${baseX - px * wing} ${baseY - py * wing} Z`
+      );
     }
 
     const len = path.getTotalLength();
@@ -1068,6 +1362,11 @@ path.setAttribute(
     el: hint,
     svg,
     path,
+    head,
+    relayout() {
+      hasState = false;
+      layout();
+    },
     showTyped,
     destroy() {
       cancelAnimationFrame(rafId);
@@ -1096,20 +1395,29 @@ path.setAttribute(
     
     await wait(250);
 
+    positionFrontClickOverlay();
+    positionCatClickOverlay();
+    await new Promise((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve))
+    );
+
     
 const catHint = makeHint({
   id: "intro-hint-cat",
   text: "click to know more about me",
   targetGetter: () => catWrap || catEl,
-  side: "left",
-  gap: 70,
-  shiftX: -40,
-  shiftY: -18,      
-  prefer: "middle",
+  side: window.innerWidth <= 700 ? "left" : "left",
+  gap: window.innerWidth <= 700 ? 8 : 70,
+  shiftX: window.innerWidth <= 700 ? 8 : -40,
+  shiftY: window.innerWidth <= 700 ? 102 : -18,      
+  prefer: window.innerWidth <= 700 ? "above" : "middle",
   smooth: true,
   smoothK: 0.14, 
 
-  arrowStartDY: -30  
+  arrowStartDX: window.innerWidth <= 700 ? 18 : 0,
+  arrowStartDY: window.innerWidth <= 700 ? 8 : -30,
+  arrowEndDX: window.innerWidth <= 700 ? 0 : 0,
+  arrowEndDY: window.innerWidth <= 700 ? 10 : 0,
   
 });
 
@@ -1117,12 +1425,14 @@ const pianoHint = makeHint({
   id: "intro-hint-piano",
   text: "click to see my projects",
   targetGetter: () => getFrontPianoRectTarget(),
-  side: "right",
-  gap: 70,
-  shiftX: 40,
-  shiftY: 50,
-  prefer: "middle",
-  arrowStartDY: -30,
+  side: window.innerWidth <= 700 ? "right" : "right",
+  gap: window.innerWidth <= 700 ? 2 : 70,
+  shiftX: window.innerWidth <= 700 ? -2 : 40,
+  shiftY: window.innerWidth <= 700 ? -8 : 50,
+  prefer: window.innerWidth <= 700 ? "below" : "middle",
+  arrowStartDX: window.innerWidth <= 700 ? -18 : 0,
+  arrowStartDY: window.innerWidth <= 700 ? -10 : -30,
+  arrowEndDY: window.innerWidth <= 700 ? -18 : 0,
 
   
   smooth: true,
@@ -1134,9 +1444,20 @@ const pianoHint = makeHint({
     await wait(150);
     await pianoHint.showTyped();
 
+    const syncHeroHints = () => {
+      positionFrontClickOverlay();
+      positionCatClickOverlay();
+      catHint.relayout();
+      pianoHint.relayout();
+    };
+
+    syncHeroHints();
+    setTimeout(syncHeroHints, 120);
+    setTimeout(syncHeroHints, 320);
+
     
     const relayout = () => {
-      
+      syncHeroHints();
     };
     window.addEventListener("resize", relayout, { passive: true });
     window.addEventListener("scroll", relayout, { passive: true });
