@@ -1075,7 +1075,17 @@ document.addEventListener("DOMContentLoaded", () => {
   head.classList.add("intro-hint__head");
   svg.appendChild(head);
 
+  const mobileArrow = document.createElement("div");
+  mobileArrow.className = "intro-hint__mobile-arrow";
+  const mobileArrowShaft = document.createElement("span");
+  mobileArrowShaft.className = "intro-hint__mobile-arrow-shaft";
+  const mobileArrowHead = document.createElement("span");
+  mobileArrowHead.className = "intro-hint__mobile-arrow-head";
+  mobileArrow.appendChild(mobileArrowShaft);
+  mobileArrow.appendChild(mobileArrowHead);
+
   hintsRoot.appendChild(svg);
+  hintsRoot.appendChild(mobileArrow);
   hintsRoot.appendChild(hint);
 
   function getTargetRect() {
@@ -1126,13 +1136,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!tr) {
 hint.style.opacity = "0";
 svg.style.opacity = "0";
+mobileArrow.style.opacity = "0";
 return;
     }
 
     const mobileHintLayout = window.innerWidth <= 700;
     
-    svg.style.opacity  = enabled ? "1" : "0";
+    svg.style.opacity  = enabled && !mobileHintLayout ? "1" : "0";
     hint.style.opacity = enabled ? "1" : "0";
+    mobileArrow.style.opacity = enabled && mobileHintLayout ? "1" : "0";
 
     
     hint.style.pointerEvents = enabled ? "auto" : "none";
@@ -1162,13 +1174,13 @@ return;
       const navRect = navPanel?.getBoundingClientRect?.();
       const navBottom = navRect ? navRect.bottom : 0;
       const headingBottom = heading?.getBoundingClientRect?.().bottom || 0;
-      hx = tr.left + tr.width * 0.22 - hintRect.width * 0.5;
-      hy = Math.max(headingBottom + 40, navBottom + 26);
+      hx = tr.left + tr.width * 0.18 - hintRect.width * 0.5;
+      hy = Math.max(headingBottom + 46, navBottom + 28);
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {
       hx = tr.left + tr.width * 0.5 - hintRect.width * 0.5;
-      hy = tr.bottom - 4;
+      hy = tr.bottom - 16;
     }
 
     
@@ -1249,20 +1261,34 @@ return;
 
     if (mobileHintLayout && id === "intro-hint-cat") {
       desiredStartX = b.left + b.width * 0.5;
-      desiredStartY = b.bottom;
+      desiredStartY = b.bottom + 4;
       desiredEndX = desiredStartX;
-      desiredEndY = tr.top + 6;
-      desiredCtrlX = desiredStartX + 2;
-      desiredCtrlY = desiredStartY + 26;
+      desiredEndY = tr.top - 8;
+      desiredCtrlX = desiredStartX;
+      desiredCtrlY = (desiredStartY + desiredEndY) / 2;
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {
       desiredStartX = b.left + b.width * 0.5;
-      desiredStartY = b.top;
+      desiredStartY = b.top - 4;
       desiredEndX = desiredStartX;
-      desiredEndY = tr.bottom - 12;
-      desiredCtrlX = desiredStartX - 2;
-      desiredCtrlY = desiredStartY - 24;
+      desiredEndY = tr.bottom + 12;
+      desiredCtrlX = desiredStartX;
+      desiredCtrlY = (desiredStartY + desiredEndY) / 2;
+    }
+
+    if (mobileHintLayout) {
+      svg.style.display = "none";
+      const top = Math.min(desiredStartY, desiredEndY);
+      const height = Math.max(16, Math.abs(desiredEndY - desiredStartY));
+      mobileArrow.style.left = `${desiredStartX - 7}px`;
+      mobileArrow.style.top = `${top}px`;
+      mobileArrow.style.height = `${height}px`;
+      mobileArrow.classList.toggle("is-up", id === "intro-hint-piano");
+      mobileArrow.classList.toggle("is-down", id === "intro-hint-cat");
+    } else {
+      svg.style.display = "block";
+      mobileArrow.style.opacity = "0";
     }
 
     
@@ -1378,6 +1404,7 @@ head.setAttribute(
       cancelAnimationFrame(rafId);
       hint.remove();
       svg.remove();
+      mobileArrow.remove();
     }
   };
 }
@@ -1415,7 +1442,7 @@ const catHint = makeHint({
   side: window.innerWidth <= 700 ? "left" : "left",
   gap: window.innerWidth <= 700 ? 8 : 70,
   shiftX: window.innerWidth <= 700 ? 0 : -40,
-  shiftY: window.innerWidth <= 700 ? 34 : -18,
+  shiftY: window.innerWidth <= 700 ? 40 : -18,
   prefer: window.innerWidth <= 700 ? "above" : "middle",
   smooth: true,
   smoothK: 0.14, 
@@ -1434,7 +1461,7 @@ const pianoHint = makeHint({
   side: window.innerWidth <= 700 ? "right" : "right",
   gap: window.innerWidth <= 700 ? 2 : 70,
   shiftX: window.innerWidth <= 700 ? -2 : 40,
-  shiftY: window.innerWidth <= 700 ? -18 : 50,
+  shiftY: window.innerWidth <= 700 ? -26 : 50,
   prefer: window.innerWidth <= 700 ? "below" : "middle",
   arrowStartDX: window.innerWidth <= 700 ? 0 : 0,
   arrowStartDY: window.innerWidth <= 700 ? 0 : -30,

@@ -941,6 +941,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     key.addEventListener('click', () => {
       focusProjectsWithFilter(k.filterType, k.filterValue);
+      key.blur();
     });
     key.addEventListener('keydown', (event) => {
       if (event.key !== 'Enter' && event.key !== ' ') return;

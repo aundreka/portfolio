@@ -5,8 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const pianoHost   = root.querySelector("#projectsPiano");
   const filtersPanelEl = root.querySelector("#projectsFiltersPanel");
+  const searchToggleBtn = root.querySelector("#projectsSearchToggle");
+  const searchToggleMobileBtn = root.querySelector("#projectsSearchToggleMobile");
   const filterToggleBtn = root.querySelector("#projectsFiltersToggle");
   const searchInputEl = root.querySelector("#projectsSearch");
+  const searchInputMobileEl = root.querySelector("#projectsSearchMobile");
   const langValueEl = root.querySelector("#langValue");
   const toolValueEl = root.querySelector("#toolValue");
   const catValueEl  = root.querySelector("#catValue");
@@ -20,10 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const catFilter   = root.querySelector('.filter[data-filter="category"]');
   const sortFilter  = root.querySelector('.filter[data-filter="sort"]');
 
-  if (!pianoHost || !filtersPanelEl || !filterToggleBtn || !searchInputEl || !langValueEl || !toolValueEl || !catValueEl || !sortValueEl || !langMenuEl || !toolMenuEl || !catMenuEl || !sortMenuEl || !langFilter || !toolFilter || !catFilter || !sortFilter) {
+  if (!pianoHost || !filtersPanelEl || !searchToggleBtn || !filterToggleBtn || !searchInputEl || !langValueEl || !toolValueEl || !catValueEl || !sortValueEl || !langMenuEl || !toolMenuEl || !catMenuEl || !sortMenuEl || !langFilter || !toolFilter || !catFilter || !sortFilter) {
     console.warn("[ProjectsPiano] Missing required DOM elements inside #projects.");
     return;
   }
+
+  const searchToggleButtons = [searchToggleBtn, searchToggleMobileBtn].filter(Boolean);
+  const searchInputs = [searchInputEl, searchInputMobileEl].filter(Boolean);
 
   function getResponsivePianoMetrics() {
     const viewportW = window.innerWidth || document.documentElement.clientWidth || 1440;
@@ -70,8 +76,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function setFiltersTrayOpen(isOpen) {
     root.classList.toggle("filters-open", isOpen);
+    if (isOpen) {
+      root.classList.remove("search-open");
+      searchToggleBtn.setAttribute("aria-expanded", "false");
+    }
     filterToggleBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
     if (!isOpen) clearMenusAnimated();
+  }
+
+  function setSearchTrayOpen(isOpen) {
+    root.classList.toggle("search-open", isOpen);
+    if (isOpen) {
+      root.classList.remove("filters-open");
+      filterToggleBtn.setAttribute("aria-expanded", "false");
+      clearMenusAnimated();
+      window.setTimeout(() => {
+        const activeInput = isCompactProjectsViewport() && searchInputMobileEl ? searchInputMobileEl : searchInputEl;
+        activeInput.focus();
+      }, 60);
+    } else if (!state.search) {
+      searchInputs.forEach((input) => input.blur());
+    }
+    searchToggleButtons.forEach((button) => {
+      button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
+  }
+
+  function syncSearchInputs(value) {
+    searchInputs.forEach((input) => {
+      if (input.value !== value) input.value = value;
+    });
+  }
+
+  function handleSearchInput(event) {
+    state.search = event.currentTarget.value || "";
+    state.openIndex = null;
+    syncSearchInputs(state.search);
+    clearMenus();
+    setSearchTrayOpen(Boolean(state.search) || root.classList.contains("search-open"));
+    render({ restoreScrollLeft: 0 });
   }
 
   applyResponsivePianoMetrics();
@@ -717,6 +760,17 @@ renderMenu(sortMenuEl, SORT_OPTIONS, (picked) => {
   render({ restoreScrollLeft: 0 });
 });
 
+  searchToggleButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setSearchTrayOpen(!root.classList.contains("search-open"));
+      if (!root.classList.contains("search-open")) return;
+      const activeInput = isCompactProjectsViewport() && searchInputMobileEl ? searchInputMobileEl : searchInputEl;
+      activeInput.select?.();
+    });
+  });
+
 filterToggleBtn.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
@@ -747,17 +801,15 @@ sortFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
   toggleMenu("sort");
 });
 
-searchInputEl.addEventListener("input", () => {
-  state.search = searchInputEl.value || "";
-  state.openIndex = null;
-  clearMenus();
-  render({ restoreScrollLeft: 0 });
+searchInputs.forEach((input) => {
+  input.addEventListener("input", handleSearchInput);
 });
 
 
 document.addEventListener("pointerdown", (e) => {
-  if (filterToggleBtn.contains(e.target) || filtersPanelEl.contains(e.target)) return;
+  if (searchToggleButtons.some((button) => button.contains(e.target)) || filterToggleBtn.contains(e.target) || filtersPanelEl.contains(e.target)) return;
   clearMenusAnimated();
+  setSearchTrayOpen(false);
   setFiltersTrayOpen(false);
 });
 
@@ -1048,34 +1100,6 @@ note.appendChild(overlay);
     });
   }
 
- 
-  pianoHost.addEventListener("pointermove", (e) => {
-    const el = document.elementFromPoint(e.clientX, e.clientY);
-    const key = el?.closest?.(".piano-key");
-    if (!key || !pianoHost.contains(key)) return;
-
-    const slot = Number(key.dataset.slot);
-    if (!Number.isFinite(slot)) return;
-
-    if (state.lastHoverSlot === slot) return;
-    state.lastHoverSlot = slot;
-
-    const filtered = getFilteredProjects();
-    const project = filtered[slot];
-    if (!project) return;
-
-    const now = Date.now();
-    if (now - state.lastHoverAt < HOVER_COOLDOWN_MS) return;
-    state.lastHoverAt = now;
-
-    playNote(pickNoteLetter(project, slot));
-  });
-
-  pianoHost.addEventListener("pointerleave", () => {
-    state.lastHoverSlot = null;
-  });
-
- 
   let isDown = false;
   let startX = 0;
   let startY = 0;
@@ -1315,7 +1339,7 @@ io.observe(root);
   toolValueEl.textContent = state.tool;
   catValueEl.textContent = state.category;
   sortValueEl.textContent = state.sort;
-  searchInputEl.value = state.search;
+  syncSearchInputs(state.search);
 
   render();
 
@@ -1358,7 +1382,8 @@ window.ProjectsPiano.setTool = (tool) => {
   toolValueEl.textContent = "All";
   catValueEl.textContent = "All";
   sortValueEl.textContent = "Newest";
-  searchInputEl.value = "";
+  syncSearchInputs("");
+  setSearchTrayOpen(false);
   state.openIndex = null;
   clearMenus();
   render({ restoreScrollLeft: 0 });

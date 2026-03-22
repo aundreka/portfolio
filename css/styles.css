@@ -523,6 +523,44 @@ body {
   z-index: 1050;
 }
 
+.intro-hint__mobile-arrow{
+  position: fixed;
+  width: 14px;
+  pointer-events: none;
+  z-index: 1050;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.intro-hint__mobile-arrow-shaft{
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  border-radius: 999px;
+  background: rgba(30,30,30,0.72);
+}
+
+.intro-hint__mobile-arrow-head{
+  position: absolute;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  border-left: 2px solid rgba(30,30,30,0.72);
+  border-bottom: 2px solid rgba(30,30,30,0.72);
+}
+
+.intro-hint__mobile-arrow.is-down .intro-hint__mobile-arrow-head{
+  bottom: 0;
+  transform: rotate(-45deg);
+}
+
+.intro-hint__mobile-arrow.is-up .intro-hint__mobile-arrow-head{
+  top: 0;
+  transform: rotate(135deg);
+}
+
 
 
 
