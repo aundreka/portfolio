@@ -533,7 +533,7 @@ function scrollToProject(projectId){
     setTimeout(() => el?.classList?.remove("highlight"), 1200);
   }, 450);
 }
-function animateRotation(targetIndex) {
+function animateRotation(targetIndex, { playSound = false } = {}) {
   hideLabel();
   const targetAngle = targetIndex * angleStep;
 
@@ -591,8 +591,10 @@ setTimeout(() => {
 }, duration + 20);
 
   if (window.__hasInitializedCarousel__) {
-    stopAllAudio();
-    playPianoSound(currentIndex);
+    if (playSound) {
+      stopAllAudio();
+      playPianoSound(currentIndex);
+    }
   } else {
     window.__hasInitializedCarousel__ = true;
   }
@@ -602,12 +604,12 @@ setTimeout(() => {
  * BUTTON CONTROLS
  ***********************/
 nextBtn?.addEventListener("click", () => {
-  animateRotation((currentIndex + 1) % totalPianos);
+  animateRotation((currentIndex + 1) % totalPianos, { playSound: true });
   playCatOnceThenIdle();
 });
 
 prevBtn?.addEventListener("click", () => {
-  animateRotation((currentIndex - 1 + totalPianos) % totalPianos);
+  animateRotation((currentIndex - 1 + totalPianos) % totalPianos, { playSound: true });
   playCatOnceThenIdle();
 });
 pianoClick?.addEventListener("click", (e) => {
@@ -745,9 +747,9 @@ function stopDrag(event) {
     const swipeThreshold = 42;
     if (Math.abs(deltaX) > swipeThreshold && Math.abs(deltaX) > Math.abs(deltaY)) {
       if (deltaX < 0) {
-        animateRotation((currentIndex + 1) % totalPianos);
+        animateRotation((currentIndex + 1) % totalPianos, { playSound: true });
       } else {
-        animateRotation((currentIndex - 1 + totalPianos) % totalPianos);
+        animateRotation((currentIndex - 1 + totalPianos) % totalPianos, { playSound: true });
       }
       playCatOnceThenIdle();
       setTimeout(positionFrontClickOverlay, 60);
@@ -1234,7 +1236,7 @@ return;
       const navBottom = navRect ? navRect.bottom : 0;
       const headingBottom = heading?.getBoundingClientRect?.().bottom || 0;
       hx = tr.left + tr.width * 0.34 - hintRect.width * 0.5;
-      hy = Math.max(headingBottom + 20, navBottom + 16);
+      hy = Math.max(headingBottom + 44, navBottom + 40);
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {
@@ -1320,9 +1322,9 @@ return;
 
     if (mobileHintLayout && id === "intro-hint-cat") {
       desiredStartX = tr.left + tr.width * 0.34;
-      desiredStartY = b.bottom + 4;
+      desiredStartY = b.bottom + 26;
       desiredEndX = desiredStartX;
-      desiredEndY = tr.top + 2;
+      desiredEndY = tr.top - 24;
       desiredCtrlX = desiredStartX;
       desiredCtrlY = (desiredStartY + desiredEndY) / 2;
     }
@@ -1338,8 +1340,14 @@ return;
 
     if (mobileHintLayout) {
       svg.style.display = "none";
-      const top = Math.min(desiredStartY, desiredEndY);
-      const height = Math.max(16, Math.abs(desiredEndY - desiredStartY));
+      let top = Math.min(desiredStartY, desiredEndY);
+      let height = Math.max(16, Math.abs(desiredEndY - desiredStartY));
+
+      if (id === "intro-hint-cat") {
+        top += 4;
+        height = Math.max(16, height - 12);
+      }
+
       mobileArrow.style.left = `${desiredStartX - 7}px`;
       mobileArrow.style.top = `${top}px`;
       mobileArrow.style.height = `${height}px`;
@@ -1505,7 +1513,7 @@ const catHint = makeHint({
   smoothK: 0.14, 
 
   arrowStartDX: window.innerWidth <= 700 ? 0 : 0,
-  arrowStartDY: window.innerWidth <= 700 ? 30 : -30,
+  arrowStartDY: window.innerWidth <= 700 ? 78 : -30,
   arrowEndDX: window.innerWidth <= 700 ? 0 : 0,
   arrowEndDY: window.innerWidth <= 700 ? 0 : 0,
   
