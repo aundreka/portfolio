@@ -61,7 +61,7 @@
   align-items: center;
   gap: 18px;
   flex-wrap: wrap;
-
+  transform-origin: top left;
 }
 
 #projects .filter{
@@ -223,8 +223,9 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 180ms ease;
-  will-change: opacity;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1), visibility 180ms step-end;
+  will-change: opacity, transform;
 }
 
 #projects .filter[data-filter="category"] .filter__menu{
@@ -340,8 +341,9 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateY(-8px);
-    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms step-end;
+    transform: translateY(-10px) scale(0.985);
+    transform-origin: top center;
+    transition: opacity 220ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1), visibility 220ms step-end;
     z-index: 45;
   }
 
@@ -349,8 +351,8 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translateY(0);
-    transition: opacity 180ms ease, transform 180ms ease, visibility 0s;
+    transform: translateY(0) scale(1);
+    transition: opacity 220ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
   }
 
   #projects .projects__dot{
@@ -447,13 +449,39 @@
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  transform: translateY(0) scale(1);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
 }
 
 #projects .filter.is-closing .filter__menu{
   opacity: 0;
   visibility: visible;
   pointer-events: none;
+  transform: translateY(6px) scale(0.985);
 }
+
+#projects .filter__menuInner > *{
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 160ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#projects .filter.is-open .filter__menuInner > *{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#projects .filter__menuInner > *:nth-child(1){ transition-delay: 20ms; }
+#projects .filter__menuInner > *:nth-child(2){ transition-delay: 35ms; }
+#projects .filter__menuInner > *:nth-child(3){ transition-delay: 50ms; }
+#projects .filter__menuInner > *:nth-child(4){ transition-delay: 65ms; }
+#projects .filter__menuInner > *:nth-child(5){ transition-delay: 80ms; }
+#projects .filter__menuInner > *:nth-child(6){ transition-delay: 95ms; }
+#projects .filter__menuInner > *:nth-child(7){ transition-delay: 110ms; }
+#projects .filter__menuInner > *:nth-child(8){ transition-delay: 125ms; }
+#projects .filter__menuInner > *:nth-child(9){ transition-delay: 140ms; }
+#projects .filter__menuInner > *:nth-child(10){ transition-delay: 155ms; }
+#projects .filter__menuInner > *:nth-child(n+11){ transition-delay: 170ms; }
 
 #projects .filter__menu button,
 #projects .filter__menu .filter__item{
@@ -1156,6 +1184,13 @@
 }
 
 @media (prefers-reduced-motion: reduce){
+  #projects .projects__filters,
+  #projects .filter__menu,
+  #projects .filter__menuInner > *{
+    transition: none !important;
+    transform: none !important;
+  }
+
   #projects .note--hero .note__glass{
     transition: none !important;
     opacity: 1 !important;

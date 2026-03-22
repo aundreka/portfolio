@@ -472,6 +472,53 @@ function positionFrontClickOverlay(){
   pianoClick.style.height = `${Math.max(0, r.height - yOffset)}px`;
 }
 
+function makeRectLike(left, top, width, height) {
+  return {
+    left,
+    top,
+    width,
+    height,
+    right: left + width,
+    bottom: top + height,
+  };
+}
+
+function getVisualCatHintTarget() {
+  const source = catWrap || catEl;
+  if (!source) return null;
+
+  const rect = source.getBoundingClientRect();
+  if (rect.width < 2 || rect.height < 2) return null;
+
+  if (window.innerWidth > 700) return rect;
+
+  return makeRectLike(
+    rect.left + rect.width * 0.2,
+    rect.top + rect.height * 0.2,
+    rect.width * 0.62,
+    rect.height * 0.52
+  );
+}
+
+function getVisualFrontPianoHintTarget() {
+  const front = getCenterPiano();
+  if (!front) return null;
+
+  const rect = front.getBoundingClientRect();
+  if (rect.width < 2 || rect.height < 2) return null;
+
+  if (window.innerWidth > 700) {
+    return pianoClick && pianoClick.style.display !== "none" ? pianoClick : front;
+  }
+
+  return makeRectLike(
+    rect.left + rect.width * 0.14,
+    rect.top + rect.height * 0.08,
+    rect.width * 0.72,
+    rect.height * 0.82
+  );
+}
+
 function scrollToProject(projectId){
   const projects = document.getElementById("projects");
   if (projects) projects.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1089,11 +1136,23 @@ document.addEventListener("DOMContentLoaded", () => {
   hintsRoot.appendChild(hint);
 
   function getTargetRect() {
-    const el = targetGetter?.();
-    if (!el) return null;
-    const r = el.getBoundingClientRect();
-    if (r.width < 2 || r.height < 2) return null;
-    return r;
+    const target = targetGetter?.();
+    if (!target) return null;
+    if (typeof target.getBoundingClientRect === "function") {
+      const r = target.getBoundingClientRect();
+      if (r.width < 2 || r.height < 2) return null;
+      return r;
+    }
+    if (
+      typeof target.left === "number" &&
+      typeof target.top === "number" &&
+      typeof target.width === "number" &&
+      typeof target.height === "number"
+    ) {
+      if (target.width < 2 || target.height < 2) return null;
+      return target;
+    }
+    return null;
   }
 
   const contactForm = document.getElementById("contactForm");
@@ -1174,13 +1233,13 @@ return;
       const navRect = navPanel?.getBoundingClientRect?.();
       const navBottom = navRect ? navRect.bottom : 0;
       const headingBottom = heading?.getBoundingClientRect?.().bottom || 0;
-      hx = tr.left + tr.width * 0.18 - hintRect.width * 0.5;
-      hy = Math.max(headingBottom + 46, navBottom + 28);
+      hx = tr.left + tr.width * 0.34 - hintRect.width * 0.5;
+      hy = Math.max(headingBottom + 20, navBottom + 16);
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {
       hx = tr.left + tr.width * 0.5 - hintRect.width * 0.5;
-      hy = tr.bottom - 16;
+      hy = tr.bottom + 22;
     }
 
     
@@ -1229,8 +1288,8 @@ return;
 
     if (id === "intro-hint-cat") {
       if (mobileHintLayout) {
-        desiredEndX = tr.left + tr.width * 0.22;
-        desiredEndY = tr.top + 6;
+        desiredEndX = tr.left + tr.width * 0.34;
+        desiredEndY = tr.top + 2;
       } else {
         desiredEndX = tr.left - marginFromTarget;
         desiredEndY = tr.top + tr.height * 0.48;
@@ -1238,7 +1297,7 @@ return;
     } else if (id === "intro-hint-piano") {
       if (mobileHintLayout) {
         desiredEndX = tr.left + tr.width * 0.5;
-        desiredEndY = tr.bottom - 12;
+        desiredEndY = tr.bottom + 2;
       } else {
         desiredEndX = tr.right + marginFromTarget;
         desiredEndY = tr.top + tr.height * 0.65;
@@ -1260,19 +1319,19 @@ return;
     let desiredCtrlY = midY - curve * 0.35;
 
     if (mobileHintLayout && id === "intro-hint-cat") {
-      desiredStartX = b.left + b.width * 0.5;
+      desiredStartX = tr.left + tr.width * 0.34;
       desiredStartY = b.bottom + 4;
       desiredEndX = desiredStartX;
-      desiredEndY = tr.top - 8;
+      desiredEndY = tr.top + 2;
       desiredCtrlX = desiredStartX;
       desiredCtrlY = (desiredStartY + desiredEndY) / 2;
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {
-      desiredStartX = b.left + b.width * 0.5;
+      desiredStartX = tr.left + tr.width * 0.5;
       desiredStartY = b.top - 4;
       desiredEndX = desiredStartX;
-      desiredEndY = tr.bottom + 12;
+      desiredEndY = tr.bottom + 2;
       desiredCtrlX = desiredStartX;
       desiredCtrlY = (desiredStartY + desiredEndY) / 2;
     }
@@ -1410,9 +1469,7 @@ head.setAttribute(
 }
 
   function getFrontPianoRectTarget() {
-    
-    if (pianoClick && pianoClick.style.display !== "none") return pianoClick;
-    return getCenterPiano?.() || null;
+    return getVisualFrontPianoHintTarget();
   }
 
   
@@ -1438,17 +1495,17 @@ head.setAttribute(
 const catHint = makeHint({
   id: "intro-hint-cat",
   text: "tap to know me",
-  targetGetter: () => catWrap || catEl,
+  targetGetter: () => getVisualCatHintTarget(),
   side: window.innerWidth <= 700 ? "left" : "left",
   gap: window.innerWidth <= 700 ? 8 : 70,
   shiftX: window.innerWidth <= 700 ? 0 : -40,
-  shiftY: window.innerWidth <= 700 ? 40 : -18,
+  shiftY: window.innerWidth <= 700 ? 68 : -18,
   prefer: window.innerWidth <= 700 ? "above" : "middle",
   smooth: true,
   smoothK: 0.14, 
 
   arrowStartDX: window.innerWidth <= 700 ? 0 : 0,
-  arrowStartDY: window.innerWidth <= 700 ? 0 : -30,
+  arrowStartDY: window.innerWidth <= 700 ? 30 : -30,
   arrowEndDX: window.innerWidth <= 700 ? 0 : 0,
   arrowEndDY: window.innerWidth <= 700 ? 0 : 0,
   
