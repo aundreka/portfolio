@@ -6,17 +6,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const pianoHost   = root.querySelector("#projectsPiano");
   const filtersPanelEl = root.querySelector("#projectsFiltersPanel");
   const filterToggleBtn = root.querySelector("#projectsFiltersToggle");
+  const searchInputEl = root.querySelector("#projectsSearch");
   const langValueEl = root.querySelector("#langValue");
   const toolValueEl = root.querySelector("#toolValue");
   const catValueEl  = root.querySelector("#catValue");
+  const sortValueEl = root.querySelector("#sortValue");
   const langMenuEl  = root.querySelector("#langMenu");
   const toolMenuEl  = root.querySelector("#toolMenu");
   const catMenuEl   = root.querySelector("#catMenu");
+  const sortMenuEl  = root.querySelector("#sortMenu");
   const langFilter  = root.querySelector('.filter[data-filter="language"]');
   const toolFilter  = root.querySelector('.filter[data-filter="tool"]');
   const catFilter   = root.querySelector('.filter[data-filter="category"]');
+  const sortFilter  = root.querySelector('.filter[data-filter="sort"]');
 
-  if (!pianoHost || !filtersPanelEl || !filterToggleBtn || !langValueEl || !toolValueEl || !catValueEl || !langMenuEl || !toolMenuEl || !catMenuEl || !langFilter || !toolFilter || !catFilter) {
+  if (!pianoHost || !filtersPanelEl || !filterToggleBtn || !searchInputEl || !langValueEl || !toolValueEl || !catValueEl || !sortValueEl || !langMenuEl || !toolMenuEl || !catMenuEl || !sortMenuEl || !langFilter || !toolFilter || !catFilter || !sortFilter) {
     console.warn("[ProjectsPiano] Missing required DOM elements inside #projects.");
     return;
   }
@@ -75,8 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const LANGUAGES = ["All","python","html css js","php sql","react native","react","next","expo","kotlin","java","c++","flutter"];
   const TOOLS = ["All","React","React Native","Flutter","Laravel","Node.js","Supabase","GCE","Vercel","REST APIs","Tableau","Power BI","Git","Docker","Figma"];
   const CATEGORIES = ["All","apps","websites","games","ai/ml","ui/ux"];
+  const SORT_OPTIONS = ["Newest","Oldest","A-Z"];
 
-const PROJECTS = [
+const RAW_PROJECTS = [
  
   {
     title: "PRISM: Social Media Auto-Posting and Analytics",
@@ -390,6 +395,32 @@ const PROJECTS = [
   },
 ];
 
+  const PROJECT_DATE_SEEDS = [
+    "2026-02-12","2026-01-26","2025-12-10","2025-11-18","2025-10-09","2025-09-15","2025-08-22","2025-07-12","2025-06-06","2025-05-21",
+    "2025-04-14","2025-03-01","2025-01-19","2024-12-06",
+    "2024-11-10","2024-10-04","2024-09-17","2024-08-08","2024-07-21","2024-06-11","2024-05-03",
+    "2024-04-18","2024-03-09","2024-02-22",
+    "2024-01-12","2023-11-18","2023-10-07"
+  ];
+
+  function formatDateKeyword(dateValue) {
+    const date = new Date(`${dateValue}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return "";
+    return new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      year: "numeric",
+    }).format(date);
+  }
+
+  const PROJECTS = RAW_PROJECTS.map((project, index) => {
+    const publishedAt = PROJECT_DATE_SEEDS[index] || "2024-01-01";
+    return {
+      ...project,
+      publishedAt,
+      dateKeyword: formatDateKeyword(publishedAt),
+    };
+  });
+
 
 
   const NOTE_LETTERS = ["a","b","c","d","e","f","g"];
@@ -404,6 +435,8 @@ const PROJECTS = [
     language: "All",
     tool: "All",
     category: "All",
+    sort: "Newest",
+    search: "",
     openIndex: null,
     lastHoverAt: 0,
     lastHoverSlot: null,
@@ -464,6 +497,26 @@ const PROJECTS = [
 
     return [...tags];
   }
+
+  function matchesSearch(project) {
+    const searchNeedle = normalize(state.search);
+    if (!searchNeedle) return true;
+
+    const haystack = [
+      project?.title,
+      project?.description,
+      project?.language,
+      project?.category,
+      project?.dateKeyword,
+      project?.publishedAt,
+      ...(project?.icons || []),
+      ...getProjectToolTags(project),
+    ]
+      .map((value) => normalize(value))
+      .join(" ");
+
+    return haystack.includes(searchNeedle);
+  }
 function isNoteInteractiveTarget(target) {
   // anything clickable inside the opened note should not start drag capture
   return !!target.closest(".note a, .note button, .note [role='button'], .note input, .note textarea, .note select");
@@ -473,11 +526,24 @@ function isNoteInteractiveTarget(target) {
     const langOk = state.language === "All" || normalize(project.language) === normalize(state.language);
     const toolOk = state.tool === "All" || hasNormalized(getProjectToolTags(project), state.tool);
     const catOk  = state.category === "All" || normalize(project.category) === normalize(state.category);
-    return langOk && toolOk && catOk;
+    const searchOk = matchesSearch(project);
+    return langOk && toolOk && catOk && searchOk;
+  }
+
+  function compareProjects(a, b) {
+    if (state.sort === "Oldest") {
+      return String(a.publishedAt).localeCompare(String(b.publishedAt));
+    }
+
+    if (state.sort === "A-Z") {
+      return String(a.title || "").localeCompare(String(b.title || ""));
+    }
+
+    return String(b.publishedAt).localeCompare(String(a.publishedAt));
   }
 
   function getFilteredProjects() {
-    return PROJECTS.filter(matchesFilters);
+    return PROJECTS.filter(matchesFilters).sort(compareProjects);
   }
 
   function pickNoteLetter(project, slotIndex) {
@@ -542,15 +608,22 @@ function openMenu(which) {
   
   if (which === "language") closeMenuAnimated(catFilter);
   if (which === "language") closeMenuAnimated(toolFilter);
+  if (which === "language") closeMenuAnimated(sortFilter);
   if (which === "tool") closeMenuAnimated(langFilter);
   if (which === "tool") closeMenuAnimated(catFilter);
+  if (which === "tool") closeMenuAnimated(sortFilter);
   if (which === "category") closeMenuAnimated(langFilter);
   if (which === "category") closeMenuAnimated(toolFilter);
+  if (which === "category") closeMenuAnimated(sortFilter);
+  if (which === "sort") closeMenuAnimated(langFilter);
+  if (which === "sort") closeMenuAnimated(toolFilter);
+  if (which === "sort") closeMenuAnimated(catFilter);
 
   const target =
     which === "language" ? langFilter :
     which === "tool" ? toolFilter :
-    catFilter;
+    which === "category" ? catFilter :
+    sortFilter;
   target.classList.remove("is-closing");
   target.classList.add("is-open");
 }
@@ -559,7 +632,8 @@ function toggleMenu(which) {
   const target =
     which === "language" ? langFilter :
     which === "tool" ? toolFilter :
-    catFilter;
+    which === "category" ? catFilter :
+    sortFilter;
   if (target.classList.contains("is-open")) {
     closeMenuAnimated(target);
   } else {
@@ -586,6 +660,7 @@ function clearMenusAnimated() {
   closeMenuAnimated(langFilter);
   closeMenuAnimated(toolFilter);
   closeMenuAnimated(catFilter);
+  closeMenuAnimated(sortFilter);
 }
 function renderMenu(menuEl, items, onPick) {
   
@@ -612,7 +687,7 @@ renderMenu(langMenuEl, LANGUAGES, (picked) => {
   state.openIndex = null;
   clearMenus();
   setFiltersTrayOpen(false);
-  render();
+  render({ restoreScrollLeft: 0 });
 });
 
 renderMenu(toolMenuEl, TOOLS, (picked) => {
@@ -621,7 +696,7 @@ renderMenu(toolMenuEl, TOOLS, (picked) => {
   state.openIndex = null;
   clearMenus();
   setFiltersTrayOpen(false);
-  render();
+  render({ restoreScrollLeft: 0 });
 });
 
 renderMenu(catMenuEl, CATEGORIES, (picked) => {
@@ -630,7 +705,16 @@ renderMenu(catMenuEl, CATEGORIES, (picked) => {
   state.openIndex = null;
   clearMenus();
   setFiltersTrayOpen(false);
-  render();
+  render({ restoreScrollLeft: 0 });
+});
+
+renderMenu(sortMenuEl, SORT_OPTIONS, (picked) => {
+  state.sort = picked;
+  sortValueEl.textContent = picked;
+  state.openIndex = null;
+  clearMenus();
+  setFiltersTrayOpen(false);
+  render({ restoreScrollLeft: 0 });
 });
 
 filterToggleBtn.addEventListener("click", (e) => {
@@ -655,6 +739,19 @@ catFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
   toggleMenu("category");
+});
+
+sortFilter.querySelector(".filter__btn")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  toggleMenu("sort");
+});
+
+searchInputEl.addEventListener("input", () => {
+  state.search = searchInputEl.value || "";
+  state.openIndex = null;
+  clearMenus();
+  render({ restoreScrollLeft: 0 });
 });
 
 
@@ -876,7 +973,8 @@ note.appendChild(overlay);
     });
   }
 
-  function render() {
+  function render(options = {}) {
+    const { focusSlot = null, restoreScrollLeft = null, focusBehavior = "smooth" } = options;
     pianoHost.innerHTML = "";
 
     const track = document.createElement("div");
@@ -935,6 +1033,15 @@ note.appendChild(overlay);
 
       
       requestAnimationFrame(() => {
+        if (Number.isFinite(restoreScrollLeft)) {
+          pianoHost.scrollLeft = restoreScrollLeft;
+        }
+
+        if (Number.isFinite(focusSlot)) {
+          const focusKey = pianoHost.querySelector(`.piano-key[data-slot="${focusSlot}"]`);
+          focusKey?.scrollIntoView({ behavior: focusBehavior, inline: "center", block: "nearest" });
+        }
+
         syncBlackLayerSize(track);
         hideBlackKeysInsideOpen(track);
       });
@@ -976,7 +1083,35 @@ note.appendChild(overlay);
   let moved = 0;
   let movedY = 0;
   let dragAxis = null;
-  const DRAG_THRESHOLD = 6;
+  const DRAG_THRESHOLD = 10;
+  const SWIPE_THRESHOLD = 42;
+
+function getNearestProjectSlot() {
+  const keys = [...pianoHost.querySelectorAll(".piano-key:not(.is-empty)")];
+  if (!keys.length) return 0;
+
+  const hostRect = pianoHost.getBoundingClientRect();
+  const hostCenter = hostRect.left + hostRect.width / 2;
+  let nearestSlot = 0;
+  let nearestDistance = Number.POSITIVE_INFINITY;
+
+  keys.forEach((key) => {
+    const rect = key.getBoundingClientRect();
+    const center = rect.left + rect.width / 2;
+    const distance = Math.abs(center - hostCenter);
+    if (distance < nearestDistance) {
+      nearestDistance = distance;
+      nearestSlot = Number(key.dataset.slot || 0);
+    }
+  });
+
+  return nearestSlot;
+}
+
+function focusProjectSlot(slot, behavior = "smooth") {
+  const key = pianoHost.querySelector(`.piano-key[data-slot="${slot}"]`);
+  key?.scrollIntoView({ behavior, inline: "center", block: "nearest" });
+}
 
 pianoHost.addEventListener("pointerdown", (e) => {
   // ✅ allow links/buttons inside note to work normally
@@ -1006,7 +1141,7 @@ pianoHost.addEventListener("pointermove", (e) => {
     dragAxis = moved > movedY ? "x" : "y";
   }
 
-  if (dragAxis === "x" && moved > DRAG_THRESHOLD) {
+  if (dragAxis === "x" && moved > DRAG_THRESHOLD && !isCompactProjectsViewport()) {
     pianoHost.scrollLeft = startScrollLeft - dx;
   }
 });
@@ -1020,6 +1155,25 @@ pianoHost.addEventListener("pointerup", (e) => {
 
   if (!isDown) return;
   isDown = false;
+
+  if (isCompactProjectsViewport() && dragAxis === "x" && moved > SWIPE_THRESHOLD && moved > movedY) {
+    const filtered = getFilteredProjects();
+    const direction = (e.clientX - startX) < 0 ? 1 : -1;
+
+    if (state.openIndex !== null) {
+      const nextSlot = Math.max(0, Math.min(filtered.length - 1, state.openIndex + direction));
+      if (nextSlot !== state.openIndex) {
+        state.openIndex = nextSlot;
+        render({ focusSlot: nextSlot });
+      }
+      return;
+    }
+
+    const currentSlot = getNearestProjectSlot();
+    const nextSlot = Math.max(0, Math.min(filtered.length - 1, currentSlot + direction));
+    focusProjectSlot(nextSlot);
+    return;
+  }
 
   if (dragAxis === "x" && moved > DRAG_THRESHOLD) return;
   if (dragAxis === "y" && movedY > DRAG_THRESHOLD) return;
@@ -1038,12 +1192,7 @@ pianoHost.addEventListener("pointerup", (e) => {
   playNote(pickNoteLetter(project, slot));
 
   state.openIndex = (state.openIndex === slot) ? null : slot;
-  render();
-
-  if (state.openIndex !== null) {
-    const opened = pianoHost.querySelector(`.piano-key[data-slot="${slot}"]`);
-    opened?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-  }
+  render({ focusSlot: slot });
 });
 
   pianoHost.addEventListener("pointercancel", () => {
@@ -1165,6 +1314,8 @@ io.observe(root);
   langValueEl.textContent = state.language;
   toolValueEl.textContent = state.tool;
   catValueEl.textContent = state.category;
+  sortValueEl.textContent = state.sort;
+  searchInputEl.value = state.search;
 
   render();
 
@@ -1176,7 +1327,7 @@ window.ProjectsPiano.setCategory = (cat) => {
   catValueEl.textContent = normalized;
   state.openIndex = null;
   clearMenus();
-  render();
+  render({ restoreScrollLeft: 0 });
 };
 
 window.ProjectsPiano.setLanguage = (lang) => {
@@ -1185,7 +1336,7 @@ window.ProjectsPiano.setLanguage = (lang) => {
   langValueEl.textContent = normalized;
   state.openIndex = null;
   clearMenus();
-  render();
+  render({ restoreScrollLeft: 0 });
 };
 
 window.ProjectsPiano.setTool = (tool) => {
@@ -1194,19 +1345,23 @@ window.ProjectsPiano.setTool = (tool) => {
   toolValueEl.textContent = normalized;
   state.openIndex = null;
   clearMenus();
-  render();
+  render({ restoreScrollLeft: 0 });
 };
 
   window.ProjectsPiano.resetFilters = () => {
   state.language = "All";
   state.tool = "All";
   state.category = "All";
+  state.sort = "Newest";
+  state.search = "";
   langValueEl.textContent = "All";
   toolValueEl.textContent = "All";
   catValueEl.textContent = "All";
+  sortValueEl.textContent = "Newest";
+  searchInputEl.value = "";
   state.openIndex = null;
   clearMenus();
-  render();
+  render({ restoreScrollLeft: 0 });
 };
 
   

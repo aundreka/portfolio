@@ -113,7 +113,6 @@
    <section id="projects" class="projects">
       <div class="projects__wrap">
         <div class="projects__topbar">
-          <div class="projects__dot"></div>
           <button
             class="projects__filterToggle"
             id="projectsFiltersToggle"
@@ -125,6 +124,14 @@
           </button>
 
           <div class="projects__filters" id="projectsFiltersPanel">
+            <div class="projects__dot" aria-hidden="true"></div>
+            <div class="filter filter--search">
+              <label class="filter__searchShell" for="projectsSearch">
+                <span class="filter__label">SEARCH</span>
+                <input id="projectsSearch" class="filter__searchInput" type="search" placeholder="Project" autocomplete="off" />
+              </label>
+            </div>
+
             <div class="filter" data-filter="language">
               <button class="filter__btn" type="button">
                 <span class="filter__label">LANGUAGE</span>
@@ -148,9 +155,17 @@
               </button>
               <div class="filter__menu" id="catMenu"></div>
             </div>
+
+            <div class="filter" data-filter="sort">
+              <button class="filter__btn" type="button">
+                <span class="filter__label">SORT</span>
+                <span class="filter__value" id="sortValue">Newest</span>
+              </button>
+              <div class="filter__menu" id="sortMenu"></div>
+            </div>
           </div>
            <div class="projects__hint">
-            Drag to browse projects. Click outside the piano to close details.
+            Swipe or drag to browse projects. Click outside the piano to close details.
           </div>
         </div>
 
