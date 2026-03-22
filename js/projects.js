@@ -971,8 +971,11 @@ note.appendChild(overlay);
  
   let isDown = false;
   let startX = 0;
+  let startY = 0;
   let startScrollLeft = 0;
   let moved = 0;
+  let movedY = 0;
+  let dragAxis = null;
   const DRAG_THRESHOLD = 6;
 
 pianoHost.addEventListener("pointerdown", (e) => {
@@ -982,16 +985,28 @@ pianoHost.addEventListener("pointerdown", (e) => {
   if (e.pointerType === "mouse" && e.button !== 0) return;
   isDown = true;
   startX = e.clientX;
+  startY = e.clientY;
   startScrollLeft = pianoHost.scrollLeft;
   moved = 0;
-  pianoHost.setPointerCapture?.(e.pointerId);
+  movedY = 0;
+  dragAxis = null;
+  if (e.pointerType === "mouse") {
+    pianoHost.setPointerCapture?.(e.pointerId);
+  }
 });
 
 pianoHost.addEventListener("pointermove", (e) => {
   if (!isDown) return;
   const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
   moved = Math.max(moved, Math.abs(dx));
-  if (moved > DRAG_THRESHOLD) {
+  movedY = Math.max(movedY, Math.abs(dy));
+
+  if (!dragAxis && (moved > DRAG_THRESHOLD || movedY > DRAG_THRESHOLD)) {
+    dragAxis = moved > movedY ? "x" : "y";
+  }
+
+  if (dragAxis === "x" && moved > DRAG_THRESHOLD) {
     pianoHost.scrollLeft = startScrollLeft - dx;
   }
 });
@@ -1006,11 +1021,11 @@ pianoHost.addEventListener("pointerup", (e) => {
   if (!isDown) return;
   isDown = false;
 
-  if (moved > DRAG_THRESHOLD) return;
+  if (dragAxis === "x" && moved > DRAG_THRESHOLD) return;
+  if (dragAxis === "y" && movedY > DRAG_THRESHOLD) return;
 
   const el = document.elementFromPoint(e.clientX, e.clientY);
   if (!el) return;
-  if (el.closest(".note")) return; // keep your existing behavior
 
   const key = el.closest(".piano-key");
   if (!key || !pianoHost.contains(key)) return;
@@ -1031,7 +1046,10 @@ pianoHost.addEventListener("pointerup", (e) => {
   }
 });
 
-  pianoHost.addEventListener("pointercancel", () => { isDown = false; });
+  pianoHost.addEventListener("pointercancel", () => {
+    isDown = false;
+    dragAxis = null;
+  });
 
   document.addEventListener("pointerdown", (e) => {
     if (state.openIndex === null) return;

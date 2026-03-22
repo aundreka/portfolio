@@ -633,7 +633,7 @@ function isTouchSwipeCarousel() {
 }
 
 function startDrag(event) {
-    if (event.target && event.target.id === "piano-click") return;
+  if (event.target && event.target.id === "piano-click") return;
 
   isDragging = true;
   hideLabel();
@@ -649,7 +649,9 @@ function startDrag(event) {
   lastOrbitX = parseFloat(orbit[0]);
   lastOrbitY = parseFloat(orbit[1]);
 
-  event.preventDefault?.();
+  if (!event.touches?.length) {
+    event.preventDefault?.();
+  }
 }
 
 function drag(event) {
@@ -898,6 +900,10 @@ if (navEl && navMobileToggle && navPanel) {
     const open = navEl.classList.contains("is-menu-open");
     if (open) closeNavMenu();
     else openNavMenu();
+    requestAnimationFrame(() => {
+      positionFrontClickOverlay();
+      positionCatClickOverlay();
+    });
   });
 
   window.addEventListener("resize", () => {
@@ -1156,13 +1162,13 @@ return;
       const navRect = navPanel?.getBoundingClientRect?.();
       const navBottom = navRect ? navRect.bottom : 0;
       const headingBottom = heading?.getBoundingClientRect?.().bottom || 0;
-      hx = tr.left - hintRect.width * 0.08;
-      hy = Math.max(headingBottom + 52, navBottom + 28);
+      hx = tr.left + tr.width * 0.02;
+      hy = Math.max(headingBottom + 24, navBottom + 16);
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {
-      hx = tr.left + tr.width * 0.5 - hintRect.width * 0.18;
-      hy = tr.bottom + 8;
+      hx = tr.left + tr.width * 0.46 - hintRect.width * 0.5;
+      hy = tr.bottom + 20;
     }
 
     
@@ -1211,16 +1217,16 @@ return;
 
     if (id === "intro-hint-cat") {
       if (mobileHintLayout) {
-        desiredEndX = tr.left + tr.width * 0.46;
-        desiredEndY = tr.top + 18;
+        desiredEndX = tr.left + tr.width * 0.22;
+        desiredEndY = tr.top + 52;
       } else {
         desiredEndX = tr.left - marginFromTarget;
         desiredEndY = tr.top + tr.height * 0.48;
       }
     } else if (id === "intro-hint-piano") {
       if (mobileHintLayout) {
-        desiredEndX = tr.left + tr.width * 0.58;
-        desiredEndY = tr.bottom + marginFromTarget + 10;
+        desiredEndX = tr.right - tr.width * 0.18;
+        desiredEndY = tr.bottom - 54;
       } else {
         desiredEndX = tr.right + marginFromTarget;
         desiredEndY = tr.top + tr.height * 0.65;
@@ -1242,21 +1248,21 @@ return;
     let desiredCtrlY = midY - curve * 0.35;
 
     if (mobileHintLayout && id === "intro-hint-cat") {
-      desiredStartX = b.right + 26;
-      desiredStartY = b.top + b.height * 1.02;
-      desiredEndX = tr.left + tr.width * 0.48;
-      desiredEndY = tr.top + tr.height * 0.16;
-      desiredCtrlX = desiredStartX + 46;
-      desiredCtrlY = desiredStartY - 30;
+      desiredStartX = b.left + b.width * 0.72;
+      desiredStartY = b.bottom + 2;
+      desiredEndX = tr.left + tr.width * 0.24;
+      desiredEndY = tr.top + 52;
+      desiredCtrlX = (desiredStartX + desiredEndX) / 2 + 16;
+      desiredCtrlY = Math.max(desiredStartY, desiredEndY) + 18;
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {
-      desiredStartX = b.left - 34;
-      desiredStartY = b.top + b.height * 0.42;
-      desiredEndX = tr.left + tr.width * 0.52;
-      desiredEndY = tr.bottom - 22;
-      desiredCtrlX = desiredEndX - 10;
-      desiredCtrlY = (desiredStartY + desiredEndY) / 2 + 14;
+      desiredStartX = b.left + b.width * 0.68;
+      desiredStartY = b.top + 4;
+      desiredEndX = tr.right - tr.width * 0.18;
+      desiredEndY = tr.bottom - 50;
+      desiredCtrlX = desiredStartX + 56;
+      desiredCtrlY = desiredStartY - 46;
     }
 
     
@@ -1404,35 +1410,35 @@ head.setAttribute(
     
 const catHint = makeHint({
   id: "intro-hint-cat",
-  text: "click to know more about me",
+  text: "tap to know me",
   targetGetter: () => catWrap || catEl,
   side: window.innerWidth <= 700 ? "left" : "left",
   gap: window.innerWidth <= 700 ? 8 : 70,
-  shiftX: window.innerWidth <= 700 ? 8 : -40,
-  shiftY: window.innerWidth <= 700 ? 102 : -18,      
+  shiftX: window.innerWidth <= 700 ? 0 : -40,
+  shiftY: window.innerWidth <= 700 ? 30 : -18,
   prefer: window.innerWidth <= 700 ? "above" : "middle",
   smooth: true,
   smoothK: 0.14, 
 
-  arrowStartDX: window.innerWidth <= 700 ? 18 : 0,
-  arrowStartDY: window.innerWidth <= 700 ? 8 : -30,
+  arrowStartDX: window.innerWidth <= 700 ? 0 : 0,
+  arrowStartDY: window.innerWidth <= 700 ? 0 : -30,
   arrowEndDX: window.innerWidth <= 700 ? 0 : 0,
-  arrowEndDY: window.innerWidth <= 700 ? 10 : 0,
+  arrowEndDY: window.innerWidth <= 700 ? 0 : 0,
   
 });
 
 const pianoHint = makeHint({
   id: "intro-hint-piano",
-  text: "click to see my projects",
+  text: "tap to see projects",
   targetGetter: () => getFrontPianoRectTarget(),
   side: window.innerWidth <= 700 ? "right" : "right",
   gap: window.innerWidth <= 700 ? 2 : 70,
   shiftX: window.innerWidth <= 700 ? -2 : 40,
-  shiftY: window.innerWidth <= 700 ? -8 : 50,
+  shiftY: window.innerWidth <= 700 ? 10 : 50,
   prefer: window.innerWidth <= 700 ? "below" : "middle",
-  arrowStartDX: window.innerWidth <= 700 ? -18 : 0,
-  arrowStartDY: window.innerWidth <= 700 ? -10 : -30,
-  arrowEndDY: window.innerWidth <= 700 ? -18 : 0,
+  arrowStartDX: window.innerWidth <= 700 ? 0 : 0,
+  arrowStartDY: window.innerWidth <= 700 ? 0 : -30,
+  arrowEndDY: window.innerWidth <= 700 ? 0 : 0,
 
   
   smooth: true,

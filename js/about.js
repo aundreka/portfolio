@@ -749,6 +749,8 @@ document.addEventListener("DOMContentLoaded", () => {
 (() => {
   const buttons = document.querySelectorAll(".note-block");
   if (!buttons.length) return;
+  const compactAboutQuery = window.matchMedia("(max-width: 768px)");
+  const isCompactAbout = () => compactAboutQuery.matches;
 
   
   const cache = new Map();
@@ -765,6 +767,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   let audioUnlocked = false;
   const unlockAudio = () => {
+    if (isCompactAbout()) return;
     if (audioUnlocked) return;
     audioUnlocked = true;
 
@@ -797,6 +800,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btn.dataset.color) btn.style.setProperty("--note-color", btn.dataset.color);
 
     btn.addEventListener("pointerenter", () => {
+      if (isCompactAbout()) return;
       const src = btn.dataset.fx;
       if (!src) return;
 
@@ -902,6 +906,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ── Build DOM ─────────────────────────────────────────────── */
   const kb = document.getElementById('skills-keyboard');
   const projectsSection = document.getElementById('projects');
+  const compactAboutQuery = window.matchMedia("(max-width: 768px)");
   if (!kb) return;
 
   const focusProjectsWithFilter = (filterType, filterValue) => {
@@ -916,59 +921,95 @@ document.addEventListener("DOMContentLoaded", () => {
     projectsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
  
-  const legendEl = document.createElement('div');
-  legendEl.className = 'skb-legend';
+  const makeKey = (k) => {
+    const key = document.createElement('div');
+    const wideClass = k.wide ? ' wide' : k.xwide ? ' xwide' : '';
+    key.className = `skb-key ${k.cat}${wideClass}`;
+    key.tabIndex = 0;
+    key.setAttribute('aria-label', k.label);
 
-  legend.forEach(item => {
-    const pill = document.createElement('div');
-    pill.className = `skb-legend-pill ${item.cat}`;
-    pill.textContent = item.label;
-    legendEl.appendChild(pill);
-  });
+    key.innerHTML = `
+      <div class="skb-face">
+        <div class="skb-icon">
+          <img src="assets/icons/${iconFiles[k.icon] || `${k.icon}.png`}" alt="${k.label}">
+        </div>
+        <div class="skb-label">${k.label}</div>
+      </div>`;
 
-  kb.appendChild(legendEl);
+    key.addEventListener('pointerdown', () => {
+      key.classList.add('skb-pressed');
+    });
+    key.addEventListener('click', () => {
+      focusProjectsWithFilter(k.filterType, k.filterValue);
+    });
+    key.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      focusProjectsWithFilter(k.filterType, k.filterValue);
+    });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(evt =>
+      key.addEventListener(evt, () => {
+        setTimeout(() => key.classList.remove('skb-pressed'), 80);
+      })
+    );
 
-  rows.forEach(rowData => {
-    const row = document.createElement('div');
-    row.className = 'skb-row';
-    row.style.setProperty('--skb-indent', rowData.indent);
+    return key;
+  };
 
-    rowData.keys.forEach(k => {
-      const key = document.createElement('div');
-      const wideClass = k.wide ? ' wide' : k.xwide ? ' xwide' : '';
-      key.className = `skb-key ${k.cat}${wideClass}`;
-      key.tabIndex = 0;
-      key.setAttribute('aria-label', k.label);
+  const renderDesktopSkills = () => {
+    const legendEl = document.createElement('div');
+    legendEl.className = 'skb-legend';
 
-      key.innerHTML = `
-        <div class="skb-face">
-          <div class="skb-icon">
-            <img src="assets/icons/${iconFiles[k.icon] || `${k.icon}.png`}" alt="${k.label}">
-          </div>
-          <div class="skb-label">${k.label}</div>
-        </div>`;
-
-      key.addEventListener('pointerdown', () => {
-        key.classList.add('skb-pressed');
-      });
-      key.addEventListener('click', () => {
-        focusProjectsWithFilter(k.filterType, k.filterValue);
-      });
-      key.addEventListener('keydown', (event) => {
-        if (event.key !== 'Enter' && event.key !== ' ') return;
-        event.preventDefault();
-        focusProjectsWithFilter(k.filterType, k.filterValue);
-      });
-      ['pointerup', 'pointerleave', 'pointercancel'].forEach(evt =>
-        key.addEventListener(evt, () => {
-          setTimeout(() => key.classList.remove('skb-pressed'), 80);
-        })
-      );
-
-      row.appendChild(key);
+    legend.forEach(item => {
+      const pill = document.createElement('div');
+      pill.className = `skb-legend-pill ${item.cat}`;
+      pill.textContent = item.label;
+      legendEl.appendChild(pill);
     });
 
-    kb.appendChild(row);
-  });
+    kb.appendChild(legendEl);
+
+    rows.forEach(rowData => {
+      const row = document.createElement('div');
+      row.className = 'skb-row';
+      row.style.setProperty('--skb-indent', rowData.indent);
+      rowData.keys.forEach((k) => row.appendChild(makeKey(k)));
+      kb.appendChild(row);
+    });
+  };
+
+  const renderMobileSkills = () => {
+    const byCat = new Map(legend.map(item => [item.cat, []]));
+    rows.forEach((rowData) => {
+      rowData.keys.forEach((k) => {
+        byCat.get(k.cat)?.push(k);
+      });
+    });
+
+    legend.forEach((item) => {
+      const section = document.createElement('section');
+      section.className = `skb-group skb-group--${item.cat}`;
+
+      const heading = document.createElement('h3');
+      heading.className = `skb-group__title ${item.cat}`;
+      heading.textContent = item.label;
+      section.appendChild(heading);
+
+      const grid = document.createElement('div');
+      grid.className = 'skb-group__grid';
+      (byCat.get(item.cat) || []).forEach((k) => grid.appendChild(makeKey(k)));
+      section.appendChild(grid);
+      kb.appendChild(section);
+    });
+  };
+
+  const renderSkills = () => {
+    kb.innerHTML = '';
+    if (compactAboutQuery.matches) renderMobileSkills();
+    else renderDesktopSkills();
+  };
+
+  renderSkills();
+  compactAboutQuery.addEventListener?.('change', renderSkills);
  
 })();

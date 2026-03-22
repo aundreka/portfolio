@@ -255,12 +255,24 @@ body {
   .nav{
     grid-template-columns: minmax(0, 1fr) auto;
     height: auto;
-    padding: 12px clamp(16px, 5vw, 32px);
-    gap: 10px 14px;
+    padding: 6px clamp(12px, 4vw, 18px);
+    gap: 0 12px;
+  }
+
+  .nav__brand{
+    font-size: 14px;
   }
 
   .nav__mobile-toggle{
     display: inline-flex;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    gap: 4px;
+  }
+
+  .nav__mobile-toggle-line{
+    width: 16px;
   }
 
   .nav__panel{
@@ -277,6 +289,7 @@ body {
     max-height: 520px;
     opacity: 1;
     transform: translateY(0);
+    margin-top: 10px;
   }
 
   .nav__panel > .nav__links,
@@ -563,6 +576,7 @@ body {
   aspect-ratio: 3 / 5;
   z-index: 1002;
   pointer-events: auto;
+  touch-action: pan-y;
   transition: transform 400ms cubic-bezier(.2, .9, .2, 1), left 400ms ease;
 }
 body.about-focus .cat-wrap {
@@ -593,7 +607,8 @@ body.about-focus .cat-wrap {
   inset: 0;
   background: transparent;
   border: none;
-    display: block;
+  display: block;
+  touch-action: pan-y;
 
   cursor: pointer;
 }
@@ -725,6 +740,7 @@ body.about-focus .cat-wrap {
   position: fixed;
   z-index: 9999;
   border-radius: 18px;
+  touch-action: pan-y;
 }
 .piano { filter: var(--piano-visual-filter, none); }
 .piano.is-front.glow{
@@ -963,7 +979,7 @@ body{
   :root{
     --hero-stage-width: calc(100vw - 28px);
     --hero-stage-height: clamp(320px, 48vh, 380px);
-    --hero-stage-top: clamp(236px, 33vh, 290px);
+    --hero-stage-top: clamp(204px, 28vh, 248px);
     --hero-controls-gap: 0px;
     --hero-controls-offset: 0px;
     --hero-piano-size: clamp(118px, 30vw, 168px);
@@ -978,12 +994,12 @@ body{
   }
 
   #hero-heading{
-    top: clamp(104px, 15vh, 138px);
+    top: clamp(74px, 11vh, 92px);
     left: 14px;
     right: 14px;
     max-width: calc(100vw - 28px);
-    font-size: clamp(22px, 8vw, 40px);
-    line-height: 1.02;
+    font-size: clamp(18px, 6.6vw, 30px);
+    line-height: 1.05;
   }
 
   .stage{
@@ -1028,15 +1044,19 @@ body{
 
   .piano-carousel{
     inset: 0 26px;
+    touch-action: pan-y;
   }
 
   .cat-wrap{
-    bottom: 40px;
+    bottom: 70px;
   }
 
   .intro-hint{
     font-size: 12px;
     padding: 8px 12px;
+    max-width: min(200px, calc(100vw - 36px));
+    white-space: normal;
+    text-align: center;
   }
 
   .intro-hint__path{
@@ -1048,7 +1068,7 @@ body{
   :root{
     --hero-stage-width: calc(100vw - 18px);
     --hero-stage-height: clamp(280px, 44vh, 330px);
-    --hero-stage-top: clamp(248px, 35vh, 304px);
+    --hero-stage-top: clamp(192px, 26vh, 228px);
     --hero-piano-size: clamp(124px, 34vw, 176px);
     --hero-cat-width: clamp(220px, 58vw, 290px);
   }
@@ -1064,8 +1084,9 @@ body{
   }
 
   #hero-heading{
-    top: clamp(112px, 16vh, 144px);
-    font-size: clamp(20px, 9vw, 32px);
+    top: clamp(68px, 10vh, 84px);
+    font-size: clamp(17px, 7.2vw, 25px);
+    line-height: 1.08;
   }
 
   .piano-carousel{
@@ -1085,12 +1106,13 @@ body{
   }
 
   .cat-wrap{
-    bottom: 56px;
+    bottom: 80px;
   }
 
   .intro-hint{
     font-size: 11px;
     padding: 7px 11px;
+    max-width: min(180px, calc(100vw - 28px));
   }
 
   .intro-hint__path{
