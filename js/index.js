@@ -1236,7 +1236,7 @@ return;
       const navBottom = navRect ? navRect.bottom : 0;
       const headingBottom = heading?.getBoundingClientRect?.().bottom || 0;
       hx = tr.left + tr.width * 0.34 - hintRect.width * 0.5;
-      hy = Math.max(headingBottom + 44, navBottom + 40);
+      hy = Math.max(headingBottom + 56, navBottom + 52);
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {

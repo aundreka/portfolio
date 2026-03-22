@@ -746,7 +746,7 @@
   .skb-label{
     display: block;
     font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 9px;
     width: 100%;
     max-width: 100%;
     font-weight: 600;
@@ -1099,7 +1099,7 @@
 }
 
 .skb-legend-pill.backend {
-  color: #f4df8a;
+  color: #d7b8ff;
 }
 
 .skb-legend-pill.data {
@@ -1107,7 +1107,7 @@
 }
 
 .skb-legend-pill.tools {
-  color: #d7dde7;
+  color: #111111;
 }
 
 .skills-keyboard .skb-row[style]{
@@ -1122,9 +1122,9 @@
 
 .skb-key.lang .skb-icon { color: #f0c6cf; }
 .skb-key.frontend .skb-icon { color: #bcdfff; }
-.skb-key.backend .skb-icon { color: #f4df8a; }
+.skb-key.backend .skb-icon { color: #d7b8ff; }
 .skb-key.data .skb-icon { color: #b7f0d4; }
-.skb-key.tools .skb-icon { color: #d7dde7; }
+.skb-key.tools .skb-icon { color: #111111; }
  
 .skb-icon {
   width: 32px;
@@ -1145,7 +1145,7 @@
 
 .skb-label {
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 500;
   line-height: 1.3;
   letter-spacing: 0.02em;
@@ -1242,8 +1242,8 @@
   }
 
   .skb-key.backend {
-    --skb-face: #8a6c12;
-    --skb-side: #55420a;
+    --skb-face: #6d3aa8;
+    --skb-side: #432166;
   }
 
   .skb-key.data {
@@ -1252,15 +1252,15 @@
   }
 
   .skb-key.tools {
-    --skb-face: #5d6572;
-    --skb-side: #353b45;
+    --skb-face: #111111;
+    --skb-side: #000000;
   }
 
   .skb-legend-pill.lang { border-color: rgba(90,36,48,0.95); }
   .skb-legend-pill.frontend { border-color: rgba(63,136,200,0.95); }
-  .skb-legend-pill.backend { border-color: rgba(207,170,29,0.95); }
+  .skb-legend-pill.backend { border-color: rgba(135,82,201,0.95); }
   .skb-legend-pill.data { border-color: rgba(45,155,111,0.95); }
-  .skb-legend-pill.tools { border-color: rgba(160,168,180,0.95); }
+  .skb-legend-pill.tools { border-color: rgba(17,17,17,0.95); }
 
   .skills-keyboard .skb-row[style]{
     margin-left: var(--skb-indent, 0px) !important;
@@ -1313,7 +1313,7 @@
   }
 
   .skb-label {
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 500;
   }
 }
