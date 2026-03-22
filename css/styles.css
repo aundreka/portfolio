@@ -1039,10 +1039,11 @@ body{
     left: 50%;
     right: auto;
     max-width: calc(100vw - 28px);
-    font-size: clamp(18px, 6.6vw, 30px);
+    font-size: clamp(12px, 5.6vw, 24px);
     line-height: 1.05;
     text-align: center;
     transform: translateX(-50%);
+    white-space: nowrap;
   }
 
   .stage{
@@ -1128,7 +1129,7 @@ body{
 
   #hero-heading{
     top: clamp(68px, 10vh, 84px);
-    font-size: clamp(17px, 7.2vw, 25px);
+    font-size: clamp(11px, 5.4vw, 21px);
     line-height: 1.08;
   }
 

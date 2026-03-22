@@ -840,7 +840,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nodejs: "nodejs.png",
     supabase: "supabase.png",
     gce: "gce.png",
-    vercel: "vercel.svg",
+    vercel: "vercel.png",
     restapi: "restapi.svg",
     tableau: "tableau.svg",
     powerbi: "powerbi.png",
@@ -850,55 +850,55 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const legend = [
-    { label: 'Languages', cat: 'lang' },
-    { label: 'Frontend', cat: 'frontend' },
-    { label: 'Backend & Cloud', cat: 'backend' },
-    { label: 'Data Visualization', cat: 'data' },
-    { label: 'Tools', cat: 'tools' },
+    { label: 'Languages', cat: 'lang', labelTheme: { bg: '#213a73' } },
+    { label: 'Frontend', cat: 'frontend', labelTheme: { bg: '#3f2d67' } },
+    { label: 'Backend & Cloud', cat: 'backend', labelTheme: { bg: '#0f4c5c' } },
+    { label: 'Data Visualization', cat: 'data', labelTheme: { bg: '#5d4037' } },
+    { label: 'Tools', cat: 'tools', labelTheme: { bg: '#39424e' } },
   ];
 
   const rows = [
     {
       indent: '0px',
       keys: [
-        { label: 'PHP',        icon: 'php',      cat: 'lang', filterType: 'language', filterValue: 'php sql' },
-        { label: 'SQL',        icon: 'mysql',      cat: 'lang', filterType: 'language', filterValue: 'php sql' },
-        { label: 'Python',     icon: 'python',   cat: 'lang', filterType: 'language', filterValue: 'python' },
-        { label: 'JS',         icon: 'js',       cat: 'lang', filterType: 'language', filterValue: 'html css js' },
-        { label: 'TypeScript', icon: 'ts',       cat: 'lang', filterType: 'tool', filterValue: 'React Native' },
+        { label: 'PHP',        icon: 'php',      cat: 'lang', filterType: 'language', filterValue: 'php sql', theme: { face: '#1b3f8b', side: '#10265a', text: '#ffffff' } },
+        { label: 'SQL',        icon: 'mysql',    cat: 'lang', filterType: 'language', filterValue: 'php sql', theme: { face: '#d86b1f', side: '#7a340b', text: '#fff2de' } },
+        { label: 'Python',     icon: 'python',   cat: 'lang', filterType: 'language', filterValue: 'python', theme: { face: '#141414', side: '#000000', text: '#ffffff' } },
+        { label: 'JS',         icon: 'js',       cat: 'lang', filterType: 'language', filterValue: 'html css js', theme: { face: '#3e2d12', side: '#241806', text: '#fff4b5' } },
+        { label: 'TypeScript', icon: 'ts',       cat: 'lang', filterType: 'tool', filterValue: 'React Native', theme: { face: '#245cbe', side: '#15366f', text: '#ffffff' } },
       ]
     },
     {
       indent: '24px',
       keys: [
-        { label: 'C++',      icon: 'cpp',      cat: 'lang', filterType: 'language', filterValue: 'c++' },
-        { label: 'Java',     icon: 'java',     cat: 'lang', filterType: 'language', filterValue: 'java' },
-        { label: 'Dart',     icon: 'dart',     cat: 'lang', filterType: 'language', filterValue: 'flutter' },
-        { label: 'HTML/CSS', icon: 'htmlcss',  cat: 'lang', filterType: 'language', filterValue: 'html css js' },
-        { label: 'React',    icon: 'react',    cat: 'frontend', filterType: 'language', filterValue: 'react' },
-        { label: 'Flutter',  icon: 'flutter',  cat: 'frontend', filterType: 'language', filterValue: 'flutter' },
+        { label: 'C++',      icon: 'cpp',      cat: 'lang', filterType: 'language', filterValue: 'c++', theme: { face: '#3847a3', side: '#20295f', text: '#ffffff' } },
+        { label: 'Java',     icon: 'java',     cat: 'lang', filterType: 'language', filterValue: 'java', theme: { face: '#8b2f24', side: '#53180f', text: '#ffffff' } },
+        { label: 'Dart',     icon: 'dart',     cat: 'lang', filterType: 'language', filterValue: 'flutter', theme: { face: '#0d6e8a', side: '#083b4a', text: '#ffffff' } },
+        { label: 'HTML/CSS', icon: 'htmlcss',  cat: 'lang', filterType: 'language', filterValue: 'html css js', theme: { face: '#9a4d17', side: '#5d2d0b', text: '#ffffff' } },
+        { label: 'React',    icon: 'react',    cat: 'frontend', filterType: 'language', filterValue: 'react', theme: { face: '#0f5164', side: '#082d37', text: '#ddf9ff' } },
+        { label: 'Flutter',  icon: 'flutter',  cat: 'frontend', filterType: 'language', filterValue: 'flutter', theme: { face: '#1c69b7', side: '#103d69', text: '#ffffff' } },
       ]
     },
     {
       indent: '56px',
       keys: [
-        { label: 'React Native', icon: 'rn',       cat: 'frontend', wide: true, filterType: 'language', filterValue: 'react native' },
-        { label: 'Laravel',      icon: 'laravel',  cat: 'backend', filterType: 'tool', filterValue: 'Laravel' },
-        { label: 'Node.js',      icon: 'nodejs',   cat: 'backend', filterType: 'tool', filterValue: 'Node.js' },
-        { label: 'Supabase',     icon: 'supabase', cat: 'backend', filterType: 'tool', filterValue: 'Supabase' },
-        { label: 'GCE',          icon: 'gce',      cat: 'backend', filterType: 'tool', filterValue: 'GCE' },
-        { label: 'Vercel',       icon: 'vercel',   cat: 'backend', filterType: 'tool', filterValue: 'Vercel' },
+        { label: 'React Native', icon: 'rn',       cat: 'frontend', wide: true, filterType: 'language', filterValue: 'react native', theme: { face: '#2d4254', side: '#18232d', text: '#ffffff' } },
+        { label: 'Laravel',      icon: 'laravel',  cat: 'backend', filterType: 'tool', filterValue: 'Laravel', theme: { face: '#8c251d', side: '#53130e', text: '#ffffff' } },
+        { label: 'Node.js',      icon: 'nodejs',   cat: 'backend', filterType: 'tool', filterValue: 'Node.js', theme: { face: '#346533', side: '#1d391c', text: '#efffe9' } },
+        { label: 'Supabase',     icon: 'supabase', cat: 'backend', filterType: 'tool', filterValue: 'Supabase', theme: { face: '#1d6c49', side: '#103b28', text: '#ffffff' } },
+        { label: 'GCE',          icon: 'gce',      cat: 'backend', filterType: 'tool', filterValue: 'GCE', theme: { face: '#25588d', side: '#14314f', text: '#ffffff' } },
+        { label: 'Vercel',       icon: 'vercel',   cat: 'backend', filterType: 'tool', filterValue: 'Vercel', theme: { face: '#111111', side: '#000000', text: '#ffffff' } },
       ]
     },
     {
       indent: '18px',
       keys: [
-        { label: 'REST APIs', icon: 'restapi', cat: 'backend', wide: true, filterType: 'tool', filterValue: 'REST APIs' },
-        { label: 'Tableau',   icon: 'tableau', cat: 'data',    wide: true, filterType: 'tool', filterValue: 'Tableau' },
-        { label: 'Power BI',  icon: 'powerbi', cat: 'data',    wide: true, filterType: 'tool', filterValue: 'Power BI' },
-        { label: 'Git',       icon: 'git',     cat: 'tools', filterType: 'tool', filterValue: 'Git' },
-        { label: 'Docker',    icon: 'docker',  cat: 'tools', filterType: 'tool', filterValue: 'Docker' },
-        { label: 'Figma',     icon: 'figma',   cat: 'tools', filterType: 'tool', filterValue: 'Figma' },
+        { label: 'REST APIs', icon: 'restapi', cat: 'backend', wide: true, filterType: 'tool', filterValue: 'REST APIs', theme: { face: '#12606c', side: '#09353c', text: '#e9ffff' } },
+        { label: 'Tableau',   icon: 'tableau', cat: 'data',    wide: true, filterType: 'tool', filterValue: 'Tableau', theme: { face: '#d56a29', side: '#8a3f13', text: '#ffffff' } },
+        { label: 'Power BI',  icon: 'powerbi', cat: 'data',    wide: true, filterType: 'tool', filterValue: 'Power BI', theme: { face: '#846600', side: '#544000', text: '#fff7ce' } },
+        { label: 'Git',       icon: 'git',     cat: 'tools', filterType: 'tool', filterValue: 'Git', theme: { face: '#d65a22', side: '#853413', text: '#ffffff' } },
+        { label: 'Docker',    icon: 'docker',  cat: 'tools', filterType: 'tool', filterValue: 'Docker', theme: { face: '#1f5fb9', side: '#12376c', text: '#ffffff' } },
+        { label: 'Figma',     icon: 'figma',   cat: 'tools', filterType: 'tool', filterValue: 'Figma', theme: { face: '#6b3cc6', side: '#3d2271', text: '#ffffff' } },
       ]
     }
   ];
@@ -906,7 +906,6 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ── Build DOM ─────────────────────────────────────────────── */
   const kb = document.getElementById('skills-keyboard');
   const projectsSection = document.getElementById('projects');
-  const compactAboutQuery = window.matchMedia("(max-width: 768px)");
   if (!kb) return;
 
   const focusProjectsWithFilter = (filterType, filterValue) => {
@@ -927,6 +926,12 @@ document.addEventListener("DOMContentLoaded", () => {
     key.className = `skb-key ${k.cat}${wideClass}`;
     key.tabIndex = 0;
     key.setAttribute('aria-label', k.label);
+
+    if (k.theme) {
+      if (k.theme.face) key.style.setProperty('--skb-desktop-face-bg', k.theme.face);
+      if (k.theme.side) key.style.setProperty('--skb-desktop-side', k.theme.side);
+      if (k.theme.text) key.style.setProperty('--skb-desktop-text', k.theme.text);
+    }
 
     key.innerHTML = `
       <div class="skb-face">
@@ -957,60 +962,35 @@ document.addEventListener("DOMContentLoaded", () => {
     return key;
   };
 
-  const renderDesktopSkills = () => {
-    const legendEl = document.createElement('div');
-    legendEl.className = 'skb-legend';
+  const categoryRows = legend.map((item) => ({
+    ...item,
+    keys: rows.flatMap((rowData) => rowData.keys.filter((k) => k.cat === item.cat)),
+  }));
 
-    legend.forEach(item => {
-      const pill = document.createElement('div');
-      pill.className = `skb-legend-pill ${item.cat}`;
-      pill.textContent = item.label;
-      legendEl.appendChild(pill);
-    });
+  const renderSkills = () => {
+    kb.innerHTML = '';
 
-    kb.appendChild(legendEl);
-
-    rows.forEach(rowData => {
-      const row = document.createElement('div');
+    categoryRows.forEach((item) => {
+      const row = document.createElement('section');
       row.className = 'skb-row';
-      row.style.setProperty('--skb-indent', rowData.indent);
-      rowData.keys.forEach((k) => row.appendChild(makeKey(k)));
+
+      const label = document.createElement('h3');
+      label.className = 'skb-row__label';
+      label.textContent = item.label;
+      if (item.labelTheme?.bg) {
+        label.style.setProperty('--skb-label-bg', item.labelTheme.bg);
+      }
+      row.appendChild(label);
+
+      const keys = document.createElement('div');
+      keys.className = 'skb-row__keys';
+      item.keys.forEach((k) => keys.appendChild(makeKey(k)));
+      row.appendChild(keys);
+
       kb.appendChild(row);
     });
   };
 
-  const renderMobileSkills = () => {
-    const byCat = new Map(legend.map(item => [item.cat, []]));
-    rows.forEach((rowData) => {
-      rowData.keys.forEach((k) => {
-        byCat.get(k.cat)?.push(k);
-      });
-    });
-
-    legend.forEach((item) => {
-      const section = document.createElement('section');
-      section.className = `skb-group skb-group--${item.cat}`;
-
-      const heading = document.createElement('h3');
-      heading.className = `skb-group__title ${item.cat}`;
-      heading.textContent = item.label;
-      section.appendChild(heading);
-
-      const grid = document.createElement('div');
-      grid.className = 'skb-group__grid';
-      (byCat.get(item.cat) || []).forEach((k) => grid.appendChild(makeKey(k)));
-      section.appendChild(grid);
-      kb.appendChild(section);
-    });
-  };
-
-  const renderSkills = () => {
-    kb.innerHTML = '';
-    if (compactAboutQuery.matches) renderMobileSkills();
-    else renderDesktopSkills();
-  };
-
   renderSkills();
-  compactAboutQuery.addEventListener?.('change', renderSkills);
  
 })();

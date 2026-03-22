@@ -584,10 +584,11 @@ function animateRotation(targetIndex, { playSound = false } = {}) {
 
   applyBackgroundTheme(colors[currentIndex % colors.length]);
 
-  setTimeout(() => showLabelForIndex(currentIndex), duration * 0.85);
+setTimeout(() => showLabelForIndex(currentIndex), duration * 0.85);
 setTimeout(() => {
   positionFrontClickOverlay();
   positionCatClickOverlay();
+  window.__syncHeroHints?.();
 }, duration + 20);
 
   if (window.__hasInitializedCarousel__) {
@@ -1236,7 +1237,7 @@ return;
       const navBottom = navRect ? navRect.bottom : 0;
       const headingBottom = heading?.getBoundingClientRect?.().bottom || 0;
       hx = tr.left + tr.width * 0.34 - hintRect.width * 0.5;
-      hy = Math.max(headingBottom + 56, navBottom + 52);
+      hy = Math.max(headingBottom + 104, navBottom + 150);
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {
@@ -1276,6 +1277,10 @@ return;
     const b = hint.getBoundingClientRect();
     let desiredHx = b.left;
     let desiredHy = b.top;
+
+    if (mobileHintLayout && id === "intro-hint-cat") {
+      desiredHy += 22;
+    }
 
     
     let desiredStartY = b.top + b.height * 0.55;
@@ -1409,6 +1414,9 @@ head.setAttribute(
     } else {
       
       hint.style.transform = "";
+      if (mobileHintLayout && id === "intro-hint-cat") {
+        hint.style.top = `${desiredHy}px`;
+      }
       svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
       svg.setAttribute("width", String(window.innerWidth));
       svg.setAttribute("height", String(window.innerHeight));
@@ -1549,6 +1557,8 @@ const pianoHint = makeHint({
       pianoHint.relayout();
     };
 
+    window.__syncHeroHints = syncHeroHints;
+
     syncHeroHints();
     setTimeout(syncHeroHints, 120);
     setTimeout(syncHeroHints, 320);
@@ -1558,7 +1568,9 @@ const pianoHint = makeHint({
       syncHeroHints();
     };
     window.addEventListener("resize", relayout, { passive: true });
-    window.addEventListener("scroll", relayout, { passive: true });
+    if (window.innerWidth > 700) {
+      window.addEventListener("scroll", relayout, { passive: true });
+    }
   })();
 });
 
