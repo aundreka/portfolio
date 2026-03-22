@@ -127,60 +127,22 @@
 }
 
 @media (max-width: 640px){
-  #projects .projects__filterToggle{
-    appearance: none;
-    display: inline-flex;
-    border: 1px solid rgba(17,17,17,0.12);
-    background: rgba(17,17,17,0.03);
-    color: #111;
-    cursor: pointer;
-    padding: 9px 14px;
-    border-radius: 999px;
-    font: inherit;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
-  }
-
-  #projects .projects__filterToggle:hover,
-  #projects.filters-open .projects__filterToggle{
-    background: #111;
-    border-color: #111;
-    color: #fff;
-  }
-
-  #projects .projects__filterToggle:active{
-    transform: translateY(1px);
-  }
-
   #projects .projects__filters{
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 16px;
-    display: grid;
-    gap: 10px;
-    width: calc(100% - 32px);
-    padding: 12px;
-    background: rgba(255,255,255,0.96);
-    border: 2px solid #111;
-    border-radius: 24px;
-    box-shadow: 0 22px 44px rgba(0,0,0,0.12);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translateY(-10px);
-    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms step-end;
-    z-index: 40;
-  }
-
-  #projects.filters-open .projects__filters{
+    position: static;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 12px;
+    width: auto;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translateY(0);
-    transition: opacity 180ms ease, transform 180ms ease, visibility 0s;
+    transform: none;
   }
 
   #projects .filter__menu{
@@ -211,33 +173,37 @@
 
 @media (max-width: 640px){
   #projects .projects__topbar{
-    gap: 16px;
-    padding: 16px;
+    gap: 10px;
+    padding: 12px 12px 10px;
   }
 
   #projects .projects__dot{
-    width: 22px;
-    height: 22px;
+    width: 14px;
+    height: 14px;
+    flex-basis: 14px;
   }
 
   #projects .filter{
-    width: 100%;
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   #projects .filter__btn{
-    padding: 10px 12px;
+    padding: 4px 2px;
     width: 100%;
-    border: 1px solid rgba(17,17,17,0.08);
-    background: rgba(17,17,17,0.025);
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    border-radius: 14px;
+    border: 0;
+    background: transparent;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 6px;
+    border-radius: 0;
   }
 
   #projects .filter__label,
   #projects .filter__value{
-    font-size: 12px;
+    font-size: 10px;
+    line-height: 1.15;
+    font-weight: 600;
   }
 
   #projects .projects__hint{
@@ -629,7 +595,7 @@
 #projects #projectsPiano.projects_piano{
   overflow-x: auto !important;
   overflow-y: hidden !important;
-  touch-action: pan-x !important;
+  touch-action: manipulation !important;
 }
 
 
@@ -750,6 +716,9 @@
     padding: 18px 18px 20px;
     justify-content: space-between;
     gap: 14px;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   #projects .note__metaRow{
@@ -919,10 +888,27 @@
 
   #projects .note__overlay{
     padding: 12px;
+    gap: 10px;
   }
 
   #projects .note__glass--text{
     padding: 14px 14px 12px;
+  }
+
+  #projects .note__title{
+    font-size: clamp(24px, 7vw, 32px);
+  }
+
+  #projects .note__desc{
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  #projects .projects-empty{
+    top: 12px;
+    padding: 7px 10px;
+    font-size: 9px;
+    letter-spacing: 0.05em;
   }
 }
 

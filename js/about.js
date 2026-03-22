@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const scroller = document.getElementById("aboutTrack");
   const aboutSection = document.querySelector(".about");
   const projectsSection = document.getElementById("projects");
-  const compactAboutQuery = window.matchMedia("(max-width: 768px)");
+  const compactAboutQuery = window.matchMedia("(max-width: 900px)");
 
   if (!scroller || !aboutSection) {
     console.warn("[About] Missing #aboutTrack or .about");
@@ -749,7 +749,7 @@ document.addEventListener("DOMContentLoaded", () => {
 (() => {
   const buttons = document.querySelectorAll(".note-block");
   if (!buttons.length) return;
-  const compactAboutQuery = window.matchMedia("(max-width: 768px)");
+  const compactAboutQuery = window.matchMedia("(max-width: 900px)");
   const isCompactAbout = () => compactAboutQuery.matches;
 
   

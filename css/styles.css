@@ -84,7 +84,7 @@ body {
 
 .nav__brand{
   font-family: "Abril Fatface", serif;
-  font-size: 18px;
+  font-size: 22px;
   letter-spacing: 0.02em;
 }
 
@@ -148,7 +148,7 @@ body {
 }
 
 .nav__link{
-  font: 500 14px "Inter", system-ui;
+  font: 500 12px "Inter", system-ui;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: inherit;
@@ -170,7 +170,7 @@ body {
   justify-content: center;
   padding: 10px 16px;
   border-radius: 999px;
-  font: 600 13px "Inter", system-ui;
+  font: 600 11px "Inter", system-ui;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: inherit;
@@ -232,7 +232,7 @@ body {
   border-radius: 10px;
   text-decoration: none;
   color: inherit;
-  font: 500 14px "Inter", system-ui;
+  font: 500 12px "Inter", system-ui;
 }
 
 .nav__menu-item:hover{
@@ -260,7 +260,7 @@ body {
   }
 
   .nav__brand{
-    font-size: 14px;
+    font-size: 18px;
   }
 
   .nav__mobile-toggle{
@@ -316,10 +316,11 @@ body {
   .nav__link{
     width: 100%;
     text-align: left;
-    padding: 14px 0;
+    padding: 12px 0;
     transform: translateY(-10px);
     opacity: 0;
     transition: opacity 220ms ease, transform 260ms cubic-bezier(.22, 1, .36, 1), letter-spacing 180ms ease;
+    font-size: 11px;
   }
 
   .nav__dropdown{
@@ -335,7 +336,7 @@ body {
   .nav__menu{
     position: static;
     min-width: 0;
-    margin-top: 8px;
+    margin-top: 0;
     padding: 2px 0 0;
     opacity: 0;
     pointer-events: none;
@@ -361,6 +362,7 @@ body {
   }
 
   .nav__dropdown.is-open .nav__menu{
+    margin-top: 8px;
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
@@ -368,10 +370,11 @@ body {
   }
 
   .nav__menu-item{
-    padding: 12px 14px;
+    padding: 10px 12px;
     transform: translateY(-6px);
     opacity: 0;
     transition: opacity 180ms ease, transform 220ms ease, background 160ms ease;
+    font-size: 11px;
   }
 
   .nav.is-menu-open .nav__link{
@@ -428,7 +431,7 @@ body {
     margin-top: 22px;
     margin-bottom: 8px;
     padding: 8px 14px;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 0.08em;
     opacity: 0;
     transform: translateY(-10px);
@@ -1052,8 +1055,8 @@ body{
   }
 
   .intro-hint{
-    font-size: 12px;
-    padding: 8px 12px;
+    font-size: 11px;
+    padding: 7px 10px;
     max-width: min(200px, calc(100vw - 36px));
     white-space: normal;
     text-align: center;
@@ -1111,7 +1114,7 @@ body{
 
   .intro-hint{
     font-size: 11px;
-    padding: 7px 11px;
+    padding: 6px 10px;
     max-width: min(180px, calc(100vw - 28px));
   }
 

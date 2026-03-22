@@ -1162,13 +1162,13 @@ return;
       const navRect = navPanel?.getBoundingClientRect?.();
       const navBottom = navRect ? navRect.bottom : 0;
       const headingBottom = heading?.getBoundingClientRect?.().bottom || 0;
-      hx = tr.left + tr.width * 0.02;
-      hy = Math.max(headingBottom + 24, navBottom + 16);
+      hx = tr.left + tr.width * 0.04;
+      hy = Math.max(headingBottom + 18, navBottom + 12);
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {
       hx = tr.left + tr.width * 0.46 - hintRect.width * 0.5;
-      hy = tr.bottom + 20;
+      hy = tr.bottom + 8;
     }
 
     
@@ -1217,8 +1217,8 @@ return;
 
     if (id === "intro-hint-cat") {
       if (mobileHintLayout) {
-        desiredEndX = tr.left + tr.width * 0.22;
-        desiredEndY = tr.top + 52;
+        desiredEndX = tr.left + tr.width * 0.32;
+        desiredEndY = tr.top + 16;
       } else {
         desiredEndX = tr.left - marginFromTarget;
         desiredEndY = tr.top + tr.height * 0.48;
@@ -1226,7 +1226,7 @@ return;
     } else if (id === "intro-hint-piano") {
       if (mobileHintLayout) {
         desiredEndX = tr.right - tr.width * 0.18;
-        desiredEndY = tr.bottom - 54;
+        desiredEndY = tr.bottom - 22;
       } else {
         desiredEndX = tr.right + marginFromTarget;
         desiredEndY = tr.top + tr.height * 0.65;
@@ -1248,21 +1248,21 @@ return;
     let desiredCtrlY = midY - curve * 0.35;
 
     if (mobileHintLayout && id === "intro-hint-cat") {
-      desiredStartX = b.left + b.width * 0.72;
-      desiredStartY = b.bottom + 2;
-      desiredEndX = tr.left + tr.width * 0.24;
-      desiredEndY = tr.top + 52;
-      desiredCtrlX = (desiredStartX + desiredEndX) / 2 + 16;
-      desiredCtrlY = Math.max(desiredStartY, desiredEndY) + 18;
+      desiredStartX = b.left + b.width * 0.74;
+      desiredStartY = b.bottom;
+      desiredEndX = tr.left + tr.width * 0.32;
+      desiredEndY = tr.top + 16;
+      desiredCtrlX = (desiredStartX + desiredEndX) / 2 + 10;
+      desiredCtrlY = desiredStartY + 24;
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {
-      desiredStartX = b.left + b.width * 0.68;
-      desiredStartY = b.top + 4;
+      desiredStartX = b.left + b.width * 0.64;
+      desiredStartY = b.top + 2;
       desiredEndX = tr.right - tr.width * 0.18;
-      desiredEndY = tr.bottom - 50;
-      desiredCtrlX = desiredStartX + 56;
-      desiredCtrlY = desiredStartY - 46;
+      desiredEndY = tr.bottom - 22;
+      desiredCtrlX = desiredStartX + 44;
+      desiredCtrlY = desiredStartY - 28;
     }
 
     
@@ -1415,7 +1415,7 @@ const catHint = makeHint({
   side: window.innerWidth <= 700 ? "left" : "left",
   gap: window.innerWidth <= 700 ? 8 : 70,
   shiftX: window.innerWidth <= 700 ? 0 : -40,
-  shiftY: window.innerWidth <= 700 ? 30 : -18,
+  shiftY: window.innerWidth <= 700 ? 18 : -18,
   prefer: window.innerWidth <= 700 ? "above" : "middle",
   smooth: true,
   smoothK: 0.14, 
@@ -1434,7 +1434,7 @@ const pianoHint = makeHint({
   side: window.innerWidth <= 700 ? "right" : "right",
   gap: window.innerWidth <= 700 ? 2 : 70,
   shiftX: window.innerWidth <= 700 ? -2 : 40,
-  shiftY: window.innerWidth <= 700 ? 10 : 50,
+  shiftY: window.innerWidth <= 700 ? 0 : 50,
   prefer: window.innerWidth <= 700 ? "below" : "middle",
   arrowStartDX: window.innerWidth <= 700 ? 0 : 0,
   arrowStartDY: window.innerWidth <= 700 ? 0 : -30,
