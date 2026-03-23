@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Education — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --accent:       #7c3aed;
+  --accent-mid:   #8b5cf6;
+  --accent-light: #ede9fe;
+  --accent-xlight: #f5f3ff;
+  --accent-soft:  rgba(124,58,237,0.07);
+  --glass-bg:     rgba(255,255,255,0.70);
+  --glass-border: rgba(124,58,237,0.10);
+  --t1: #12082a;
+  --t2: #6b5b8a;
+  --t3: #b3a4cc;
+  --divider: rgba(124,58,237,0.08);
+}
+
+html {
+  background: #ffffff;
+  font-family: 'Inter', sans-serif;
+  color: var(--t1);
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background: #ffffff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SOFT BLOBS — decorative only */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+.b1 { width: 280px; height: 280px; background: rgba(196,181,253,0.18); top: -60px; right: -80px; }
+.b2 { width: 220px; height: 220px; background: rgba(167,139,250,0.12); bottom: 120px; left: -60px; }
+
+/* GLASS */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* PAGE WRAPPER */
+.page {
+  position: relative;
+  z-index: 1;
+  padding: 0 0 80px;
+}
+
+/* ── TOP HEADER ── */
+.top-bar {
+  padding: 56px 24px 0;
+  margin-bottom: 32px;
+}
+.top-eyebrow {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.top-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 44px;
+  font-weight: 300;
+  line-height: 1.0;
+  color: var(--t1);
+}
+.top-title em { font-style: italic; color: var(--accent); }
+
+/* ── SECTION LABELS ── */
+.sec-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--t3);
+  padding: 0 24px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sec-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--divider);
+}
+
+/* ── DEGREE CARD ── */
+.deg-card {
+  margin: 0 16px 10px;
+  padding: 22px 22px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.deg-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(124,58,237,0.04) 0%, transparent 55%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.deg-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-light);
+  border: 1px solid rgba(124,58,237,0.18);
+  border-radius: 100px;
+  padding: 3px 11px;
+  margin-bottom: 14px;
+}
+.deg-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--t1);
+  margin-bottom: 5px;
+}
+.deg-uni {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--t2);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+.deg-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.mpill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  font-weight: 300;
+  color: var(--t3);
+}
+.mpip {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ── HONOUR CARDS ── */
+.hon-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 16px;
+  margin-bottom: 36px;
+}
+.hon {
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.hon-ico {
+  width: 36px; height: 36px;
+  border-radius: 11px;
+  background: var(--accent-light);
+  border: 1px solid rgba(124,58,237,0.14);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.hon-ico svg { width: 14px; height: 14px; stroke: var(--accent); fill: none; stroke-width: 1.8; }
+.hon-title { font-size: 13px; font-weight: 500; color: var(--t1); margin-bottom: 2px; }
+.hon-sub { font-size: 10px; font-weight: 400; color: var(--t3); }
+
+/* ── PHOTO FRAMES ── */
+.photos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 16px;
+  margin-bottom: 36px;
+}
+.pf {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+}
+.pfbg {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 10px;
+}
+.pfbg1 { background: linear-gradient(145deg, #f0ebff, #e4d9fd 60%, #ede8ff); }
+.pfbg2 { background: linear-gradient(145deg, #f5f2ff, #ebe4fd 55%, #ddd6fe); }
+.pf-ico {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(124,58,237,0.09);
+  border: 1px dashed rgba(124,58,237,0.25);
+  display: flex; align-items: center; justify-content: center;
+}
+.pf-ico svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+.pf-hint { font-size: 10px; font-weight: 300; color: var(--t2); text-align: center; line-height: 1.55; padding: 0 20px; }
+.pf-cap {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 14px 16px;
+  background: linear-gradient(to top, rgba(240,235,255,0.92) 0%, transparent 100%);
+}
+.pf-cap p { font-size: 9px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--t2); }
+
+/* ── CERT ROWS ── */
+.certs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+.cc {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 18px;
+  border-radius: 16px;
+  transition: transform 0.25s ease, background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.cc:active { transform: scale(0.975); background: rgba(124,58,237,0.04); }
+.cc-thumb {
+  width: 44px; height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--accent-xlight);
+  border: 1px solid rgba(124,58,237,0.13);
+  display: flex; align-items: center; justify-content: center;
+}
+.cc-thumb svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+.cc-body { flex: 1; min-width: 0; }
+.cc-issuer {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-mid);
+  margin-bottom: 3px;
+}
+.cc-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--t1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cc-arr {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  border: 1px solid rgba(124,58,237,0.12);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.cc-arr svg { width: 10px; height: 10px; stroke: var(--accent); fill: none; stroke-width: 2; }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="top-bar reveal">
+    <p class="top-eyebrow">Formation</p>
+    <h1 class="top-title">Education &amp;<br><em>Credentials</em></h1>
+  </div>
+
+  <!-- DEGREE -->
+  <p class="sec-label reveal" style="transition-delay:0.05s">Degree</p>
+  <div class="glass deg-card reveal" style="transition-delay:0.1s">
+    <span class="deg-pill">B.S. Computer Science</span>
+    <h3 class="deg-name">Bachelor of Science<br>in Computer Science</h3>
+    <p class="deg-uni">Lyceum of the Philippines University — Cavite</p>
+    <div class="deg-meta">
+      <span class="mpill"><span class="mpip"></span>Aug 2023 — May 2027</span>
+      <span class="mpill"><span class="mpip"></span>Currently enrolled</span>
+    </div>
+  </div>
+
+  <!-- HONOURS -->
+  <p class="sec-label reveal" style="transition-delay:0.15s; margin-top:24px">Honours</p>
+  <div class="hon-list">
+    <div class="glass hon reveal" style="transition-delay:0.2s">
+      <div class="hon-ico">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div>
+        <p class="hon-title">Consistent Dean's Lister</p>
+        <p class="hon-sub">A.Y. 2023 – 2025 · Current</p>
+      </div>
+    </div>
+    <div class="glass hon reveal" style="transition-delay:0.25s">
+      <div class="hon-ico">
+        <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div>
+        <p class="hon-title">Resident Scholarship Holder</p>
+        <p class="hon-sub">A.Y. 2023 – 2025 · Current</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHOTOS -->
+  <p class="sec-label reveal" style="transition-delay:0.1s">Memories</p>
+  <div class="photos">
+    <div class="pf glass reveal" style="transition-delay:0.15s">
+      <div class="pfbg pfbg1">
+        <div class="pf-ico">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <p class="pf-hint">Replace with your campus photo</p>
+      </div>
+      <div class="pf-cap"><p>On Campus</p></div>
+    </div>
+    <div class="pf glass reveal" style="transition-delay:0.22s">
+      <div class="pfbg pfbg2">
+        <div class="pf-ico">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <p class="pf-hint">Replace with your award ceremony photo</p>
+      </div>
+      <div class="pf-cap"><p>Award Ceremony</p></div>
+    </div>
+  </div>
+
+  <!-- CERTS -->
+  <p class="sec-label reveal" style="transition-delay:0.1s">Certifications</p>
+  <div class="certs">
+    <a class="glass cc reveal" href="https://www.certiport.com/portal/desktopdefault.aspx?page=common/pagelibrary/certificationdetails.htm" target="_blank" rel="noopener" style="transition-delay:0.15s">
+      <div class="cc-thumb"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="cc-body">
+        <p class="cc-issuer">Certiport</p>
+        <p class="cc-name">Database IT Specialist</p>
+      </div>
+      <div class="cc-arr"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </a>
+    <a class="glass cc reveal" href="https://www.netacad.com/courses/python-essentials-1" target="_blank" rel="noopener" style="transition-delay:0.22s">
+      <div class="cc-thumb"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="cc-body">
+        <p class="cc-issuer">Cisco Networking Academy</p>
+        <p class="cc-name">Python Essentials 1 &amp; 2</p>
+      </div>
+      <div class="cc-arr"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </a>
+    <a class="glass cc reveal" href="https://acubetechnologies.com" target="_blank" rel="noopener" style="transition-delay:0.29s">
+      <div class="cc-thumb"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="cc-body">
+        <p class="cc-issuer">ACube Technologies Inc.</p>
+        <p class="cc-name">IoT Bootcamp</p>
+      </div>
+      <div class="cc-arr"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </a>
+  </div>
+
+</div>
+
+<script>
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

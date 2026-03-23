@@ -23,6 +23,7 @@ html, body{
   width: 100%;
   max-width: 100%;
   overscroll-behavior-x: none;
+  overscroll-behavior-y: none;
 }
 
 html {
@@ -38,6 +39,7 @@ body {
   overflow-y: auto;
   background-color: var(--light);
   perspective: 800px;
+  margin-bottom: 0;
 }
 
 :root{
@@ -86,9 +88,16 @@ body {
 }
 
 .nav__brand{
+  color: inherit;
+  text-decoration: none;
   font-family: "Abril Fatface", serif;
   font-size: 22px;
   letter-spacing: 0.02em;
+}
+
+.nav__brand:hover,
+.nav__brand:focus-visible{
+  text-decoration: none;
 }
 
 .nav__mobile-toggle{

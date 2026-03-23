@@ -41,7 +41,7 @@
 
 
     <nav class="nav" aria-label="Primary">
-      <div class="nav__brand">Aundreka</div>
+      <a class="nav__brand" href="#home" aria-label="Go to homepage">Aundreka</a>
       <button
         class="nav__mobile-toggle"
         type="button"
@@ -618,40 +618,50 @@
               </svg>
             </a>
           </div>
-        </div>
-        <div class="contact__actions">
           <form class="contact__form" id="contactForm">
-            <div class="contact__form-header">
-              <p class="contact__label">Send a message</p>
-              <p class="contact__hint">I usually reply within 1-2 days.</p>
-            </div>
+            <p class="contact__label">Send a message</p>
+            <p class="contact__hint">I usually reply within 1-2 days.</p>
 
-            <label class="contact__field" for="contactSubject">
-              <span class="contact__field-label">Subject</span>
-              <input
-                class="contact__input"
-                id="contactSubject"
-                name="subject"
-                type="text"
-                placeholder="Let's build something together"
-                required
-              />
-            </label>
+            <label class="contact__field-label" for="contactSubject">Subject</label>
+            <input
+              class="contact__input"
+              id="contactSubject"
+              name="subject"
+              type="text"
+              placeholder="Let's build something together"
+              required
+            />
 
-            <label class="contact__field" for="contactBody">
-              <span class="contact__field-label">Message</span>
-              <textarea
-                class="contact__input contact__textarea"
-                id="contactBody"
-                name="body"
-                placeholder="Tell me a bit about your idea…"
-                rows="5"
-                required
-              ></textarea>
-            </label>
+            <label class="contact__field-label" for="contactBody">Message</label>
+            <textarea
+              class="contact__input contact__textarea"
+              id="contactBody"
+              name="body"
+              placeholder="Tell me a bit about your idea…"
+              rows="5"
+              required
+            ></textarea>
 
             <button class="contact__btn primary contact__submit" type="submit">Send Email</button>
           </form>
+        </div>
+        <div class="contact__actions" aria-hidden="true">
+          <div class="contact__cat-stage">
+            <div class="contact__cat-shadow"></div>
+            <model-viewer
+              class="contact__cat"
+              src="assets/models/cat.glb"
+              alt="Animated 3D cat companion"
+              autoplay
+              disable-pan
+              disable-zoom
+              interaction-prompt="none"
+              shadow-intensity="0"
+              exposure="1.05"
+              camera-orbit="0deg 88deg 2.65m"
+              field-of-view="26deg"
+            ></model-viewer>
+          </div>
         </div>
       </div>
     </section>
@@ -691,6 +701,7 @@
     <script src="js/entrance.js" defer></script>
     <script src="js/about.js" defer></script>
     <script src="js/projects.js" defer></script>
+    <script src="js/contact.js" defer></script>
 
   </body>
 </html>
