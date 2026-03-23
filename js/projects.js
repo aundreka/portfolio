@@ -74,6 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return window.matchMedia("(max-width: 900px)").matches;
   }
 
+  let lastViewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+  let lastViewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+
   function setFiltersTrayOpen(isOpen) {
     root.classList.toggle("filters-open", isOpen);
     if (isOpen) {
@@ -1412,11 +1415,26 @@ window.ProjectsPiano.setTool = (tool) => {
 
   
   window.addEventListener("resize", () => {
+    const nextViewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+    const nextViewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const widthDelta = Math.abs(nextViewportWidth - lastViewportWidth);
+    const heightDelta = Math.abs(nextViewportHeight - lastViewportHeight);
+    const compactViewport = isCompactProjectsViewport();
+
+    lastViewportWidth = nextViewportWidth;
+    lastViewportHeight = nextViewportHeight;
+
+    // Mobile browsers fire resize while the URL bar hides/shows during scroll.
+    // Ignore those height-only jitters so the accordion does not rebuild/reset.
+    if (compactViewport && widthDelta < 2 && heightDelta > 0) {
+      return;
+    }
+
     applyResponsivePianoMetrics();
-    if (!isCompactProjectsViewport()) {
+    if (!compactViewport) {
       clearMenusAnimated();
     }
-    render();
+    render({ restoreScrollLeft: pianoHost.scrollLeft, focusBehavior: "auto" });
   });
 
   
