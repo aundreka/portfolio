@@ -96,7 +96,9 @@
 
               el.classList.add('fall-in');
 
-              const onDone = () => {
+              const onDone = (event) => {
+                if (event.animationName !== 'landBounce') return;
+
                 el.classList.remove('fall-in', 'intro-target');
                 el.style.removeProperty('--finalTF');
                 el.style.removeProperty('--startY');
@@ -114,7 +116,7 @@
 
           
           const total =
-            (pianos.length - 1) * stagger +
+            ((cat ? pianos.length : Math.max(pianos.length - 1, 0)) * stagger) +
             (cat ? catExtra : 0) +
             drop + bounce + 100;
 

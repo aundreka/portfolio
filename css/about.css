@@ -1525,9 +1525,15 @@
 }
 
 @media (max-width: 768px){
+  .about{
+    overflow-x: clip;
+  }
+
   .about__scroller{
     overflow-x: hidden;
     overflow-y: visible;
+    overscroll-behavior-x: contain;
+    touch-action: pan-y;
   }
 
   .strip{
