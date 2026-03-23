@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function isCompactProjectsViewport() {
-    return window.matchMedia("(max-width: 900px)").matches;
+    return window.matchMedia("(max-width: 1300px)").matches;
   }
 
   let lastViewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;

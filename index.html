@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -13,6 +13,8 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <script
       type="module"
@@ -58,7 +60,7 @@
             <div class="nav__dropdown">
               <button class="nav__link nav__toggle" type="button" aria-haspopup="true" aria-expanded="false">
                 About
-                <span class="nav__chevron" aria-hidden="true">▾</span>
+                <span class="nav__chevron" aria-hidden="true">&#9662;</span>
               </button>
               <div class="nav__menu" role="menu">
                 <a class="nav__menu-item" role="menuitem" href="#about" data-about-target="skills">Skills</a>
@@ -190,7 +192,7 @@
             </div>
           </div>
            <div class="projects__hint">
-            Swipe or drag to browse projects. Click outside the piano to close details.
+            Swipe or drag to browse projects. Click to open or close a key.
           </div>
         </div>
 
@@ -237,7 +239,7 @@
 
 
 <!-- WORK (4 notes) -->
-<button class="note-block" data-category="work" data-color="purple" data-fx="assets/music/fx3.wav">
+<button class="note-block" data-category="work" data-color="red" data-fx="assets/music/fx3.wav">
   <div class="note-notes">
     <img src="assets/notes/work1.svg" class="note-img" alt="" />
     <img src="assets/notes/work2.svg" class="note-img" alt="" />
@@ -246,18 +248,311 @@
   </div>
   <span class="label bottom note-title">Work</span>
   <div class="note-panel" aria-hidden="true">
-    <img src="assets/about/2.png" alt="Work placeholder" />
+    <div class="note-panel__card work-card">
+      <div class="work-card__header">
+        <div class="work-card__logo" aria-hidden="true">
+          <div class="work-card__pixel-grid">
+            <span class="work-card__pixel work-card__pixel--off"></span>
+            <span class="work-card__pixel work-card__pixel--dim"></span>
+            <span class="work-card__pixel work-card__pixel--light"></span>
+            <span class="work-card__pixel work-card__pixel--dim"></span>
+            <span class="work-card__pixel work-card__pixel--off"></span>
+            <span class="work-card__pixel work-card__pixel--dim"></span>
+            <span class="work-card__pixel work-card__pixel--off"></span>
+            <span class="work-card__pixel work-card__pixel--accent"></span>
+            <span class="work-card__pixel work-card__pixel--off"></span>
+            <span class="work-card__pixel work-card__pixel--dim"></span>
+            <span class="work-card__pixel work-card__pixel--light"></span>
+            <span class="work-card__pixel work-card__pixel--accent"></span>
+            <span class="work-card__pixel work-card__pixel--light"></span>
+            <span class="work-card__pixel work-card__pixel--accent"></span>
+            <span class="work-card__pixel work-card__pixel--light"></span>
+            <span class="work-card__pixel work-card__pixel--dim"></span>
+            <span class="work-card__pixel work-card__pixel--off"></span>
+            <span class="work-card__pixel work-card__pixel--accent"></span>
+            <span class="work-card__pixel work-card__pixel--off"></span>
+            <span class="work-card__pixel work-card__pixel--dim"></span>
+            <span class="work-card__pixel work-card__pixel--off"></span>
+            <span class="work-card__pixel work-card__pixel--dim"></span>
+            <span class="work-card__pixel work-card__pixel--light"></span>
+            <span class="work-card__pixel work-card__pixel--dim"></span>
+            <span class="work-card__pixel work-card__pixel--off"></span>
+          </div>
+          <span class="work-card__logo-label">PixelPulse</span>
+        </div>
+
+        <div class="work-card__info">
+          <p class="work-card__role">Freelance Developer</p>
+          <p class="work-card__company">PixelPulse PH via <strong>PixelPulse Solutions</strong></p>
+          <div class="work-card__tags">
+            <span class="work-card__tag work-card__tag--time"><span class="work-card__tag-dot"></span>Oct 2024 - Present</span>
+            <span class="work-card__tag">Freelance</span>
+          </div>
+        </div>
+
+        <div class="work-card__stat">
+          <span class="work-card__stat-number">15+</span>
+          <span class="work-card__stat-label">Projects Delivered</span>
+        </div>
+      </div>
+
+      <p class="work-card__mobile-label">Stats</p>
+      <div class="work-card__mobile-stats">
+        <div class="work-card__mobile-stat">
+          <span class="work-card__mobile-stat-number">15+</span>
+          <span class="work-card__mobile-stat-label">Projects Delivered</span>
+        </div>
+        <div class="work-card__mobile-stat">
+          <span class="work-card__mobile-stat-number">3</span>
+          <span class="work-card__mobile-stat-label">Project Types</span>
+        </div>
+        <div class="work-card__mobile-stat">
+          <span class="work-card__mobile-stat-number">1+</span>
+          <span class="work-card__mobile-stat-label">Years Active</span>
+        </div>
+      </div>
+
+      <p class="work-card__mobile-label">Highlights</p>
+      <div class="work-card__body">
+        <article class="work-card__bullet">
+          <div class="work-card__bullet-number">01</div>
+          <div class="work-card__bullet-copy">
+            <p class="work-card__bullet-kicker">Delivery</p>
+            <p class="work-card__bullet-text">Shipped <strong>15+ client projects</strong> across mobile apps, games, and websites through my side business, PixelPulse Solutions.</p>
+          </div>
+        </article>
+        <article class="work-card__bullet">
+          <div class="work-card__bullet-number">02</div>
+          <div class="work-card__bullet-copy">
+            <p class="work-card__bullet-kicker">Engineering</p>
+            <p class="work-card__bullet-text">Handled <strong>version control, releases, and iteration cycles</strong> independently across multiple active client builds.</p>
+          </div>
+        </article>
+        <article class="work-card__bullet">
+          <div class="work-card__bullet-number">03</div>
+          <div class="work-card__bullet-copy">
+            <p class="work-card__bullet-kicker">Collaboration</p>
+            <p class="work-card__bullet-text">Managed <strong>direct client communication</strong> from briefing to launch to keep scope aligned and delivery on time.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="work-card__footer">
+        <span class="work-card__footer-label">Focus</span>
+        <div class="work-card__chips">
+          <span class="work-card__chip">Mobile Apps</span>
+          <span class="work-card__chip">Game Dev</span>
+          <span class="work-card__chip">Web Dev</span>
+          <span class="work-card__chip">Client Relations</span>
+        </div>
+        <p class="work-card__mobile-label">Business</p>
+        <div class="work-card__business">
+          <div class="work-card__business-logo" aria-hidden="true">
+            <div class="work-card__pixel-grid work-card__pixel-grid--compact">
+              <span class="work-card__pixel work-card__pixel--off"></span>
+              <span class="work-card__pixel work-card__pixel--dim"></span>
+              <span class="work-card__pixel work-card__pixel--light"></span>
+              <span class="work-card__pixel work-card__pixel--dim"></span>
+              <span class="work-card__pixel work-card__pixel--off"></span>
+              <span class="work-card__pixel work-card__pixel--dim"></span>
+              <span class="work-card__pixel work-card__pixel--off"></span>
+              <span class="work-card__pixel work-card__pixel--accent"></span>
+              <span class="work-card__pixel work-card__pixel--off"></span>
+              <span class="work-card__pixel work-card__pixel--dim"></span>
+              <span class="work-card__pixel work-card__pixel--light"></span>
+              <span class="work-card__pixel work-card__pixel--accent"></span>
+              <span class="work-card__pixel work-card__pixel--light"></span>
+              <span class="work-card__pixel work-card__pixel--accent"></span>
+              <span class="work-card__pixel work-card__pixel--light"></span>
+              <span class="work-card__pixel work-card__pixel--dim"></span>
+              <span class="work-card__pixel work-card__pixel--off"></span>
+              <span class="work-card__pixel work-card__pixel--accent"></span>
+              <span class="work-card__pixel work-card__pixel--off"></span>
+              <span class="work-card__pixel work-card__pixel--dim"></span>
+              <span class="work-card__pixel work-card__pixel--off"></span>
+              <span class="work-card__pixel work-card__pixel--dim"></span>
+              <span class="work-card__pixel work-card__pixel--light"></span>
+              <span class="work-card__pixel work-card__pixel--dim"></span>
+              <span class="work-card__pixel work-card__pixel--off"></span>
+            </div>
+          </div>
+          <div class="work-card__business-copy">
+            <p class="work-card__business-name">PixelPulse Solutions</p>
+            <p class="work-card__business-hint">Creative freelance work for apps, games, and websites.</p>
+          </div>
+        </div>
+        <p class="work-card__mobile-label">Find Us</p>
+        <div class="work-card__socials" aria-label="PixelPulse social media">
+          <a class="work-card__social" href="https://facebook.com/PixelPulsePH" target="_blank" rel="noreferrer" aria-label="PixelPulse Facebook">
+            <span class="work-card__social-thumb">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M13.5 8.5V6.9c0-.76.5-1.1 1.24-1.1h1.46V3h-2.2C11.4 3 10 4.42 10 6.84V8.5H8v3h2v9h3.5v-9h2.35l.38-3H13.5z"/>
+              </svg>
+            </span>
+            <span class="work-card__social-copy">
+              <span class="work-card__social-label">Facebook</span>
+              <span class="work-card__social-name">PixelPulse Solutions</span>
+            </span>
+            <span class="work-card__social-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <line x1="7" y1="17" x2="17" y2="7"/>
+                <polyline points="7 7 17 7 17 17"/>
+              </svg>
+            </span>
+          </a>
+          <a class="work-card__social" href="https://instagram.com/PixelPulsePH" target="_blank" rel="noreferrer" aria-label="PixelPulse Instagram">
+            <span class="work-card__social-thumb">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+              </svg>
+            </span>
+            <span class="work-card__social-copy">
+              <span class="work-card__social-label">Instagram</span>
+              <span class="work-card__social-name">PixelPulse Solutions</span>
+            </span>
+            <span class="work-card__social-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <line x1="7" y1="17" x2="17" y2="7"/>
+                <polyline points="7 7 17 7 17 17"/>
+              </svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </button>
 
 <!-- EDUCATION (1 note) -->
-<button class="note-block" data-category="education" data-color="red" data-fx="assets/music/fx1.wav">
+<button class="note-block" data-category="education" data-color="purple" data-fx="assets/music/fx1.wav">
   <div class="note-notes">
     <img src="assets/notes/education1.svg" class="note-img edu-1"  alt="" />
   </div>
   <span class="label bottom note-title">Education</span>
   <div class="note-panel" aria-hidden="true">
-    <img src="assets/about/3.png" alt="Education placeholder" />
+    <div class="note-panel__card education-card">
+      <div class="education-strip">
+        <section class="education-panel education-panel--degree">
+          <span class="education-panel__index">01 / 03</span>
+          <div class="education-panel__deco" aria-hidden="true">01</div>
+          <div class="education-card__hero">
+            <div class="education-card__hero-copy">
+              <h3 class="education-card__title">Alma Mater &amp; <em>Honours</em></h3>
+              <div class="education-degree">
+                <span class="education-degree__pill">B.S. Computer Science</span>
+                <div class="education-degree__media" aria-hidden="true">
+                  <div class="education-degree__media-inner">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.4"/><path d="M6 17l4.5-4.5L14 16l2.5-2.5L18 15"/></svg>
+                    <span>Landscape image placeholder</span>
+                  </div>
+                </div>
+                <p class="education-degree__name">Bachelor of Science in Computer Science</p>
+                <p class="education-degree__school">Lyceum of the Philippines University - Cavite</p>
+                <div class="education-degree__meta">
+                  <span class="education-degree__meta-item"><span class="education-degree__dot"></span>Aug 2023 - May 2027</span>
+                  <span class="education-degree__meta-item"><span class="education-degree__dot"></span>Currently enrolled</span>
+                </div>
+              </div>
+              <div class="education-honours">
+                <article class="education-honour">
+                  <div>
+                    <p class="education-honour__title">Consistent Dean's Lister</p>
+                    <p class="education-honour__sub">A.Y. 2023 - 2025 · Current</p>
+                  </div>
+                </article>
+                <article class="education-honour">
+                  <div>
+                    <p class="education-honour__title">Resident Scholarship Holder</p>
+                    <p class="education-honour__sub">A.Y. 2023 - 2025 · Current</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="education-panel education-panel--memories">
+          <span class="education-panel__index">02 / 03</span>
+          <div class="education-card__section">
+            <div class="education-card__section-head">
+              <p class="education-card__section-title"><em>Student Life</em></p>
+            </div>
+            <div class="education-memories">
+              <article class="education-memory education-memory--campus">
+                <div class="education-memory__visual" aria-hidden="true">
+                  <div class="education-memory__orb"></div>
+                  <svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M6 20V9l6-4 6 4v11"/><path d="M9 20v-5h6v5"/><path d="M10 11h.01"/><path d="M14 11h.01"/></svg>
+                </div>
+                <div class="education-memory__body">
+                  <p class="education-memory__label">On Campus</p>
+                  <p class="education-memory__text">Learning core computer science foundations while building real projects and sharpening technical depth.</p>
+                </div>
+              </article>
+              <article class="education-memory education-memory--awards">
+                <div class="education-memory__visual" aria-hidden="true">
+                  <div class="education-memory__orb"></div>
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M8 14h8"/><path d="M9 14v6l3-2 3 2v-6"/></svg>
+                </div>
+                <div class="education-memory__body">
+                  <p class="education-memory__label">Award Ceremony</p>
+                  <p class="education-memory__text">Recognized through consistent academic performance and scholarship standing across recent school years.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="education-panel education-panel--certs">
+          <span class="education-panel__index">03 / 03</span>
+          <div class="education-card__section">
+            <div class="education-card__section-head">
+              <p class="education-card__section-title"><em>Certifications</em></p>
+            </div>
+            <div class="education-certs">
+              <a class="education-cert education-cert--featured" href="https://www.certiport.com/portal/desktopdefault.aspx?page=common/pagelibrary/certificationdetails.htm" target="_blank" rel="noopener">
+                <div class="education-cert__poster" aria-hidden="true">
+                  <div class="education-cert__poster-inner">
+                    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>Certiport</span>
+                  </div>
+                </div>
+                <p class="education-cert__issuer">Certiport</p>
+                <p class="education-cert__name">Database IT Specialist</p>
+                <span class="education-cert__link">View credential <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+              </a>
+              <div class="education-cert-list">
+                <a class="education-cert" href="https://www.netacad.com/courses/python-essentials-1" target="_blank" rel="noopener">
+                  <div class="education-cert__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <div class="education-cert__body">
+                    <p class="education-cert__issuer">Cisco Networking Academy</p>
+                    <p class="education-cert__name">Python Essentials 1 &amp; 2</p>
+                  </div>
+                  <div class="education-cert__arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                  </div>
+                </a>
+                <a class="education-cert" href="https://acubetechnologies.com" target="_blank" rel="noopener">
+                  <div class="education-cert__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <div class="education-cert__body">
+                    <p class="education-cert__issuer">ACube Technologies Inc.</p>
+                    <p class="education-cert__name">IoT Bootcamp</p>
+                  </div>
+                  <div class="education-cert__arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
   </div>
 </button>
 
@@ -271,7 +566,19 @@
   </div>
   <span class="label top note-title">Interests</span>
   <div class="note-panel" aria-hidden="true">
-    <img src="assets/about/4.png" alt="Interests placeholder" />
+    <div class="note-panel__card interests-frame-card">
+      <div class="interests-frame-shell">
+        <iframe
+          class="interests-frame"
+          src="interests.html"
+          data-desktop-src="interests.html"
+          data-mobile-src="interests-mobile.html"
+          title="Interests gallery"
+          loading="lazy"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
   </div>
 </button>
         </div>
@@ -316,7 +623,7 @@
           <form class="contact__form" id="contactForm">
             <div class="contact__form-header">
               <p class="contact__label">Send a message</p>
-              <p class="contact__hint">I usually reply within 1–2 days.</p>
+              <p class="contact__hint">I usually reply within 1-2 days.</p>
             </div>
 
             <label class="contact__field" for="contactSubject">
@@ -326,7 +633,7 @@
                 id="contactSubject"
                 name="subject"
                 type="text"
-                placeholder="Let’s build something together"
+                placeholder="Let's build something together"
                 required
               />
             </label>
@@ -349,6 +656,37 @@
       </div>
     </section>
 
+    <footer class="site-footer" aria-labelledby="footer-title">
+      <div class="site-footer__wrap">
+        <div class="site-footer__intro">
+          <h2 class="site-footer__title" id="footer-title">Aundreka Perez</h2>
+          <p class="site-footer__desc">
+            Computer Science student building polished digital experiences across web, mobile, and creative development.
+          </p>
+        </div>
+
+        <nav class="site-footer__group" aria-label="Footer navigation">
+          <p class="site-footer__label">Navigate</p>
+          <div class="site-footer__links">
+            <a href="#home">Home</a>
+            <a href="#projects">Projects</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </nav>
+
+        <div class="site-footer__group">
+          <p class="site-footer__label">Connect</p>
+          <div class="site-footer__links">
+            <a href="https://github.com/aundreka" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="https://www.linkedin.com/in/aundreka" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="mailto:c.aundrekaperez@gmail.com">Email</a>
+            <a href="assets/resume.pdf" download>Resume</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
     <script src="js/index.js"></script>
     <script src="js/entrance.js" defer></script>
     <script src="js/about.js" defer></script>
@@ -356,3 +694,4 @@
 
   </body>
 </html>
+

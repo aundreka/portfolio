@@ -27,6 +27,7 @@ html, body{
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 88px;
 }
 
 body {
@@ -65,10 +66,11 @@ body {
   gap: 12px;
   padding: 0 clamp(16px, 5vw, 48px);
   z-index: 1100;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 30px rgba(15, 15, 16, 0.08);
   color: #0f0f10;
 }
 
@@ -77,8 +79,9 @@ body {
 }
 
 .nav--dark{
-  background: rgba(10, 12, 16, 0.6);
+  background: rgba(10, 12, 16, 0.78);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
   color: #f6f6f9;
 }
 
@@ -849,7 +852,6 @@ model-viewer.piano {
 .nav, #hero-heading, .stage, #piano-label, .about .about__inner {
   transition: opacity 240ms ease, transform 240ms ease;
 }
-body.about-focus:not(.about-focus--nav-visible) .nav,
 body.about-focus #hero-heading,
 body.about-focus .stage,
 body.about-focus #piano-label,

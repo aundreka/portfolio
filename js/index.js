@@ -1208,6 +1208,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   
   let hasState = false;
+  let cachedMobilePlacement = null;
+  let lastMobileLayout = window.innerWidth <= 700;
   let cur = {
     hx: 0, hy: 0,
     startX: 0, startY: 0,
@@ -1215,16 +1217,43 @@ document.addEventListener("DOMContentLoaded", () => {
     ctrlX: 0, ctrlY: 0,
   };
 
-  function layout() {
+  function applyMobilePlacement(placement) {
+    hint.style.left = `${placement.hx}px`;
+    hint.style.top = `${placement.hy}px`;
+    hint.style.transform = "";
+    svg.style.display = "none";
+    mobileArrow.style.left = `${placement.arrowLeft}px`;
+    mobileArrow.style.top = `${placement.arrowTop}px`;
+    mobileArrow.style.height = `${placement.arrowHeight}px`;
+    mobileArrow.classList.toggle("is-up", placement.arrowDirection === "up");
+    mobileArrow.classList.toggle("is-down", placement.arrowDirection === "down");
+  }
+
+  function layout(forceFresh = false) {
     const tr = getTargetRect();
     if (!tr) {
 hint.style.opacity = "0";
 svg.style.opacity = "0";
 mobileArrow.style.opacity = "0";
+cachedMobilePlacement = null;
 return;
     }
 
     const mobileHintLayout = window.innerWidth <= 700;
+    if (mobileHintLayout !== lastMobileLayout) {
+      cachedMobilePlacement = null;
+      lastMobileLayout = mobileHintLayout;
+    }
+
+    if (mobileHintLayout && cachedMobilePlacement && !forceFresh) {
+      svg.style.opacity  = "0";
+      hint.style.opacity = enabled ? "1" : "0";
+      mobileArrow.style.opacity = enabled ? "1" : "0";
+      hint.style.pointerEvents = enabled ? "auto" : "none";
+      svg.style.pointerEvents  = "none";
+      applyMobilePlacement(cachedMobilePlacement);
+      return;
+    }
     
     svg.style.opacity  = enabled && !mobileHintLayout ? "1" : "0";
     hint.style.opacity = enabled ? "1" : "0";
@@ -1380,9 +1409,18 @@ return;
       mobileArrow.style.height = `${height}px`;
       mobileArrow.classList.toggle("is-up", id === "intro-hint-piano");
       mobileArrow.classList.toggle("is-down", id === "intro-hint-cat");
+      cachedMobilePlacement = {
+        hx: desiredHx,
+        hy: id === "intro-hint-cat" ? desiredHy : parseFloat(hint.style.top) || desiredHy,
+        arrowLeft: desiredStartX - 7,
+        arrowTop: top,
+        arrowHeight: height,
+        arrowDirection: id === "intro-hint-piano" ? "up" : "down",
+      };
     } else {
       svg.style.display = "block";
       mobileArrow.style.opacity = "0";
+      cachedMobilePlacement = null;
     }
 
     
@@ -1494,7 +1532,8 @@ head.setAttribute(
     head,
     relayout() {
       hasState = false;
-      layout();
+      cachedMobilePlacement = null;
+      layout(true);
     },
     showTyped,
     destroy() {

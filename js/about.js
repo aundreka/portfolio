@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const scroller = document.getElementById("aboutTrack");
   const aboutSection = document.querySelector(".about");
   const projectsSection = document.getElementById("projects");
-  const compactAboutQuery = window.matchMedia("(max-width: 900px)");
+  const compactAboutQuery = window.matchMedia("(max-width: 1300px)");
 
   if (!scroller || !aboutSection) {
     console.warn("[About] Missing #aboutTrack or .about");
@@ -47,6 +47,50 @@ document.addEventListener("DOMContentLoaded", () => {
   const thumb = scrubber.querySelector(".about-scrubber__thumb");
   const isCompactAbout = () => compactAboutQuery.matches;
 
+  const syncInterestsFrames = () => {
+    const useMobile = window.matchMedia("(max-width: 1300px)").matches;
+    document.querySelectorAll(".interests-frame").forEach((frame) => {
+      const desktopSrc = frame.dataset.desktopSrc || "interests.html";
+      const mobileSrc = frame.dataset.mobileSrc || desktopSrc;
+      const nextSrc = useMobile ? mobileSrc : desktopSrc;
+      const currentSrc = frame.getAttribute("src");
+      if (currentSrc !== nextSrc) frame.setAttribute("src", nextSrc);
+    });
+  };
+  syncInterestsFrames();
+
+  const resizeInterestsFrame = (frame) => {
+    if (!frame) return;
+    const useMobile = window.matchMedia("(max-width: 1300px)").matches;
+
+    if (!useMobile) {
+      frame.style.height = "";
+      return;
+    }
+
+    try {
+      const doc = frame.contentDocument;
+      if (!doc) return;
+      const bodyHeight = doc.body ? doc.body.scrollHeight : 0;
+      const docHeight = doc.documentElement ? doc.documentElement.scrollHeight : 0;
+      const nextHeight = Math.max(bodyHeight, docHeight);
+      if (nextHeight > 0) frame.style.height = `${nextHeight}px`;
+    } catch (error) {
+      console.warn("[About] Unable to resize interests mobile frame.", error);
+    }
+  };
+
+  const bindInterestsFrame = (frame) => {
+    if (!frame || frame.dataset.boundResize === "1") return;
+    frame.dataset.boundResize = "1";
+    frame.addEventListener("load", () => {
+      resizeInterestsFrame(frame);
+      setTimeout(() => resizeInterestsFrame(frame), 120);
+    });
+  };
+
+  document.querySelectorAll(".interests-frame").forEach(bindInterestsFrame);
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -83,6 +127,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const pct = maxScroll > 0 ? scroller.scrollLeft / maxScroll : 0;
     const maxThumbTravel = track.clientWidth - thumb.clientWidth;
     thumb.style.transform = `translateX(${pct * maxThumbTravel}px)`;
+  }
+
+  function centerExpandedPanel(btn) {
+    if (!btn || isCompactAbout()) return;
+
+    const panel = btn.querySelector(".note-panel");
+    if (!panel) return;
+
+    // Wait for hover layout to apply, then measure the real panel box.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const panelRect = panel.getBoundingClientRect();
+        const scrollerRect = scroller.getBoundingClientRect();
+
+        if (!panelRect.width || !scrollerRect.width) return;
+
+        const panelCenter = panelRect.left + panelRect.width / 2;
+        const viewportCenter = scrollerRect.left + scrollerRect.width / 2;
+        const leftBias = 80;
+        const delta = panelCenter - (viewportCenter - leftBias);
+
+        if (Math.abs(delta) < 4) return;
+
+        const maxScroll = Math.max(scroller.scrollWidth - scroller.clientWidth, 0);
+        const nextLeft = Math.max(0, Math.min(scroller.scrollLeft + delta, maxScroll));
+        scroller.scrollTo({ left: nextLeft, behavior: "smooth" });
+        requestAnimationFrame(syncThumb);
+      });
+    });
   }
 
   /* --------------------------
@@ -163,6 +236,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   window.addEventListener("resize", sizeThumb);
+  window.addEventListener("resize", () => {
+    syncInterestsFrames();
+    document.querySelectorAll(".interests-frame").forEach((frame) => resizeInterestsFrame(frame));
+  });
   compactAboutQuery.addEventListener?.("change", sizeThumb);
 
   /* --------------------------
@@ -674,7 +751,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (isCompactAbout()) return;
         setAboutAccent(btn);
         btn.classList.add("is-turned");
-        if (btn.dataset.category === "contact") btn.classList.add("panel-pinned");
+
+        if (btn.dataset.category === "contact") {
+          requestAnimationFrame(() => centerExpandedPanel(btn));
+        }
 
         isWaveActive = true;
         releasing = false;
@@ -703,6 +783,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.classList.remove("wave-active");
         btn.classList.add("wave-releasing");
         btn.classList.remove("is-turned");
+        btn.classList.remove("panel-pinned");
 
         clearAboutAccent();
 
@@ -749,7 +830,7 @@ document.addEventListener("DOMContentLoaded", () => {
 (() => {
   const buttons = document.querySelectorAll(".note-block");
   if (!buttons.length) return;
-  const compactAboutQuery = window.matchMedia("(max-width: 900px)");
+  const compactAboutQuery = window.matchMedia("(max-width: 1300px)");
   const isCompactAbout = () => compactAboutQuery.matches;
 
   

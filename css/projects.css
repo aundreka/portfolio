@@ -233,7 +233,7 @@
   right: 0;
 }
 
-@media (max-width: 640px){
+@media (max-width: 1300px){
   #projects .projects__topbar{
     gap: 8px;
     padding: 10px 12px 6px;
@@ -432,7 +432,7 @@
   }
 }
 
-@media (max-width: 980px){
+@media (max-width: 1300px){
   #projects .projects__topbar{
     flex-wrap: wrap;
   }
@@ -943,11 +943,11 @@
   transform: translateY(0);
 }
 
-@media (max-width: 1100px){
+@media (max-width: 1300px){
   #projects .note__title{ font-size: 44px; }
 }
 
-@media (max-width: 900px){
+@media (max-width: 1300px){
   #projects .projects_piano{
     border-left-width: 1px;
     border-right-width: 1px;
