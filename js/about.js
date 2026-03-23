@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const scroller = document.getElementById("aboutTrack");
   const aboutSection = document.querySelector(".about");
   const projectsSection = document.getElementById("projects");
-  const compactAboutQuery = window.matchMedia("(max-width: 1300px)");
+  const compactAboutQuery = window.matchMedia("(max-width: 900px)");
 
   if (!scroller || !aboutSection) {
     console.warn("[About] Missing #aboutTrack or .about");
@@ -47,50 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const thumb = scrubber.querySelector(".about-scrubber__thumb");
   const isCompactAbout = () => compactAboutQuery.matches;
 
-  const syncInterestsFrames = () => {
-    const useMobile = window.matchMedia("(max-width: 1300px)").matches;
-    document.querySelectorAll(".interests-frame").forEach((frame) => {
-      const desktopSrc = frame.dataset.desktopSrc || "interests.html";
-      const mobileSrc = frame.dataset.mobileSrc || desktopSrc;
-      const nextSrc = useMobile ? mobileSrc : desktopSrc;
-      const currentSrc = frame.getAttribute("src");
-      if (currentSrc !== nextSrc) frame.setAttribute("src", nextSrc);
-    });
-  };
-  syncInterestsFrames();
-
-  const resizeInterestsFrame = (frame) => {
-    if (!frame) return;
-    const useMobile = window.matchMedia("(max-width: 1300px)").matches;
-
-    if (!useMobile) {
-      frame.style.height = "";
-      return;
-    }
-
-    try {
-      const doc = frame.contentDocument;
-      if (!doc) return;
-      const bodyHeight = doc.body ? doc.body.scrollHeight : 0;
-      const docHeight = doc.documentElement ? doc.documentElement.scrollHeight : 0;
-      const nextHeight = Math.max(bodyHeight, docHeight);
-      if (nextHeight > 0) frame.style.height = `${nextHeight}px`;
-    } catch (error) {
-      console.warn("[About] Unable to resize interests mobile frame.", error);
-    }
-  };
-
-  const bindInterestsFrame = (frame) => {
-    if (!frame || frame.dataset.boundResize === "1") return;
-    frame.dataset.boundResize = "1";
-    frame.addEventListener("load", () => {
-      resizeInterestsFrame(frame);
-      setTimeout(() => resizeInterestsFrame(frame), 120);
-    });
-  };
-
-  document.querySelectorAll(".interests-frame").forEach(bindInterestsFrame);
-
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -106,6 +62,131 @@ document.addEventListener("DOMContentLoaded", () => {
     { threshold: [0, 0.6, 0.9, 1] }
   );
   observer.observe(aboutSection);
+
+  const interestsRevealObserver = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("in");
+        obs.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.07 }
+  );
+
+  document.querySelectorAll(".interests-mobile-gallery .rv").forEach((el) => {
+    interestsRevealObserver.observe(el);
+  });
+
+  const desktopInterests = document.querySelector(".interests-desktop");
+  if (desktopInterests) {
+    const trackEl = desktopInterests.querySelector(".interests-desktop__track");
+    const dots = Array.from(desktopInterests.querySelectorAll(".interests-desktop__dot"));
+    const prevBtn = desktopInterests.querySelector(".interests-desktop__arrow--prev");
+    const nextBtn = desktopInterests.querySelector(".interests-desktop__arrow--next");
+    const panels = Array.from(desktopInterests.querySelectorAll(".interests-desktop__panel-inner"));
+
+    const updateDesktopInterests = () => {
+      if (!trackEl) return;
+      const panelWidth = Math.max(trackEl.clientWidth, 1);
+      const nextIndex = Math.round(trackEl.scrollLeft / panelWidth);
+      dots.forEach((dot, index) => dot.classList.toggle("is-active", index === nextIndex));
+      panels.forEach((panel, index) => panel.classList.toggle("is-in", index === nextIndex));
+      if (prevBtn) prevBtn.disabled = nextIndex <= 0;
+      if (nextBtn) nextBtn.disabled = nextIndex >= dots.length - 1;
+    };
+
+    const goToDesktopInterest = (index) => {
+      if (!trackEl) return;
+      trackEl.scrollTo({ left: trackEl.clientWidth * index, behavior: "smooth" });
+    };
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => goToDesktopInterest(index));
+      dot.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        goToDesktopInterest(index);
+      });
+    });
+
+    const goPrev = () => {
+      const current = dots.findIndex((dot) => dot.classList.contains("is-active"));
+      goToDesktopInterest(Math.max(current - 1, 0));
+    };
+
+    const goNext = () => {
+      const current = dots.findIndex((dot) => dot.classList.contains("is-active"));
+      goToDesktopInterest(Math.min(current + 1, dots.length - 1));
+    };
+
+    prevBtn?.addEventListener("click", goPrev);
+    nextBtn?.addEventListener("click", goNext);
+    prevBtn?.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      goPrev();
+    });
+    nextBtn?.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      goNext();
+    });
+
+    trackEl.addEventListener("scroll", updateDesktopInterests, { passive: true });
+    window.addEventListener("resize", updateDesktopInterests);
+    updateDesktopInterests();
+  }
+
+  const setupScrollReveals = () => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const revealGroups = isCompactAbout()
+      ? [
+          [...document.querySelectorAll(".intro-block")],
+          [...document.querySelectorAll(".staff-track > .note-block")],
+          [...document.querySelectorAll('.note-block[data-category="education"] .education-panel')],
+          [...document.querySelectorAll("#contact .contact__intro, #contact .contact__form, #contact .contact__actions")],
+        ]
+      : [
+          [...document.querySelectorAll("#contact .contact__intro, #contact .contact__actions, #contact .contact__form")],
+        ];
+
+    const revealTargets = revealGroups.flat().filter(Boolean);
+    if (!revealTargets.length) return;
+
+    revealTargets.forEach((el) => el.classList.add("scroll-reveal-mobile"));
+
+    if (reduceMotion) {
+      revealTargets.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+
+    const mobileRevealObserver = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          obs.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    revealGroups.forEach((group) => {
+      group.forEach((el, index) => {
+        el.style.setProperty("--scroll-reveal-delay", `${index * 70}ms`);
+        mobileRevealObserver.observe(el);
+      });
+    });
+  };
+
+  setupScrollReveals();
+
+  if (isCompactAbout()) {
+    scrubber.remove();
+    stars.remove();
+    return;
+  }
 
   function sizeThumb() {
     if (isCompactAbout()) {
@@ -236,10 +317,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   window.addEventListener("resize", sizeThumb);
-  window.addEventListener("resize", () => {
-    syncInterestsFrames();
-    document.querySelectorAll(".interests-frame").forEach((frame) => resizeInterestsFrame(frame));
-  });
   compactAboutQuery.addEventListener?.("change", sizeThumb);
 
   /* --------------------------
@@ -514,21 +591,27 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     let waveHoverEl = null;
+    let activeWaveImages = [];
+    let activeWaveLetters = [];
     let isWaveActive = false;
     let releaseT = 0;
     let releasing = false;
-    const RELEASE_MS = 520;
+    const RELEASE_MS = 620;
 
     let amp = 0;
     let ampTarget = 0;
     let lastT = performance.now();
+    let waveRafId = 0;
 
     let mouseX = 0;
     let mouseVX = 0;
     let lastMouseX = 0;
+    let staffLeft = 0;
+    let staffWidth = 1;
+    let staffHeight = 1;
 
     const AMP_MAX = 70;
-    const SMOOTH = 0.12;
+    const SMOOTH = 0.09;
 
     function staffBaseYs(h) {
       const gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--staff-gap")) || 48;
@@ -557,10 +640,34 @@ document.addEventListener("DOMContentLoaded", () => {
       return d;
     }
 
+    function updateStaffMetrics() {
+      const rect = staffLinesEl.getBoundingClientRect();
+      staffLeft = rect.left;
+      staffWidth = Math.max(1, rect.width);
+      staffHeight = Math.max(1, rect.height);
+    }
+
+    function updateWaveTargets() {
+      if (!waveHoverEl) {
+        activeWaveImages = [];
+        activeWaveLetters = [];
+        return;
+      }
+
+      activeWaveImages = Array.from(waveHoverEl.querySelectorAll(".note-img")).map((img) => {
+        const r = img.getBoundingClientRect();
+        return { el: img, x: (r.left + r.width / 2) - staffLeft };
+      });
+
+      activeWaveLetters = Array.from(waveHoverEl.querySelectorAll(".note-title .letter")).map((letter) => {
+        const r = letter.getBoundingClientRect();
+        return { el: letter, x: (r.left + r.width / 2) - staffLeft };
+      });
+    }
+
     function setMouseXFromEvent(e) {
-      const r = staffLinesEl.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const clamped = Math.max(0, Math.min(x, r.width));
+      const x = e.clientX - staffLeft;
+      const clamped = Math.max(0, Math.min(x, staffWidth));
       mouseVX = clamped - lastMouseX;
       lastMouseX = clamped;
       mouseX = clamped;
@@ -624,18 +731,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderBulge() {
-      const rect = staffLinesEl.getBoundingClientRect();
-      const w = Math.max(1, rect.width);
-      const h = Math.max(1, rect.height);
+      W = staffWidth;
+      SIGMA0 = Math.max(42, staffWidth * 0.01);
 
-      W = w;
-      SIGMA0 = Math.max(42, w * 0.01);
+      svg.setAttribute("viewBox", `0 0 ${staffWidth} ${staffHeight}`);
+      const baseYs = staffBaseYs(staffHeight);
 
-      svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-      const baseYs = staffBaseYs(h);
-
-      const step = Math.max(18, Math.min(40, w / 42));
-      const count = Math.ceil(w / step);
+      const step = Math.max(20, Math.min(46, staffWidth / 38));
+      const count = Math.ceil(staffWidth / step);
 
       for (let line = 0; line < 5; line++) {
         const y0 = baseYs[line];
@@ -643,7 +746,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const pts = [];
         for (let i = 0; i <= count; i++) {
-          const x = (i / count) * w;
+          const x = (i / count) * staffWidth;
           const env = rippleProfile(x, line) * edgeFade(x);
           const y = y0 - (amp * lineScale * env);
           pts.push({ x, y });
@@ -670,7 +773,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     noteBlocks.forEach((b) => wrapTitleLetters(b.querySelector(".note-title")));
 
+    function startWaveLoop() {
+      if (waveRafId) return;
+      lastT = performance.now();
+      waveRafId = requestAnimationFrame(tick);
+    }
+
     function tick(now) {
+      waveRafId = 0;
       const dt = Math.min(0.05, (now - lastT) / 1000);
       lastT = now;
 
@@ -687,13 +797,6 @@ document.addEventListener("DOMContentLoaded", () => {
       renderBulge();
 
       if (waveHoverEl) {
-        const rect = staffLinesEl.getBoundingClientRect();
-
-        const elCenterX = (el) => {
-          const r = el.getBoundingClientRect();
-          return (r.left + r.width / 2) - rect.left;
-        };
-
         const envAt = (x) => {
           const clampedX = Math.max(0, Math.min(x, W));
           return rippleProfile(clampedX, 2) * edgeFade(clampedX);
@@ -701,9 +804,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const strength = amp / AMP_MAX;
 
-        const imgs = waveHoverEl.querySelectorAll(".note-img");
-        imgs.forEach((img) => {
-          const x = elCenterX(img);
+        activeWaveImages.forEach(({ el: img, x }) => {
           const env = envAt(x);
 
           const lift = (amp * 0.85) * env;
@@ -721,9 +822,7 @@ document.addEventListener("DOMContentLoaded", () => {
           img.style.setProperty("--wave-tilt", `${nextT}deg`);
         });
 
-        const letters = waveHoverEl.querySelectorAll(".note-title .letter");
-        letters.forEach((sp) => {
-          const x = elCenterX(sp);
+        activeWaveLetters.forEach(({ el: sp, x }) => {
           const env = envAt(x);
 
           const lift = (amp * 0.22) * env;
@@ -742,9 +841,29 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      requestAnimationFrame(tick);
+      mouseVX *= 0.82;
+
+      if (isWaveActive || releasing || Math.abs(amp) > 0.08) {
+        waveRafId = requestAnimationFrame(tick);
+      } else {
+        amp = 0;
+        renderBulge();
+      }
     }
-    requestAnimationFrame(tick);
+
+    updateStaffMetrics();
+    renderBulge();
+
+    const refreshWaveLayout = () => {
+      if (!isWaveActive && !releasing && !waveHoverEl) return;
+      updateStaffMetrics();
+      updateWaveTargets();
+      renderBulge();
+      if (isWaveActive || releasing) startWaveLoop();
+    };
+
+    window.addEventListener("resize", refreshWaveLayout, { passive: true });
+    scroller.addEventListener("scroll", refreshWaveLayout, { passive: true });
 
     noteBlocks.forEach((btn) => {
       btn.addEventListener("pointerenter", (e) => {
@@ -762,14 +881,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ampTarget = AMP_MAX;
         waveHoverEl = btn;
+        updateStaffMetrics();
+        updateWaveTargets();
         btn.classList.add("wave-active");
         setMouseXFromEvent(e);
+        startWaveLoop();
       });
 
       btn.addEventListener("pointermove", (e) => {
         if (isCompactAbout()) return;
         if (!isWaveActive) return;
         setMouseXFromEvent(e);
+        startWaveLoop();
       });
 
       btn.addEventListener("pointerleave", () => {
@@ -801,9 +924,15 @@ document.addEventListener("DOMContentLoaded", () => {
             sp.style.setProperty("--l-drift-x", `0px`);
             sp.style.setProperty("--l-tilt", `0deg`);
           });
-        }, 520);
+        }, RELEASE_MS);
 
-        if (waveHoverEl === btn) waveHoverEl = null;
+        if (waveHoverEl === btn) {
+          waveHoverEl = null;
+          activeWaveImages = [];
+          activeWaveLetters = [];
+        }
+
+        startWaveLoop();
       });
 
       // IMPORTANT: modal click removed (you said redesign)
@@ -830,7 +959,7 @@ document.addEventListener("DOMContentLoaded", () => {
 (() => {
   const buttons = document.querySelectorAll(".note-block");
   if (!buttons.length) return;
-  const compactAboutQuery = window.matchMedia("(max-width: 1300px)");
+  const compactAboutQuery = window.matchMedia("(max-width: 900px)");
   const isCompactAbout = () => compactAboutQuery.matches;
 
   

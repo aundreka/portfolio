@@ -868,6 +868,12 @@ function focusAboutScroll() {
   // ✅ stop Projects snap from fighting this scroll
   suspendProjectsSnap(1600);
 
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    exitAboutFocus();
+    about.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+
   enterAboutFocus();
   about.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -897,6 +903,14 @@ window.addEventListener("scroll", () => {
 const about = document.getElementById("about") || document.querySelector("section.about, .about");
   if (!about) return;
 
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    exitAboutFocus();
+    catWrap?.classList.remove("cat-fixed-left");
+    document.querySelector(".piano-carousel")?.classList.remove("piano-lift");
+    if (catWrap) catWrap.style.left = "";
+    return;
+  }
+
   const docTop = window.scrollY || document.documentElement.scrollTop;
   const aboutTop = about.getBoundingClientRect().top + window.scrollY;
 
@@ -917,6 +931,12 @@ window.addEventListener("scroll", () => {
   const currentY = window.scrollY || document.documentElement.scrollTop;
   const delta = currentY - lastAboutFocusScrollY;
 
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    document.body.classList.remove("about-focus--nav-visible");
+    lastAboutFocusScrollY = currentY;
+    return;
+  }
+
   if (!document.body.classList.contains("about-focus")) {
     document.body.classList.remove("about-focus--nav-visible");
     lastAboutFocusScrollY = currentY;
@@ -936,6 +956,7 @@ const navEl = document.querySelector(".nav");
 const navMobileToggle = document.querySelector(".nav__mobile-toggle");
 const navPanel = document.querySelector(".nav__panel");
 const aboutSectionEl = document.getElementById("about");
+const isScrollEffectsMobile = () => window.matchMedia("(max-width: 900px)").matches;
 const updateNavTheme = () => {
   if (!navEl || !aboutSectionEl) return;
   navEl.classList.toggle("nav--dark", aboutSectionEl.classList.contains("stars-on"));
@@ -1029,6 +1050,13 @@ aboutMenuLinks.forEach((link) => {
     const target = link.dataset.aboutTarget;
     const aboutSection = document.getElementById("about");
     if (!aboutSection || !aboutTrack) return;
+
+    if (isScrollEffectsMobile()) {
+      aboutSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      closeAboutDropdown();
+      if (isMobileNav()) closeNavMenu();
+      return;
+    }
 
     aboutSection.scrollIntoView({ behavior: "smooth", block: "center" });
 
@@ -1163,9 +1191,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function getTargetRect() {
     const target = targetGetter?.();
     if (!target) return null;
+    const isViewportVisible = (rect) =>
+      rect.width >= 2 &&
+      rect.height >= 2 &&
+      rect.right > 0 &&
+      rect.bottom > 0 &&
+      rect.left < window.innerWidth &&
+      rect.top < window.innerHeight;
     if (typeof target.getBoundingClientRect === "function") {
       const r = target.getBoundingClientRect();
-      if (r.width < 2 || r.height < 2) return null;
+      if (!isViewportVisible(r)) return null;
       return r;
     }
     if (
@@ -1174,7 +1209,7 @@ document.addEventListener("DOMContentLoaded", () => {
       typeof target.width === "number" &&
       typeof target.height === "number"
     ) {
-      if (target.width < 2 || target.height < 2) return null;
+      if (!isViewportVisible(target)) return null;
       return target;
     }
     return null;
@@ -1240,6 +1275,7 @@ return;
     }
 
     const mobileHintLayout = window.innerWidth <= 700;
+    const scrollTop = mobileHintLayout ? (window.scrollY || window.pageYOffset || 0) : 0;
     if (mobileHintLayout !== lastMobileLayout) {
       cachedMobilePlacement = null;
       lastMobileLayout = mobileHintLayout;
@@ -1302,7 +1338,7 @@ return;
 
     
     hint.style.left = `${hx}px`;
-    hint.style.top  = `${hy}px`;
+    hint.style.top  = `${hy + scrollTop}px`;
 
     const placed = hint.getBoundingClientRect();
     if (rectsOverlap(placed, tr)) {
@@ -1314,7 +1350,7 @@ return;
       else tryHy = hy - push;
 
       tryHy = Math.max(padding, Math.min(window.innerHeight - hintRect.height - padding, tryHy));
-      hint.style.top = `${tryHy}px`;
+      hint.style.top = `${tryHy + scrollTop}px`;
 
       const placed2 = hint.getBoundingClientRect();
       if (rectsOverlap(placed2, tr)) {
@@ -1405,15 +1441,15 @@ return;
       }
 
       mobileArrow.style.left = `${desiredStartX - 7}px`;
-      mobileArrow.style.top = `${top}px`;
+      mobileArrow.style.top = `${top + scrollTop}px`;
       mobileArrow.style.height = `${height}px`;
       mobileArrow.classList.toggle("is-up", id === "intro-hint-piano");
       mobileArrow.classList.toggle("is-down", id === "intro-hint-cat");
       cachedMobilePlacement = {
         hx: desiredHx,
-        hy: id === "intro-hint-cat" ? desiredHy : parseFloat(hint.style.top) || desiredHy,
+        hy: id === "intro-hint-cat" ? desiredHy + scrollTop : parseFloat(hint.style.top) || (desiredHy + scrollTop),
         arrowLeft: desiredStartX - 7,
-        arrowTop: top,
+        arrowTop: top + scrollTop,
         arrowHeight: height,
         arrowDirection: id === "intro-hint-piano" ? "up" : "down",
       };
@@ -1445,7 +1481,7 @@ return;
       
 hint.style.transform = ""; 
 hint.style.left = `${cur.hx}px`;
-hint.style.top  = `${cur.hy}px`;
+hint.style.top  = `${cur.hy + scrollTop}px`;
 
 svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
 svg.setAttribute("width", String(window.innerWidth));
@@ -1475,7 +1511,7 @@ head.setAttribute(
       
       hint.style.transform = "";
       if (mobileHintLayout && id === "intro-hint-cat") {
-        hint.style.top = `${desiredHy}px`;
+        hint.style.top = `${desiredHy + scrollTop}px`;
       }
       svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
       svg.setAttribute("width", String(window.innerWidth));
@@ -1629,9 +1665,7 @@ const pianoHint = makeHint({
       syncHeroHints();
     };
     window.addEventListener("resize", relayout, { passive: true });
-    if (window.innerWidth > 700) {
-      window.addEventListener("scroll", relayout, { passive: true });
-    }
+    window.addEventListener("scroll", relayout, { passive: true });
   })();
 });
 

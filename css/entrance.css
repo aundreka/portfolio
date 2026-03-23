@@ -1,42 +1,26 @@
-
 :root{
-  --drop-duration: 650ms;
-  --bounce-duration: 520ms;
-  --stagger: 120ms;   
-  --cat-extra: 220ms; 
-  --bounce-1: -14px;
-  --bounce-2: -6px;
+  --intro-start-y: -140px;
 }
-
 
 @media (prefers-reduced-motion: no-preference) {
-  .intro-active .intro-target {
-   
+  .intro-target {
     opacity: 0;
-    transform: translate3d(0, var(--startY, -140px), 0) rotateX(6deg) var(--finalTF, none);
-    will-change: transform, opacity;
+    will-change: translate, opacity;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
   }
 
-  .fall-in {
-    animation:      dropIn var(--drop-duration) cubic-bezier(.2,.9,.2,1) forwards,      landBounce var(--bounce-duration) ease-out var(--drop-duration) forwards;
-    -webkit-animation:      dropIn var(--drop-duration) cubic-bezier(.2,.9,.2,1) forwards,      landBounce var(--bounce-duration) ease-out var(--drop-duration) forwards;
-}
-
-  @keyframes dropIn {
-    from { opacity: 0; transform: translate3d(0, var(--startY, -140px), 0) rotateX(6deg) var(--finalTF, none); }
-    to   { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg) var(--finalTF, none); }
-  }
-
-  @keyframes landBounce {
-    0%   { transform: translate3d(0, 0, 0) var(--finalTF, none); }
-    35%  { transform: translate3d(0, var(--bounce-1), 0) var(--finalTF, none); }
-    65%  { transform: translate3d(0, 0, 0) var(--finalTF, none); }
-    85%  { transform: translate3d(0, var(--bounce-2), 0) var(--finalTF, none); }
-    100% { transform: translate3d(0, 0, 0) var(--finalTF, none); -webkit-transform: translate3d(0, 0, 0) var(--finalTF, none); -moz-transform: translate3d(0, 0, 0) var(--finalTF, none); -ms-transform: translate3d(0, 0, 0) var(--finalTF, none); -o-transform: translate3d(0, 0, 0) var(--finalTF, none); }
+  model-viewer.intro-target,
+  .intro-target model-viewer {
+    backface-visibility: hidden;
+    transform: translateZ(0);
   }
 }
-
 
 @media (prefers-reduced-motion: reduce) {
-  .intro-target { opacity: 1 !important; transform: none !important; }
+  .intro-target {
+    opacity: 1 !important;
+    translate: 0 0 !important;
+    will-change: auto;
+  }
 }

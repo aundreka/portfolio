@@ -1,141 +1,140 @@
-
 (() => {
-  const LOG = "[entrance-anim]";
-
-  
   const DUR = {
-    drop: 1000,     
-    bounce: 700,    
-    stagger: 260,   
-    catExtra: 380,  
-  };
-  const BOUNCE = {
-    first: -10,     
-    second: -4,     
+    drop: 760,
+    bounce: 420,
+    stagger: 150,
+    catExtra: 220,
   };
 
-  
+  const BOUNCE = {
+    first: -12,
+    second: -5,
+  };
+
+  let didRun = false;
+
   const getCat = () =>
     document.querySelector('[data-role="cat"]') ||
-    document.querySelector('.cat') ||
-    document.querySelector('.cat-wrap');
+    document.querySelector(".cat") ||
+    document.querySelector(".cat-wrap");
 
-  
   function computeStartY(el) {
-    const margin = 30; 
     const rect = el.getBoundingClientRect();
-    return -(rect.top + rect.height + margin);
+    const extra = Math.max(36, Math.round(rect.height * 0.2));
+    return -(window.innerHeight + rect.height + extra);
   }
 
-  
+  function animateTarget(el, delay) {
+    if (!el || el.dataset.fellOnce === "true") return;
+
+    const startY = computeStartY(el);
+    el.style.setProperty("--intro-start-y", `${startY}px`);
+    el.classList.add("intro-target");
+
+    const animation = el.animate(
+      [
+        {
+          opacity: 0,
+          translate: `0 ${startY}px`,
+          easing: "cubic-bezier(.22,.9,.22,1)",
+          offset: 0,
+        },
+        {
+          opacity: 1,
+          translate: "0 0",
+          easing: "cubic-bezier(.22,.9,.22,1)",
+          offset: 0.7,
+        },
+        {
+          opacity: 1,
+          translate: `0 ${BOUNCE.first}px`,
+          easing: "ease-out",
+          offset: 0.84,
+        },
+        {
+          opacity: 1,
+          translate: "0 0",
+          easing: "ease-out",
+          offset: 0.93,
+        },
+        {
+          opacity: 1,
+          translate: `0 ${BOUNCE.second}px`,
+          easing: "ease-out",
+          offset: 0.97,
+        },
+        {
+          opacity: 1,
+          translate: "0 0",
+          easing: "ease-out",
+          offset: 1,
+        },
+      ],
+      {
+        duration: DUR.drop + DUR.bounce,
+        delay,
+        fill: "both",
+      }
+    );
+
+    el._entranceAnimation = animation;
+
+    animation.addEventListener(
+      "finish",
+      () => {
+        el.classList.remove("intro-target");
+        el.style.removeProperty("--intro-start-y");
+        el.style.opacity = "";
+        el.style.translate = "";
+        el.dataset.fellOnce = "true";
+        if (el._entranceAnimation === animation) delete el._entranceAnimation;
+      },
+      { once: true }
+    );
+  }
+
   function animate() {
-    const pianos = Array.from(
-      document.querySelectorAll('model-viewer.piano, .piano')
-    );
+    if (didRun) return;
+    didRun = true;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const pianos = Array.from(document.querySelectorAll("model-viewer.piano, .piano"));
     const cat = getCat();
+    const targets = [...pianos];
 
-    if (pianos.length === 0 && !cat) {
-      console.warn(LOG, "No targets found (.piano or cat).");
-      return;
-    }
+    if (cat) targets.push(cat);
+    if (targets.length === 0) return;
 
-    
-    const haveAnyTransform = pianos.some(
-      el => getComputedStyle(el).transform !== "none"
-    );
+    document.body.classList.add("intro-active");
 
-    const run = () => {
-      
-      const rootStyle = document.documentElement.style;
-      rootStyle.setProperty('--drop-duration', `${DUR.drop}ms`);
-      rootStyle.setProperty('--bounce-duration', `${DUR.bounce}ms`);
-      rootStyle.setProperty('--stagger', `${DUR.stagger}`);
-      rootStyle.setProperty('--cat-extra', `${DUR.catExtra}`);
-      rootStyle.setProperty('--bounce-1', `${BOUNCE.first}px`);
-      rootStyle.setProperty('--bounce-2', `${BOUNCE.second}px`);
+    targets.forEach((el) => {
+      el._entranceAnimation?.cancel?.();
+      delete el._entranceAnimation;
+    });
 
-      document.body.classList.add('intro-active');
-
-      const targets = [...pianos];
-      if (cat) targets.push(cat);
-
-      
-      targets.forEach((el) => {
-        const computedTF = getComputedStyle(el).transform; 
-        const finalTF = (computedTF && computedTF !== 'none') ? computedTF : 'none';
-
-        
-        el.dataset.origInlineTransform = el.style.transform || "";
-
-        
-        el.style.setProperty('--finalTF', finalTF);
-
-        const startY = computeStartY(el);
-        el.style.setProperty('--startY', `${startY}px`);
-
-        el.classList.add('intro-target');
+    requestAnimationFrame(() => {
+      targets.forEach((el, i) => {
+        const isCat = el === cat;
+        const delay = (isCat ? pianos.length : i) * DUR.stagger + (isCat ? DUR.catExtra : 0);
+        animateTarget(el, delay);
       });
 
-      
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const root = getComputedStyle(document.documentElement);
-          const stagger = parseInt(root.getPropertyValue('--stagger')) || DUR.stagger;
-          const drop = DUR.drop;
-          const bounce = DUR.bounce;
-          const catExtra = parseInt(root.getPropertyValue('--cat-extra')) || DUR.catExtra;
+      const totalDelay =
+        ((cat ? pianos.length : Math.max(pianos.length - 1, 0)) * DUR.stagger) +
+        (cat ? DUR.catExtra : 0) +
+        DUR.drop +
+        DUR.bounce;
 
-          targets.forEach((el, i) => {
-            const isCat = (el === cat);
-            const pianoCount = pianos.length;
-            const baseIndex = isCat ? pianoCount : i;
-            const delay = baseIndex * stagger + (isCat ? catExtra : 0);
-
-            setTimeout(() => {
-              if (el.dataset.fellOnce === 'true') return;
-
-              el.classList.add('fall-in');
-
-              setTimeout(() => {
-                el.classList.remove('fall-in', 'intro-target');
-                el.style.removeProperty('--finalTF');
-                el.style.removeProperty('--startY');
-
-                
-                if (el.dataset.origInlineTransform !== undefined) {
-                  el.style.transform = el.dataset.origInlineTransform;
-                }
-                el.dataset.fellOnce = 'true';
-              }, drop + bounce + 50);
-            }, delay);
-          });
-
-          
-          const total =
-            ((cat ? pianos.length : Math.max(pianos.length - 1, 0)) * stagger) +
-            (cat ? catExtra : 0) +
-            drop + bounce + 100;
-
-          setTimeout(() => {
-            document.body.classList.remove('intro-active');
-            console.log(LOG, `Intro complete for ${pianos.length} piano(s)${cat ? " + cat" : ""}.`);
-          }, total);
-        });
-      });
-    };
-
-    if (!haveAnyTransform) {
-      
-      setTimeout(run, 0);
-    } else {
-      run();
-    }
+      window.setTimeout(() => {
+        document.body.classList.remove("intro-active");
+      }, totalDelay + 80);
+    });
   }
 
-  
-  if (document.readyState === 'complete') {
+  if (document.readyState === "complete") {
     animate();
   } else {
-    window.addEventListener('load', animate, { once: true });
+    window.addEventListener("load", animate, { once: true });
   }
 })();
