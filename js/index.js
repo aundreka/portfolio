@@ -115,6 +115,23 @@ function updateResponsiveCarouselMetrics() {
   document.documentElement.style.setProperty("--hero-mobile-depth", metrics.mobileDepth ? "1" : "0");
 }
 
+const mobileViewportQuery = window.matchMedia("(max-width: 900px)");
+
+function syncMobileViewportLock() {
+  const viewportMeta = document.querySelector('meta[name="viewport"]');
+  if (!viewportMeta) return;
+
+  const mobileViewportContent =
+    "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover";
+  const defaultViewportContent =
+    "width=device-width, initial-scale=1, viewport-fit=cover";
+
+  viewportMeta.setAttribute(
+    "content",
+    mobileViewportQuery.matches ? mobileViewportContent : defaultViewportContent
+  );
+}
+
 /***********************
  * ABOUT FOCUS HELPERS
  ***********************/
@@ -153,10 +170,15 @@ function keepCatFullyOnscreen() {
 }
 
 updateResponsiveCarouselMetrics();
+syncMobileViewportLock();
+
+mobileViewportQuery.addEventListener?.("change", syncMobileViewportLock);
+mobileViewportQuery.addListener?.(syncMobileViewportLock);
 
 window.addEventListener("resize", keepCatFullyOnscreen, { passive: true });
 window.addEventListener("orientationchange", () => {
   updateResponsiveCarouselMetrics();
+  syncMobileViewportLock();
   keepCatFullyOnscreen();
   animateRotation(currentIndex);
   positionFrontClickOverlay();
