@@ -1279,7 +1279,7 @@ return;
     let desiredHy = b.top;
 
     if (mobileHintLayout && id === "intro-hint-cat") {
-      desiredHy += 10;
+      desiredHy += 2;
     }
 
     

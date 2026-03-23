@@ -1104,11 +1104,14 @@ note.appendChild(overlay);
   let startX = 0;
   let startY = 0;
   let startScrollLeft = 0;
+  let startWindowScrollY = 0;
+  let didPageScrollDuringPointer = false;
   let moved = 0;
   let movedY = 0;
   let dragAxis = null;
   const DRAG_THRESHOLD = 10;
   const SWIPE_THRESHOLD = 42;
+  const PAGE_SCROLL_TAP_CANCEL_PX = 8;
 
 function getNearestProjectSlot() {
   const keys = [...pianoHost.querySelectorAll(".piano-key:not(.is-empty)")];
@@ -1146,6 +1149,8 @@ pianoHost.addEventListener("pointerdown", (e) => {
   startX = e.clientX;
   startY = e.clientY;
   startScrollLeft = pianoHost.scrollLeft;
+  startWindowScrollY = window.scrollY;
+  didPageScrollDuringPointer = false;
   moved = 0;
   movedY = 0;
   dragAxis = null;
@@ -1158,6 +1163,9 @@ pianoHost.addEventListener("pointermove", (e) => {
   if (!isDown) return;
   const dx = e.clientX - startX;
   const dy = e.clientY - startY;
+  if (Math.abs(window.scrollY - startWindowScrollY) > PAGE_SCROLL_TAP_CANCEL_PX) {
+    didPageScrollDuringPointer = true;
+  }
   moved = Math.max(moved, Math.abs(dx));
   movedY = Math.max(movedY, Math.abs(dy));
 
@@ -1174,11 +1182,22 @@ pianoHost.addEventListener("pointerup", (e) => {
   // ✅ if they clicked inside note (links/buttons), don't treat it as piano click
   if (isNoteInteractiveTarget(e.target)) {
     isDown = false;
+    didPageScrollDuringPointer = false;
     return;
   }
 
   if (!isDown) return;
   isDown = false;
+
+  if (Math.abs(window.scrollY - startWindowScrollY) > PAGE_SCROLL_TAP_CANCEL_PX) {
+    didPageScrollDuringPointer = true;
+  }
+
+  if (didPageScrollDuringPointer) {
+    dragAxis = null;
+    didPageScrollDuringPointer = false;
+    return;
+  }
 
   if (isCompactProjectsViewport() && dragAxis === "x" && moved > SWIPE_THRESHOLD && moved > movedY) {
     const filtered = getFilteredProjects();
@@ -1222,6 +1241,7 @@ pianoHost.addEventListener("pointerup", (e) => {
   pianoHost.addEventListener("pointercancel", () => {
     isDown = false;
     dragAxis = null;
+    didPageScrollDuringPointer = false;
   });
 
   document.addEventListener("pointerdown", (e) => {
@@ -1230,8 +1250,9 @@ pianoHost.addEventListener("pointerup", (e) => {
     if (e.target.closest(".piano-key")) return;
     if (e.target.closest(".note")) return;
 
+    const restoreScrollLeft = pianoHost.scrollLeft;
     state.openIndex = null;
-    render();
+    render({ restoreScrollLeft });
   });
 
  
