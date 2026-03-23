@@ -1113,7 +1113,7 @@ note.appendChild(overlay);
   let movedY = 0;
   let dragAxis = null;
   const DRAG_THRESHOLD = 10;
-  const SWIPE_THRESHOLD = 42;
+  const AXIS_LOCK_BIAS = 10;
   const PAGE_SCROLL_TAP_CANCEL_PX = 8;
 
 function getNearestProjectSlot() {
@@ -1173,10 +1173,20 @@ pianoHost.addEventListener("pointermove", (e) => {
   movedY = Math.max(movedY, Math.abs(dy));
 
   if (!dragAxis && (moved > DRAG_THRESHOLD || movedY > DRAG_THRESHOLD)) {
-    dragAxis = moved > movedY ? "x" : "y";
+    if (moved >= DRAG_THRESHOLD && moved - movedY >= AXIS_LOCK_BIAS) {
+      dragAxis = "x";
+    } else if (movedY >= DRAG_THRESHOLD && movedY - moved >= AXIS_LOCK_BIAS) {
+      dragAxis = "y";
+      didPageScrollDuringPointer = true;
+      isDown = false;
+      if (e.pointerType === "mouse" && pianoHost.hasPointerCapture?.(e.pointerId)) {
+        pianoHost.releasePointerCapture?.(e.pointerId);
+      }
+      return;
+    }
   }
 
-  if (dragAxis === "x" && moved > DRAG_THRESHOLD && !isCompactProjectsViewport()) {
+  if (dragAxis === "x" && moved > DRAG_THRESHOLD) {
     pianoHost.scrollLeft = startScrollLeft - dx;
   }
 });
@@ -1199,25 +1209,6 @@ pianoHost.addEventListener("pointerup", (e) => {
   if (didPageScrollDuringPointer) {
     dragAxis = null;
     didPageScrollDuringPointer = false;
-    return;
-  }
-
-  if (isCompactProjectsViewport() && dragAxis === "x" && moved > SWIPE_THRESHOLD && moved > movedY) {
-    const filtered = getFilteredProjects();
-    const direction = (e.clientX - startX) < 0 ? 1 : -1;
-
-    if (state.openIndex !== null) {
-      const nextSlot = Math.max(0, Math.min(filtered.length - 1, state.openIndex + direction));
-      if (nextSlot !== state.openIndex) {
-        state.openIndex = nextSlot;
-        render({ focusSlot: nextSlot });
-      }
-      return;
-    }
-
-    const currentSlot = getNearestProjectSlot();
-    const nextSlot = Math.max(0, Math.min(filtered.length - 1, currentSlot + direction));
-    focusProjectSlot(nextSlot);
     return;
   }
 
