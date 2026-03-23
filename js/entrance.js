@@ -96,9 +96,7 @@
 
               el.classList.add('fall-in');
 
-              const onDone = (event) => {
-                if (event.animationName !== 'landBounce') return;
-
+              setTimeout(() => {
                 el.classList.remove('fall-in', 'intro-target');
                 el.style.removeProperty('--finalTF');
                 el.style.removeProperty('--startY');
@@ -108,9 +106,7 @@
                   el.style.transform = el.dataset.origInlineTransform;
                 }
                 el.dataset.fellOnce = 'true';
-                el.removeEventListener('animationend', onDone);
-              };
-              el.addEventListener('animationend', onDone, { once: true });
+              }, drop + bounce + 50);
             }, delay);
           });
 
