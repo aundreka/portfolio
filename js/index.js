@@ -1329,7 +1329,7 @@ return;
       desiredStartX = tr.left + tr.width * 0.34;
       desiredStartY = b.bottom + 26;
       desiredEndX = desiredStartX;
-      desiredEndY = tr.top - 24;
+      desiredEndY = tr.top - 32;
       desiredCtrlX = desiredStartX;
       desiredCtrlY = (desiredStartY + desiredEndY) / 2;
     }
@@ -1350,7 +1350,7 @@ return;
 
       if (id === "intro-hint-cat") {
         top += 4;
-        height = Math.max(16, height - 12);
+        height = Math.max(16, height - 24);
       }
 
       mobileArrow.style.left = `${desiredStartX - 7}px`;
