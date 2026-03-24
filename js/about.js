@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const aboutSection = document.querySelector(".about");
   const projectsSection = document.getElementById("projects");
   const compactAboutQuery = window.matchMedia("(max-width: 900px)");
+  const hoverCapableQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
 
   if (!scroller || !aboutSection) {
     console.warn("[About] Missing #aboutTrack or .about");
@@ -46,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const track = scrubber.querySelector(".about-scrubber__track");
   const thumb = scrubber.querySelector(".about-scrubber__thumb");
   const isCompactAbout = () => compactAboutQuery.matches;
+  const canUseHover = () => hoverCapableQuery.matches;
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -865,9 +867,48 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", refreshWaveLayout, { passive: true });
     scroller.addEventListener("scroll", refreshWaveLayout, { passive: true });
 
+    const endNoteInteraction = (btn) => {
+      isWaveActive = false;
+      releasing = true;
+      releaseT = 0;
+
+      ampTarget = 0;
+
+      btn.classList.remove("wave-active");
+      btn.classList.add("wave-releasing");
+      btn.classList.remove("is-turned");
+      btn.classList.remove("panel-pinned");
+
+      clearAboutAccent();
+
+      setTimeout(() => {
+        btn.classList.remove("wave-releasing");
+
+        btn.querySelectorAll(".note-img").forEach((img) => {
+          img.style.setProperty("--wave-lift", `0px`);
+          img.style.setProperty("--wave-drift-x", `0px`);
+          img.style.setProperty("--wave-tilt", `0deg`);
+        });
+
+        btn.querySelectorAll(".note-title .letter").forEach((sp) => {
+          sp.style.setProperty("--l-lift", `0px`);
+          sp.style.setProperty("--l-drift-x", `0px`);
+          sp.style.setProperty("--l-tilt", `0deg`);
+        });
+      }, RELEASE_MS);
+
+      if (waveHoverEl === btn) {
+        waveHoverEl = null;
+        activeWaveImages = [];
+        activeWaveLetters = [];
+      }
+
+      startWaveLoop();
+    };
+
     noteBlocks.forEach((btn) => {
       btn.addEventListener("pointerenter", (e) => {
-        if (isCompactAbout()) return;
+        if (isCompactAbout() || !canUseHover()) return;
         setAboutAccent(btn);
         btn.classList.add("is-turned");
 
@@ -889,50 +930,27 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       btn.addEventListener("pointermove", (e) => {
-        if (isCompactAbout()) return;
+        if (isCompactAbout() || !canUseHover()) return;
         if (!isWaveActive) return;
         setMouseXFromEvent(e);
         startWaveLoop();
       });
 
       btn.addEventListener("pointerleave", () => {
-        if (isCompactAbout()) return;
-        isWaveActive = false;
-        releasing = true;
-        releaseT = 0;
+        if (isCompactAbout() || !canUseHover()) return;
+        endNoteInteraction(btn);
+      });
 
-        ampTarget = 0;
+      btn.addEventListener("focusin", () => {
+        if (isCompactAbout() || canUseHover()) return;
+        setAboutAccent(btn);
+        btn.classList.add("is-turned");
+      });
 
-        btn.classList.remove("wave-active");
-        btn.classList.add("wave-releasing");
-        btn.classList.remove("is-turned");
-        btn.classList.remove("panel-pinned");
-
-        clearAboutAccent();
-
-        setTimeout(() => {
-          btn.classList.remove("wave-releasing");
-
-          btn.querySelectorAll(".note-img").forEach((img) => {
-            img.style.setProperty("--wave-lift", `0px`);
-            img.style.setProperty("--wave-drift-x", `0px`);
-            img.style.setProperty("--wave-tilt", `0deg`);
-          });
-
-          btn.querySelectorAll(".note-title .letter").forEach((sp) => {
-            sp.style.setProperty("--l-lift", `0px`);
-            sp.style.setProperty("--l-drift-x", `0px`);
-            sp.style.setProperty("--l-tilt", `0deg`);
-          });
-        }, RELEASE_MS);
-
-        if (waveHoverEl === btn) {
-          waveHoverEl = null;
-          activeWaveImages = [];
-          activeWaveLetters = [];
-        }
-
-        startWaveLoop();
+      btn.addEventListener("focusout", (e) => {
+        if (isCompactAbout() || canUseHover()) return;
+        if (btn.contains(e.relatedTarget)) return;
+        endNoteInteraction(btn);
       });
 
       // IMPORTANT: modal click removed (you said redesign)
@@ -960,7 +978,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const buttons = document.querySelectorAll(".note-block");
   if (!buttons.length) return;
   const compactAboutQuery = window.matchMedia("(max-width: 900px)");
+  const hoverCapableQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
   const isCompactAbout = () => compactAboutQuery.matches;
+  const canUseHover = () => hoverCapableQuery.matches;
 
   
   const cache = new Map();
@@ -1010,7 +1030,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btn.dataset.color) btn.style.setProperty("--note-color", btn.dataset.color);
 
     btn.addEventListener("pointerenter", () => {
-      if (isCompactAbout()) return;
+      if (isCompactAbout() || !canUseHover()) return;
       const src = btn.dataset.fx;
       if (!src) return;
 

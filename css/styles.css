@@ -1191,11 +1191,13 @@ body{
   }
 
   .intro-hint{
+    transform: none;
     font-size: 11px;
     padding: 7px 10px;
     max-width: min(200px, calc(100vw - 36px));
     white-space: normal;
     text-align: center;
+    transition: opacity 220ms ease;
   }
 
   .intro-hint__path{
@@ -1278,9 +1280,11 @@ body{
   }
 
   .intro-hint{
+    transform: none;
     font-size: 11px;
     padding: 6px 10px;
     max-width: min(180px, calc(100vw - 28px));
+    transition: opacity 220ms ease;
   }
 
   .intro-hint__path{

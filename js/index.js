@@ -1453,6 +1453,10 @@ return;
         arrowHeight: height,
         arrowDirection: id === "intro-hint-piano" ? "up" : "down",
       };
+
+      applyMobilePlacement(cachedMobilePlacement);
+      hasState = false;
+      return;
     } else {
       svg.style.display = "block";
       mobileArrow.style.opacity = "0";
