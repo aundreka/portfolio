@@ -21,7 +21,7 @@
 #projects .projects__title{
   margin: 0;
   font-family: "Abril Fatface", serif;
-  font-size: clamp(26px, 3.8vw, 48px);
+  font-size: clamp(24px, 3.3vw, 42px);
   line-height: 0.95;
   letter-spacing: -0.04em;
   color: #111;
@@ -35,11 +35,11 @@
    ========================= */
 #projects .projects__topbar{
   position: relative;
-  min-height: 78px;
+  min-height: 72px;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 18px 10px;
+  padding: 12px 18px 8px;
   border-bottom: 2px solid #111;
   background: #fff;
   isolation: isolate;
@@ -123,10 +123,10 @@
   border: 0;
   background: transparent;
   cursor: pointer;
-  padding: 10px 8px;
+  padding: 8px 8px;
   display: inline-flex;
   align-items: baseline;
-  gap: 14px;
+  gap: 12px;
   letter-spacing: 0.06em;
 }
 
@@ -134,7 +134,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 0 10px 4px;
+  padding: 8px 0 8px 4px;
 }
 
 #projects .projects__searchInline{
@@ -156,7 +156,7 @@
   background: transparent;
   border-radius: 0;
   padding: 0 0 2px;
-  font: 600 14px "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font: 600 13px "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: #111;
   outline: none;
 }
@@ -179,7 +179,7 @@
 
 #projects .filter__label,
 #projects .filter__value{
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #111;
 }
@@ -188,7 +188,7 @@
 #projects .projects__hint{
   margin-left: auto;
   align-self: center;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 300;
   letter-spacing: 0.02em;
   color: rgba(17,17,17,0.55);
@@ -200,7 +200,7 @@
   background: rgba(0,0,0,0.01);
   border: 1px solid rgba(0,0,0,0.05);
   border-radius: 999px;
-  padding: 7px 11px;
+  padding: 6px 10px;
   margin-top: 0;
 }
 
@@ -493,7 +493,7 @@
   cursor: pointer;
   font: inherit;
   color: #111;
-  font-size: 14px;
+  font-size: 13px;
   border-bottom: 1px solid rgba(0,0,0,0.14);
 }
 
@@ -541,14 +541,14 @@
   position: relative;
   display: flex;
   align-items: stretch;
-  height: 660px;
+  height: 610px;
   width: max-content;
   min-width: 100%;
 }
 
 #projects .piano-key{
   position: relative;
-  height: 660px;
+  height: 610px;
   background: #fff;
   border-right: 2px solid #111;
   box-sizing: border-box;
@@ -567,7 +567,7 @@
   left: 14px;
   right: 14px;
   bottom: 14px;
-  font-size: 15px;
+  font-size: 13px;
   line-height: 1.25;
   font-weight: 400;
   color: #111;
@@ -652,7 +652,7 @@
   z-index: 2;
   height: 100%;
   width: 100%;
-  padding: 22px 26px;
+  padding: 20px 24px;
 
   display: flex;
   flex-direction: column;
@@ -675,7 +675,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   flex-wrap: nowrap;
 }
@@ -687,7 +687,7 @@
    - logos stay same size
    ========================= */
 #projects .note__glass--icons{
-  padding: 6px 10px;                 /* less height */
+  padding: 5px 9px;                 /* less height */
   background: rgba(20, 22, 26, 0.28);
   border-radius: 30px;               /* more rounded */
   flex: 0 0 auto;
@@ -696,7 +696,7 @@
 #projects .note__icons{
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   line-height: 0;                    /* kills extra vertical whitespace */
 }
 
@@ -708,8 +708,8 @@
 }
 
 #projects .note__iconImg{
-  width: 44px;                       /* logo size unchanged */
-  height: 44px;                      /* logo size unchanged */
+  width: 40px;
+  height: 40px;
   object-fit: contain;
   display: block;
   flex: 0 0 auto;
@@ -733,10 +733,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 8px;
 
-  height: 44px;
-  min-width: 44px;          /* keeps icon-only size */
+  height: 40px;
+  min-width: 40px;          /* keeps icon-only size */
   padding: 0;               /* no idle pill padding */
   border-radius: 999px;
 
@@ -750,8 +750,8 @@
 
 /* icon image */
 #projects .note__btnIcon{
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
   display: block;
   flex: 0 0 auto;
@@ -768,14 +768,14 @@
   opacity: 0;
   transform: translateX(-6px);
 
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.02em;
   color: rgba(255,255,255,0.95);
 
   background: rgba(20, 22, 26, 0.38);
   border-radius: 999px;
-  padding: 8px 10px;
+  padding: 7px 9px;
 
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -810,9 +810,9 @@
   align-items: flex-start;
 
   width: fit-content;
-  max-width: calc(100% - 52px);
+  max-width: calc(100% - 48px);
 
-  padding: 20px 22px 18px 22px;
+  padding: 18px 20px 16px 20px;
   background: rgba(20, 22, 26, 0.32);
   border-radius: 22px;
   position: relative;
@@ -822,8 +822,8 @@
 #projects .note__glass--text::before{
   content:"";
   position:absolute;
-  left: 18px;
-  right: 18px;
+  left: 16px;
+  right: 16px;
   top: 12px;
   height: 1px;
   background: rgba(255,255,255,0.16);
@@ -836,7 +836,7 @@
   font-family: "Abril Fatface", serif;
   font-weight: 400;
   letter-spacing: -0.01em;
-  font-size: 52px;
+  font-size: clamp(34px, 3.7vw, 46px);
   line-height: 1.02;
   color: rgba(255,255,255,0.98);
   text-shadow: 0 12px 26px rgba(0,0,0,0.40);
@@ -850,8 +850,8 @@
   margin: 0;
 
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: 15px;
+  line-height: 1.58;
   color: rgba(255,255,255,0.92);
   text-shadow: 0 10px 22px rgba(0,0,0,0.34);
 

@@ -41,6 +41,7 @@
   width: 100%;
   padding: 0 clamp(18px, 4vw, 32px);
   margin-top: 50px;
+  margin-bottom: -72px;
 }
 
 .about__title{
@@ -50,6 +51,9 @@
   line-height: 0.95;
   letter-spacing: -0.04em;
   color: #111;
+  position: relative;
+  z-index: 5;
+  transform: translateY(62px);
 }
 .about::before{
   content:"";
@@ -1860,6 +1864,7 @@
 
   .about__title{
     font-size: clamp(22px, 7vw, 34px);
+    transform: none;
   }
 
   .about__scroller{
@@ -3958,4 +3963,3 @@ body.modal-open{
     padding-top: 24px;
   }
 }
-
