@@ -94,8 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const nextIndex = Math.round(trackEl.scrollLeft / panelWidth);
       dots.forEach((dot, index) => dot.classList.toggle("is-active", index === nextIndex));
       panels.forEach((panel, index) => panel.classList.toggle("is-in", index === nextIndex));
-      if (prevBtn) prevBtn.disabled = nextIndex <= 0;
-      if (nextBtn) nextBtn.disabled = nextIndex >= dots.length - 1;
     };
 
     const goToDesktopInterest = (index) => {
@@ -114,12 +112,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const goPrev = () => {
       const current = dots.findIndex((dot) => dot.classList.contains("is-active"));
-      goToDesktopInterest(Math.max(current - 1, 0));
+      const nextIndex = current <= 0 ? dots.length - 1 : current - 1;
+      goToDesktopInterest(nextIndex);
     };
 
     const goNext = () => {
       const current = dots.findIndex((dot) => dot.classList.contains("is-active"));
-      goToDesktopInterest(Math.min(current + 1, dots.length - 1));
+      const nextIndex = current >= dots.length - 1 ? 0 : current + 1;
+      goToDesktopInterest(nextIndex);
     };
 
     prevBtn?.addEventListener("click", goPrev);
@@ -360,6 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const CENTER_TOL = 10;
   const SNAP_LOCK_MS = 450;
   let centerSnapping = false;
+  let hasCenteredFromProjects = false;
 
   const aboutVisibleRatio = () => {
     const r = aboutSection.getBoundingClientRect();
@@ -393,28 +394,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return false;
   };
 
-  // Wheel-based snap into center (global)
-  window.addEventListener(
-    "wheel",
-    (e) => {
-      if (isCompactAbout()) return;
-      // ignore wheel when inside About; handled by the About scroller
-      if (e.target.closest(".about")) return;
-
-      const dir = Math.sign(e.deltaY);
-      if (!isEnteringAbout(dir)) return;
-
-      const ratio = aboutVisibleRatio();
-
-      // If About is sufficiently visible but not centered, snap it in.
-      if (ratio >= ENTER_RATIO && !isAboutCentered()) {
-        e.preventDefault();
-        snapAboutToCenter("smooth");
-      }
-    },
-    { passive: false }
-  );
-
   // Scroll-end snap (touchpad/drag scroll) into center
   let scrollEndTimer = null;
   let lastScrollY = window.scrollY;
@@ -431,7 +410,19 @@ document.addEventListener("DOMContentLoaded", () => {
       clearTimeout(scrollEndTimer);
       scrollEndTimer = setTimeout(() => {
         const ratio = aboutVisibleRatio();
-        if (ratio >= ENTER_RATIO && !isAboutCentered() && isEnteringAbout(dirDown ? 1 : -1)) {
+        if (ratio < 0.12) {
+          hasCenteredFromProjects = false;
+          return;
+        }
+
+        if (
+          !hasCenteredFromProjects &&
+          dirDown &&
+          ratio >= ENTER_RATIO &&
+          !isAboutCentered() &&
+          isEnteringAbout(1)
+        ) {
+          hasCenteredFromProjects = true;
           snapAboutToCenter("smooth");
         }
       }, 120);
@@ -441,8 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* --------------------------
      Horizontal wheel inside aboutTrack
-     - scrolls horizontally
-     - exits vertically to Projects (up) or next section (down)
+     - only intercept explicit horizontal intent
      -------------------------- */
   scroller.addEventListener(
     "wheel",
@@ -452,16 +442,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const absY = Math.abs(e.deltaY);
       const hasHorizontalIntent = absX > absY || e.shiftKey;
 
-      const delta = hasHorizontalIntent ? e.deltaX : e.deltaY;
+      if (!hasHorizontalIntent) return;
+
+      const delta = e.deltaX !== 0 ? e.deltaX : e.deltaY;
       if (delta === 0) return;
 
-      // Allow vertical exit only at edges.
-      if (!hasHorizontalIntent) {
-        if (delta > 0 && isAtFarRight()) return; // exit down to next section
-        if (delta < 0 && isAtFarLeft()) return;  // exit up to previous section
-      }
-
-      // Otherwise, convert wheel to horizontal scroll.
       e.preventDefault();
       scroller.scrollLeft += delta * 0.9;
       syncThumb();
@@ -911,10 +896,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (isCompactAbout() || !canUseHover()) return;
         setAboutAccent(btn);
         btn.classList.add("is-turned");
-
-        if (btn.dataset.category === "contact") {
-          requestAnimationFrame(() => centerExpandedPanel(btn));
-        }
 
         isWaveActive = true;
         releasing = false;

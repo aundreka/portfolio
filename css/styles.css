@@ -74,6 +74,12 @@ body {
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow: 0 10px 30px rgba(15, 15, 16, 0.08);
   color: #0f0f10;
+  transform: translateY(0);
+  transition: transform 240ms cubic-bezier(.22, 1, .36, 1), background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, color 180ms ease;
+}
+
+.nav.nav--hidden {
+  transform: translateY(calc(-100% - 12px));
 }
 
 .nav__panel{

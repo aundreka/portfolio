@@ -875,7 +875,7 @@ function focusAboutScroll() {
   }
 
   enterAboutFocus();
-  about.scrollIntoView({ behavior: "smooth", block: "start" });
+  about.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 catBtn?.addEventListener("click", (e) => {
@@ -971,14 +971,35 @@ const navDropdown = document.querySelector(".nav__dropdown");
 const navToggle = document.querySelector(".nav__toggle");
 const navMenu = document.querySelector(".nav__menu");
 const isMobileNav = () => window.matchMedia("(max-width: 900px)").matches;
+let lastNavScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+
+const updateNavVisibility = () => {
+  if (!navEl) return;
+
+  const currentY = window.scrollY || document.documentElement.scrollTop || 0;
+  const scrollDelta = currentY - lastNavScrollY;
+  const keepVisible = currentY < 80 || navEl.classList.contains("is-menu-open") || isMobileNav();
+
+  if (keepVisible || scrollDelta < -6) {
+    navEl.classList.remove("nav--hidden");
+  } else if (scrollDelta > 6) {
+    navEl.classList.add("nav--hidden");
+    closeAboutDropdown();
+  }
+
+  lastNavScrollY = currentY;
+};
+
 const closeNavMenu = () => {
   navEl?.classList.remove("is-menu-open");
+  navEl?.classList.remove("nav--hidden");
   navMobileToggle?.setAttribute("aria-expanded", "false");
   navMobileToggle?.setAttribute("aria-label", "Open navigation menu");
 };
 
 const openNavMenu = () => {
   navEl?.classList.add("is-menu-open");
+  navEl?.classList.remove("nav--hidden");
   navMobileToggle?.setAttribute("aria-expanded", "true");
   navMobileToggle?.setAttribute("aria-label", "Close navigation menu");
 };
@@ -989,6 +1010,8 @@ const closeAboutDropdown = () => {
 };
 
 if (navEl && navMobileToggle && navPanel) {
+  window.addEventListener("scroll", updateNavVisibility, { passive: true });
+
   navMobileToggle.addEventListener("click", () => {
     const open = navEl.classList.contains("is-menu-open");
     if (open) closeNavMenu();
@@ -1004,7 +1027,10 @@ if (navEl && navMobileToggle && navPanel) {
       closeNavMenu();
       closeAboutDropdown();
     }
+    updateNavVisibility();
   }, { passive: true });
+
+  updateNavVisibility();
 }
 
 if (navDropdown && navToggle && navMenu) {
@@ -1034,7 +1060,14 @@ navAnchorLinks.forEach((link) => {
 
     e.preventDefault();
     suspendProjectsSnap(2000);
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    const desktopAboutSection =
+      !isMobileNav() && (href === "#about" || href === "#aboutIntro")
+        ? document.getElementById("about")
+        : null;
+    (desktopAboutSection || target).scrollIntoView({
+      behavior: "smooth",
+      block: desktopAboutSection ? "center" : "start",
+    });
     if (isMobileNav()) {
       closeNavMenu();
       closeAboutDropdown();
@@ -1213,6 +1246,45 @@ document.addEventListener("DOMContentLoaded", () => {
       return target;
     }
     return null;
+  }
+
+  function rectDelta(a, b) {
+    if (!a || !b) return Infinity;
+    return Math.max(
+      Math.abs(a.left - b.left),
+      Math.abs(a.top - b.top),
+      Math.abs(a.width - b.width),
+      Math.abs(a.height - b.height)
+    );
+  }
+
+  async function waitForStableMobileTarget() {
+    if (window.innerWidth > 700) return;
+
+    let previousRect = null;
+    let stableFrames = 0;
+    let attempts = 0;
+
+    while (attempts < 18 && stableFrames < 3) {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const nextRect = getTargetRect();
+
+      if (!nextRect) {
+        previousRect = null;
+        stableFrames = 0;
+        attempts += 1;
+        continue;
+      }
+
+      if (rectDelta(previousRect, nextRect) <= 1) {
+        stableFrames += 1;
+      } else {
+        stableFrames = 0;
+      }
+
+      previousRect = nextRect;
+      attempts += 1;
+    }
   }
 
   const contactForm = document.getElementById("contactForm");
@@ -1552,10 +1624,10 @@ head.setAttribute(
   tick();
 
    async function showTyped() {
-    enabled = true;
+    await waitForStableMobileTarget();
 
-    
-    layout();
+    enabled = true;
+    layout(true);
 
     hint.classList.add("is-visible");
     path.classList.remove("is-drawing");
@@ -1696,5 +1768,3 @@ function playCatOnceThenIdle() {
     }, len * 1000);
   }
 }
-
-
