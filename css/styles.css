@@ -95,6 +95,17 @@ body {
   letter-spacing: 0.02em;
 }
 
+@media (min-width: 901px){
+  .nav{
+    height: 76px;
+  }
+
+  .nav__brand{
+    font-size: clamp(42px, 3.8vw, 52px);
+    line-height: 0.95;
+  }
+}
+
 .nav__brand:hover,
 .nav__brand:focus-visible{
   text-decoration: none;

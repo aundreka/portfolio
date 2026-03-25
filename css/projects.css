@@ -21,7 +21,7 @@
 #projects .projects__title{
   margin: 0;
   font-family: "Abril Fatface", serif;
-  font-size: clamp(24px, 3.3vw, 42px);
+  font-size: clamp(26px, 3.8vw, 48px);
   line-height: 0.95;
   letter-spacing: -0.04em;
   color: #111;
@@ -156,7 +156,7 @@
   background: transparent;
   border-radius: 0;
   padding: 0 0 2px;
-  font: 600 13px "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font: 600 12px "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: #111;
   outline: none;
 }
@@ -179,7 +179,7 @@
 
 #projects .filter__label,
 #projects .filter__value{
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #111;
 }
@@ -493,7 +493,7 @@
   cursor: pointer;
   font: inherit;
   color: #111;
-  font-size: 13px;
+  font-size: 12px;
   border-bottom: 1px solid rgba(0,0,0,0.14);
 }
 
