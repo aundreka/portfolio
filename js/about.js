@@ -202,14 +202,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const full = scroller.scrollWidth;
     const ratio = Math.max(view / full, 0.08);
     thumb.style.width = `${track.clientWidth * ratio}px`;
-    syncThumb();
+    scheduleThumbSync();
   }
 
+  let thumbSyncRaf = 0;
   function syncThumb() {
     const maxScroll = scroller.scrollWidth - scroller.clientWidth;
     const pct = maxScroll > 0 ? scroller.scrollLeft / maxScroll : 0;
     const maxThumbTravel = track.clientWidth - thumb.clientWidth;
     thumb.style.transform = `translateX(${pct * maxThumbTravel}px)`;
+  }
+
+  function scheduleThumbSync() {
+    if (thumbSyncRaf) return;
+    thumbSyncRaf = requestAnimationFrame(() => {
+      thumbSyncRaf = 0;
+      syncThumb();
+    });
   }
 
   function centerExpandedPanel(btn) {
@@ -298,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const scrollDelta = (dx / maxThumbTravel) * maxScroll;
     scroller.scrollLeft = Math.min(Math.max(dragStartLeft + scrollDelta, 0), maxScroll);
-    syncThumb();
+    scheduleThumbSync();
   });
 
   ["pointerup", "pointercancel", "pointerleave"].forEach((t) =>
@@ -315,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const pct = maxThumbTravel > 0 ? clamped / maxThumbTravel : 0;
     const maxScroll = scroller.scrollWidth - scroller.clientWidth;
     scroller.scrollLeft = pct * maxScroll;
-    syncThumb();
+    scheduleThumbSync();
   });
 
   window.addEventListener("resize", sizeThumb);
@@ -449,7 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       e.preventDefault();
       scroller.scrollLeft += delta * 0.9;
-      syncThumb();
+      scheduleThumbSync();
     },
     { passive: false }
   );
@@ -474,7 +483,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isCompactAbout()) return;
     if (!isDown) return;
     scroller.scrollLeft = startLeft - (e.clientX - startX);
-    syncThumb();
+    scheduleThumbSync();
   });
 
   ["pointerup", "pointerleave", "pointercancel"].forEach((t) =>
@@ -841,12 +850,19 @@ document.addEventListener("DOMContentLoaded", () => {
     updateStaffMetrics();
     renderBulge();
 
+    let waveLayoutRaf = 0;
     const refreshWaveLayout = () => {
       if (!isWaveActive && !releasing && !waveHoverEl) return;
-      updateStaffMetrics();
-      updateWaveTargets();
-      renderBulge();
-      if (isWaveActive || releasing) startWaveLoop();
+      if (waveLayoutRaf) return;
+
+      waveLayoutRaf = requestAnimationFrame(() => {
+        waveLayoutRaf = 0;
+        if (!isWaveActive && !releasing && !waveHoverEl) return;
+        updateStaffMetrics();
+        updateWaveTargets();
+        renderBulge();
+        if (isWaveActive || releasing) startWaveLoop();
+      });
     };
 
     window.addEventListener("resize", refreshWaveLayout, { passive: true });
@@ -944,14 +960,15 @@ document.addEventListener("DOMContentLoaded", () => {
   /* --------------------------
      Init sizes
      -------------------------- */
+  scroller.addEventListener("scroll", scheduleThumbSync, { passive: true });
   sizeThumb();
   window.addEventListener("load", () => {
     sizeThumb();
-    syncThumb();
+    scheduleThumbSync();
   });
   requestAnimationFrame(() => {
     sizeThumb();
-    syncThumb();
+    scheduleThumbSync();
   });
 });
 
