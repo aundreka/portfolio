@@ -3748,18 +3748,18 @@
     padding-top: 40px;
   }
 
-  .note-block[data-category="skills"]::before{
-    content: "";
-    position: absolute;
-    left: -14px;
-    right: -14px;
-    top: -14px;
-    height: 72px;
-    pointer-events: none;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.68) 40%, rgba(255,255,255,0.94) 72%, rgba(255,255,255,1));
-    filter: blur(8px);
-  }
+.note-block[data-category="skills"]::before{
+  content: "";
+  position: absolute;
+  left: -14px;
+  right: -14px;
+  top: -14px;
+  height: 72px;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.68) 40%, rgba(255,255,255,0.94) 72%, rgba(255,255,255,1));
+  filter: blur(8px);
+}
 }
 
 .note-block:hover .note-title,
@@ -4572,5 +4572,182 @@ body.modal-open{
   .about__header{
     margin-top: 0 !important;
     padding-top: 24px;
+  }
+}
+
+@media (max-width: 900px){
+  .note-block[data-category="work"] .note-panel{
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 clamp(12px, 4vw, 20px) 20px;
+    background: transparent;
+    border: none;
+  }
+
+  .note-block[data-category="work"] .note-panel__card{
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .work-card{
+    width: 100%;
+    max-width: 100%;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .work-card__header{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .work-card__logo,
+  .work-card__info,
+  .work-card__stat{
+    width: 100%;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+  }
+
+  .work-card__logo{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+  }
+
+  .work-card__stat{
+    display: block;
+    padding: 0;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .work-card__stat-number{
+    font-size: 1.8rem;
+    color: #111;
+  }
+
+  .work-card__stat-label{
+    color: #111;
+  }
+
+  .work-card__mobile-stats{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .work-card__mobile-stat{
+    background: rgba(255,45,78,0.05);
+    border: 1px solid rgba(255,45,78,0.1);
+    border-radius: 18px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .work-card__mobile-label{
+    margin: 0;
+    padding: 8px 0 4px;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,45,78,0.8);
+  }
+
+  .work-card__body{
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .work-card__bullet{
+    padding: 14px 16px;
+    border-radius: 22px;
+    border: 1px solid rgba(255,45,78,0.12);
+    background: rgba(255,45,78,0.04);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .work-card__bullet-number{
+    width: 36px;
+    height: 36px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.66rem;
+    background: rgba(255,45,78,0.14);
+  }
+
+  .work-card__chips{
+    flex-wrap: wrap;
+  }
+
+  .work-card__chip{
+    border-radius: 16px;
+    font-size: 0.62rem;
+    padding: 6px 12px;
+    border-color: rgba(255,45,78,0.2);
+    background: rgba(255,45,78,0.05);
+  }
+
+  .work-card__footer{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .work-card__business{
+    width: 100%;
+    border-radius: 20px;
+    padding: 12px 16px;
+    background: rgba(255,45,78,0.04);
+    border: 1px solid rgba(255,45,78,0.12);
+    gap: 12px;
+    display: flex;
+    align-items: center;
+  }
+
+  .work-card__socials{
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .work-card__social{
+    flex: 0 0 auto;
+    min-width: 140px;
+    border-radius: 16px;
+    border: none;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    background: rgba(255,45,78,0.02);
   }
 }

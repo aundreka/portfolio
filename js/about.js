@@ -449,12 +449,16 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isCompactAbout()) return;
       const absX = Math.abs(e.deltaX);
       const absY = Math.abs(e.deltaY);
-      const hasHorizontalIntent = absX > absY || e.shiftKey;
+      const horizontalIntent = absX > absY || e.shiftKey;
+      const verticalIntent = absY >= absX && !horizontalIntent;
+      if (!horizontalIntent && !verticalIntent) return;
 
-      if (!hasHorizontalIntent) return;
-
-      const delta = e.deltaX !== 0 ? e.deltaX : e.deltaY;
+      const delta = horizontalIntent ? e.deltaX : e.deltaY;
       if (delta === 0) return;
+
+      const hittingRightEdge = delta > 0 && isAtFarRight();
+      const hittingLeftEdge = delta < 0 && isAtFarLeft();
+      if (hittingRightEdge || hittingLeftEdge) return;
 
       e.preventDefault();
       scroller.scrollLeft += delta * 0.9;
