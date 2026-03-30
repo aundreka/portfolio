@@ -99,6 +99,14 @@ body {
   font-family: "Abril Fatface", serif;
   font-size: 22px;
   letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav__brand-logo{
+  height: clamp(24px, 2.8vw, 38px);
+  width: auto;
+  display: block;
 }
 
 @media (min-width: 901px){
