@@ -133,17 +133,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const PROJECT_DATE_SEEDS = Array.isArray(PROJECT_DATA.PROJECT_DATE_SEEDS) ? PROJECT_DATA.PROJECT_DATE_SEEDS : [];
 
 
-  function formatDateKeyword(dateValue) {
-    const date = new Date(`${dateValue}T00:00:00`);
-    if (Number.isNaN(date.getTime())) return "";
-    return new Intl.DateTimeFormat("en-US", {
-      month: "long",
-      year: "numeric",
-    }).format(date);
-  }
+  function formatDateKeyword(dateValue) {
+    const date = new Date(`${dateValue}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return "";
+    return new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      year: "numeric",
+    }).format(date);
+  }
+
+  function buildPublishedAt(project, fallback) {
+    const year = Number(project?.year);
+    const month = Number(project?.month);
+    const day = Number(project?.day);
+    if (Number.isFinite(year) && Number.isFinite(month)) {
+      const safeMonth = Math.min(Math.max(month, 1), 12);
+      const safeDay = Number.isFinite(day) ? Math.min(Math.max(day, 1), 31) : 1;
+      const monthStr = String(safeMonth).padStart(2, "0");
+      const dayStr = String(safeDay).padStart(2, "0");
+      return `${year}-${monthStr}-${dayStr}`;
+    }
+    return fallback;
+  }
 
-  const PROJECTS = RAW_PROJECTS.map((project, index) => {
-    const publishedAt = PROJECT_DATE_SEEDS[index] || "2024-01-01";
+  const PROJECTS = RAW_PROJECTS.map((project, index) => {
+    const seedAt = PROJECT_DATE_SEEDS[index] || "2024-01-01";
+    const publishedAt = buildPublishedAt(project, seedAt);
     return {
       ...project,
       publishedAt,
@@ -553,9 +568,30 @@ icons.slice(0, 6).forEach((iconKey) => {
   item.className = "note__iconItem";
 
   const img = document.createElement("img");
-  img.className = "note__iconImg";
+  img.className = "note__iconImg";
+  const normalizedIconKey = String(iconKey || "").trim().toLowerCase();
+  if (normalizedIconKey === "expo") {
+    img.classList.add("note__iconImg--expo");
+  }
   img.alt = String(iconKey);
-  img.src = `assets/icons/${iconKey}.png`;
+  const iconPaths = [
+    `assets/icons/${iconKey}.png`,
+    `assets/icons/${iconKey}.svg`,
+  ];
+
+  let currentIndex = 0;
+
+  const loadIcon = () => {
+    if (currentIndex >= iconPaths.length) return;
+    img.src = iconPaths[currentIndex];
+  };
+
+  img.addEventListener("error", () => {
+    currentIndex += 1;
+    loadIcon();
+  }, { once: true });
+
+  loadIcon();
 
   item.appendChild(img);
   iconsWrap.appendChild(item);
@@ -600,10 +636,10 @@ const makeBtn = (label, href, iconSrc) => {
 };
 
 
-const gh = makeBtn("GitHub", links.github, "assets/icons/github.png");
-const dc = makeBtn("Docs", links.docs, "assets/icons/document.png");
-const ws = makeBtn("Website", links.website, "assets/icons/website.png");
-[gh, dc, ws].forEach((b) => b && btnWrap.appendChild(b));
+const gh = makeBtn("GitHub", links.github, "assets/icons/github.png");
+const dc = makeBtn("Docs", links.docs, "assets/icons/document.png");
+const liveBtn = makeBtn("Live", links.live, "assets/icons/website.png");
+[gh, dc, liveBtn].forEach((b) => b && btnWrap.appendChild(b));
 
 // meta row: icons glass + buttons (no container)
 metaRow.appendChild(iconsGlass);

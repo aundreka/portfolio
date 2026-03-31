@@ -717,6 +717,11 @@
   -webkit-filter: drop-shadow(0 8px 14px rgba(0,0,0,0.22));
 }
 
+#projects .note__iconImg--expo{
+  width: 32px;
+  height: 32px;
+}
+
 /* =========================
    BUTTONS (GitHub/Docs/Website)
    - remove the "half circle" artifact
@@ -1068,6 +1073,11 @@
   #projects .note__iconImg{
     width: 34px;
     height: 34px;
+  }
+
+  #projects .note__iconImg--expo{
+    width: 28px;
+    height: 28px;
   }
 
   #projects .note__btns{

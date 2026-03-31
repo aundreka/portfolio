@@ -2803,6 +2803,49 @@
   filter: drop-shadow(0 2px 6px rgba(0,0,0,.12));
 }
 
+.skills-callout{
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 4px 16px rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.9);
+  font: 500 10px/1.2 "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.skills-callout__icon{
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+  filter:
+    drop-shadow(0 4px 10px rgba(0,0,0,.35))
+    brightness(1.05);
+}
+
+.skills-callout__text{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.skills-callout__label{
+  margin:0;
+  font-size: 8px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.skills-callout__desc{
+  margin:0;
+  font-size: 11px;
+  color: rgba(255,255,255,0.76);
+}
+
 .skills-keyboard {
   margin-top: 12px;
   margin-left: 0;
@@ -3231,6 +3274,17 @@
 
   .skb-face{
     gap: 8px;
+  }
+
+  .skills-callout{
+    width: 100%;
+    padding: 10px 16px;
+    justify-content: flex-start;
+    box-shadow: none;
+  }
+
+  .skills-callout__text{
+    gap: 3px;
   }
 
   .skb-icon {

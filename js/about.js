@@ -1079,6 +1079,7 @@ document.addEventListener("DOMContentLoaded", () => {
     git: "git.svg",
     docker: "docker.svg",
     figma: "figma.png",
+    expo: "expo.svg",
   };
 
   const legend = [
@@ -1115,6 +1116,7 @@ document.addEventListener("DOMContentLoaded", () => {
       indent: '56px',
       keys: [
         { label: 'React Native', icon: 'rn',       cat: 'frontend', wide: true, filterType: 'language', filterValue: 'react native', theme: { face: '#2d4254', side: '#18232d', text: '#ffffff' } },
+        { label: 'Expo',          icon: 'expo',    cat: 'frontend', filterType: 'tool',     filterValue: 'Expo', theme: { face: '#1a4c3d', side: '#0c2415', text: '#f1fff7' } },
         { label: 'Laravel',      icon: 'laravel',  cat: 'backend', filterType: 'tool', filterValue: 'Laravel', theme: { face: '#8c251d', side: '#53130e', text: '#ffffff' } },
         { label: 'Node.js',      icon: 'nodejs',   cat: 'backend', filterType: 'tool', filterValue: 'Node.js', theme: { face: '#346533', side: '#1d391c', text: '#efffe9' } },
         { label: 'Supabase',     icon: 'supabase', cat: 'backend', filterType: 'tool', filterValue: 'Supabase', theme: { face: '#1d6c49', side: '#103b28', text: '#ffffff' } },
