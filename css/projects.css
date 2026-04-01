@@ -698,6 +698,7 @@
   align-items: center;
   gap: 8px;
   line-height: 0;                    /* kills extra vertical whitespace */
+  margin-left: 8px;
 }
 
 #projects .note__iconItem{
@@ -731,6 +732,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  margin-left: 8px;
 }
 
 /* icon-only button (no pill/background when idle) */
