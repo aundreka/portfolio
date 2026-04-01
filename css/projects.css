@@ -687,18 +687,18 @@
    - logos stay same size
    ========================= */
 #projects .note__glass--icons{
-  padding: 5px 9px;                 /* less height */
+  padding: 6px 12px;
   background: rgba(20, 22, 26, 0.28);
-  border-radius: 30px;               /* more rounded */
+  border-radius: 30px;
   flex: 0 0 auto;
 }
 
 #projects .note__icons{
   display: flex;
   align-items: center;
-  gap: 8px;
-  line-height: 0;                    /* kills extra vertical whitespace */
-  margin-left: 8px;
+  justify-content: flex-start;
+  gap: 10px;
+  line-height: 0;
 }
 
 #projects .note__iconItem{
@@ -706,21 +706,28 @@
   align-items: center;
   justify-content: center;
   border-radius: 16px;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
 }
 
 #projects .note__iconImg{
-  width: 40px;
-  height: 40px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   display: block;
-  flex: 0 0 auto;
   filter: drop-shadow(0 8px 14px rgba(0,0,0,0.22));
   -webkit-filter: drop-shadow(0 8px 14px rgba(0,0,0,0.22));
 }
 
 #projects .note__iconImg--expo{
-  width: 32px;
-  height: 32px;
+  transform: scale(0.88);
+  transform-origin: center;
+}
+
+#projects .note__iconImg--react{
+  transform: scale(0.92);
+  transform-origin: center;
 }
 
 /* =========================
@@ -766,23 +773,6 @@
   -webkit-filter: none !important;
 }
 
-#projects .note__iconImg{
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  display: block;
-  flex: 0 0 auto;
-}
-
-#projects .note__iconImg--expo{
-  width: 28px;
-  height: 28px;
-}
-
-#projects .note__iconImg--react{
-  width: 48px;
-  height: 48px;
-}
 
 #projects .note__btnIcon.note__btnIcon--bw{
   filter: grayscale(100%) brightness(0.95) contrast(1.35) !important;
@@ -1110,14 +1100,14 @@
     gap: 8px;
   }
 
-  #projects .note__iconImg{
-    width: 34px;
-    height: 34px;
+  #projects .note__iconItem{
+    width: 38px;
+    height: 38px;
   }
 
   #projects .note__iconImg--expo{
-    width: 28px;
-    height: 28px;
+    transform: scale(0.8);
+    transform-origin: center;
   }
 
   #projects .note__btns{
@@ -1157,21 +1147,6 @@
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     font-size: 12px;
-  }
-
-  #projects .note__iconImg{
-    width: 30px;
-    height: 30px;
-  }
-
-  #projects .note__iconImg--expo{
-    width: 26px;
-    height: 26px;
-  }
-
-  #projects .note__iconImg--react{
-    width: 40px;
-    height: 40px;
   }
 
   #projects .note__glass--text{

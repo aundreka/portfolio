@@ -236,7 +236,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     }
   },
   {
-    "title": "Tree Traversal Visualizer — Algorithms Mini-Game",
+    "title": "TreeQuest: An Educational Game on Tree Traversals",
     "month": 8,
     "day": 6,
     "year": 2024,
