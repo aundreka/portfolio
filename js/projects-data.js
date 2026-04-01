@@ -121,11 +121,11 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
   },
   
   {
-    "title": "Winderella",
+    "title": "Winderella: Mirroring Wind Hazard Detection System",
     "month": 11,
     "day": 6,
     "year": 2025,
-    "description": "A weather app with location-based forecasts, clean cards, and a layout designed for quick scanning.",
+    "description": "Winderella is a low-cost, real-time wind hazard detection and visualization system designed to provide hyperlocal, accessible, and reliable wind monitoring, especially for disaster-prone communities.",
     "language": "flutter",
     "category": "apps",
     "icons": [
@@ -237,10 +237,10 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
   },
   {
     "title": "Tree Traversal Visualizer — Algorithms Mini-Game",
-    "month": 12,
+    "month": 8,
     "day": 6,
     "year": 2024,
-    "description": "A small interactive project that visualizes tree traversal steps (DFS/BFS) in a game-like flow.",
+    "description": "TreeQuest is an educational web-based game designed to help students understand tree traversals in a fun and interactive way. It was created as a learning aid for classmates to better grasp traversal concepts through gameplay rather than traditional lectures.",
     "language": "javascript",
     "category": "games",
     "icons": [
@@ -258,65 +258,55 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     }
   },
   {
-    "title": "Beth Aven — Website / Landing Page",
-    "month": 11,
+    "title": "Beth Aven E-commerce Website",
+    "month": 12,
     "day": 10,
     "year": 2024,
     "description": "A responsive site focused on layout, typography, and clean section-based presentation.",
-    "language": "html css js",
+    "language": "php",
     "category": "websites",
     "icons": [
-      "html",
-      "css",
+      "php",
+      "sql",
       "javascript"
     ],
     "note": "c",
     "keyBg": "assets/projects/beth-aven/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
+
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/bethaven",
+      "live": "https://bethaven.gt.tc/"
     }
   },
   {
-    "title": "Gabriel — Portfolio / Personal Site",
-    "month": 10,
+    "title": "Gabriel - UI Design",
+    "month": 8,
     "day": 4,
     "year": 2024,
     "description": "A personal website emphasizing UI polish, sections, and interactive presentation of work.",
-    "language": "html css js",
-    "category": "websites",
+    "language": "ui design",
+    "category": "ui/ux",
     "icons": [
-      "html",
-      "css",
-      "javascript"
+      "figma"
     ],
     "note": "d",
     "keyBg": "assets/projects/gabriel-site/key.jpg",
     "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
+      "big": "assets/projects/gabriel.png",
     },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+        "links": {
+      "uiMockup": "https://drive.google.com/drive/folders/19OJPe5VBEu_JsPOuODvUponVKU5IQJjL?usp=sharing",
     }
   },
   {
-    "title": "League of Legends Login — UI Clone Practice",
+    "title": "League of Legends Fan Website",
     "month": 9,
     "day": 17,
     "year": 2024,
-    "description": "A front-end UI recreation project focused on spacing, alignment, and form styling details.",
+    "description": "This is a League of Legends / Arcane fan experience built with PHP, MySQL, and handcrafted styling. The site centres on the Runeterra lore and gives visitors a Piltover/Zaun‑flavoured landing page, gated character explorations, and light admin management for the crew that keeps the community running.",
     "language": "html css js",
     "category": "websites",
     "icons": [
@@ -328,46 +318,15 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "keyBg": "assets/projects/lol-login/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/arcane-fansite",
+      "live": "https://arcane.gamer.gd/"
     }
   },
   {
-    "title": "School Websites — Multiple Academic Builds",
-    "month": 8,
-    "day": 8,
-    "year": 2024,
-    "description": "A set of school-based website projects featuring responsive layouts, pages, and components.",
-    "language": "php sql",
-    "category": "websites",
-    "icons": [
-      "php",
-      "sql",
-      "html"
-    ],
-    "note": "f",
-    "keyBg": "assets/projects/school-websites/key.jpg",
-    "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
-    },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
-    }
-  },
-  {
-    "title": "Diversity Globe — Informational Website",
-    "month": 7,
+    "title": "Diversity Globe: Informational Website",
+    "month": 2,
     "day": 21,
     "year": 2024,
     "description": "A content-forward site with structured sections, visual hierarchy, and accessible navigation.",
@@ -382,43 +341,172 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "keyBg": "assets/projects/diversity-globe/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/diversityglobe",
+      "live": "https://aundreka.github.io/diversityglobe/"
     }
   },
   
   {
-    "title": "BitMind — Bitcoin Auto-Trading (Predictive Modeling)",
+    "title": "BitMind: Bitcoin Auto-Trading (Predictive Modeling)",
     "month": 3,
     "day": 9,
-    "year": 2024,
+    "year": 2025,
     "description": "A trading system combining time-series prediction, backtesting, and real-time execution logic for decision-making.",
     "language": "python",
     "category": "ai/ml",
     "icons": [
       "python",
-      "ml",
-      "time-series",
-      "backtesting"
+      "pytorch",
+      "tensorflow",
+      "scikit"
     ],
     "note": "d",
     "keyBg": "assets/projects/bitmind/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/bitmind",
+    }
+  },
+   {
+    "title": "UST Physics of Life and Stuff Research Group",
+    "month": 1,
+    "day": 21,
+    "year": 2026,
+    "description": "This website was developed for the Physics of Life and Stuff research group at the University of Santo Tomas. It serves as an online platform to present the group’s profile, research areas, projects, and related information in a clear and accessible format.",
+    "language": "react",
+    "category": "websites",
+    "icons": [
+      "react",
+      "appscript",
+      "javascript"
+    ],
+    "note": "g",
+    "keyBg": "assets/projects/diversity-globe/key.jpg",
+    "media": {
+      "big": "",
+    },
+    "links": {
+      "github": "https://github.com/aundreka/physicsoflifeandstuff",
+      "live": "https://plsust.org/"
+    }
+  },
+     {
+    "title": "Universentiment: Sentiment Analysis on University Reviews",
+    "month": 2,
+    "day": 21,
+    "year": 2026,
+    "description": "Universentiment is a sentiment-analysis AI chatbot that lets prospective students ask about campus life across Philippine universities. ",
+    "language": "react",
+    "category": "websites",
+    "icons": [
+      "react",
+      "appscript",
+      "javascript"
+    ],
+    "note": "g",
+    "keyBg": "assets/projects/diversity-globe/key.jpg",
+    "media": {
+      "big": "",
+    },
+    "links": {
+      "github": "https://github.com/aundreka/universentiment",
+      "docs": "https://drive.google.com/drive/folders/1yCvuD9kiI9rv-EldneBL64-HWXcc9vXR?usp=sharing/"
+    }
+  },
+    {
+    "title": "Hephzibah School",
+    "month": 8,
+    "day": 8,
+    "year": 2024,
+    "description": "A responsive single-page site for Hephzibah School (Secondary), a DepEd-recognized institution in Silang, Cavite. ",
+    "language": "php sql",
+    "category": "websites",
+    "icons": [
+      "php",
+      "sql",
+      "html"
+    ],
+    "note": "f",
+    "keyBg": "assets/projects/school-websites/key.jpg",
+    "media": {
+      "big": "",
+    },
+    "links": {
+      "github": "https://github.com/aundreka/Hephzibah-School",
+      "live": "https://aundreka.github.io/Hephzibah-School/"
+    }
+  },
+      {
+    "title": "Shalom Learning Center",
+    "month": 8,
+    "day": 8,
+    "year": 2024,
+    "description": "A responsive single-page site for Shalom Learning Center (Secondary), a DepEd-recognized institution in Dasmarinas, Cavite. ",
+    "language": "php sql",
+    "category": "websites",
+    "icons": [
+      "php",
+      "sql",
+      "html"
+    ],
+    "note": "f",
+    "keyBg": "assets/projects/school-websites/key.jpg",
+    "media": {
+      "big": "",
+    },
+    "links": {
+      "github": "https://github.com/aundreka/Shalom-Learning-Center",
+      "live": "https://aundreka.github.io/Shalom-Learning-Center/"
+    }
+  },
+      {
+    "title": "Makwills Integrated School",
+    "month": 8,
+    "day": 8,
+    "year": 2024,
+    "description": "A responsive single-page site for Makwills Integrated School (Secondary), a DepEd-recognized institution in Imus, Cavite. ",
+    "language": "php sql",
+    "category": "websites",
+    "icons": [
+      "php",
+      "sql",
+      "html"
+    ],
+    "note": "f",
+    "keyBg": "assets/projects/school-websites/key.jpg",
+    "media": {
+      "big": "",
+    },
+    "links": {
+      "github": "https://github.com/aundreka/Makwills-Integrated-School",
+      "live": "https://aundreka.github.io/Makwills-Integrated-School/"
+    }
+  },
+      {
+    "title": "Queen Anne School",
+    "month": 8,
+    "day": 8,
+    "year": 2024,
+    "description": "A responsive single-page site for Queen Anne School (Secondary), a DepEd-recognized institution in General Trias, Cavite. ",
+    "language": "php sql",
+    "category": "websites",
+    "icons": [
+      "php",
+      "sql",
+      "html"
+    ],
+    "note": "f",
+    "keyBg": "assets/projects/school-websites/key.jpg",
+    "media": {
+      "big": "",
+    },
+    "links": {
+      "github": "https://github.com/aundreka/Queen-Anne-School",
+      "live": "https://aundreka.github.io/Queen-Anne-School/"
     }
   },
 ];
