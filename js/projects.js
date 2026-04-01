@@ -573,7 +573,10 @@ icons.slice(0, 6).forEach((iconKey) => {
   if (normalizedIconKey === "expo") {
     img.classList.add("note__iconImg--expo");
   }
-  img.alt = String(iconKey);
+  if (normalizedIconKey === "react") {
+    img.classList.add("note__iconImg--react");
+  }
+  img.alt = String(iconKey);
   const iconPaths = [
     `assets/icons/${iconKey}.png`,
     `assets/icons/${iconKey}.svg`,
@@ -604,7 +607,7 @@ const links = project.links || {};
 const btnWrap = document.createElement("div");
 btnWrap.className = "note__btns";
 
-const makeBtn = (label, href, iconSrc) => {
+const makeBtn = (label, href, iconSrc, iconExtraClasses = [], options = {}) => {
   if (!href) return null;
 
   const a = document.createElement("a");
@@ -612,7 +615,10 @@ const makeBtn = (label, href, iconSrc) => {
   a.href = href;
   a.target = "_blank";
   a.rel = "noopener noreferrer";
-  a.setAttribute("aria-label", label);
+  a.setAttribute("aria-label", label);
+  if (options.download) {
+    a.setAttribute("download", "");
+  }
 
   // IMPORTANT: prevent parent click handlers from hijacking the click
   a.addEventListener("click", (e) => {
@@ -622,7 +628,14 @@ const makeBtn = (label, href, iconSrc) => {
   });
 
   const ic = document.createElement("img");
-  ic.className = "note__btnIcon";
+  ic.className = "note__btnIcon";
+  const extraClasses = Array.isArray(iconExtraClasses)
+    ? iconExtraClasses
+    : String(iconExtraClasses || "")
+        .split(/\s+/)
+        .map((cls) => cls.trim())
+        .filter(Boolean);
+  extraClasses.forEach((cls) => ic.classList.add(cls));
   ic.src = iconSrc;
   ic.alt = "";
   a.appendChild(ic);
@@ -638,8 +651,16 @@ const makeBtn = (label, href, iconSrc) => {
 
 const gh = makeBtn("GitHub", links.github, "assets/icons/github.png");
 const dc = makeBtn("Docs", links.docs, "assets/icons/document.png");
+const uiMockupBtn = makeBtn(
+  "UI Mockup",
+  links.uiMockup,
+  "assets/icons/figma.png",
+  ["note__btnIcon--bw", "note__btnIcon--circle"]
+);
+const downloadHref = links.download || links.apk;
+const downloadBtn = makeBtn("Download", downloadHref, "assets/icons/download.svg", [], { download: true });
 const liveBtn = makeBtn("Live", links.live, "assets/icons/website.png");
-[gh, dc, liveBtn].forEach((b) => b && btnWrap.appendChild(b));
+[gh, dc, uiMockupBtn, downloadBtn, liveBtn].forEach((b) => b && btnWrap.appendChild(b));
 
 // meta row: icons glass + buttons (no container)
 metaRow.appendChild(iconsGlass);

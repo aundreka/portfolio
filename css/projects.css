@@ -764,6 +764,44 @@
   -webkit-filter: none !important;
 }
 
+#projects .note__iconImg{
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: block;
+  flex: 0 0 auto;
+}
+
+#projects .note__iconImg--expo{
+  width: 28px;
+  height: 28px;
+}
+
+#projects .note__iconImg--react{
+  width: 48px;
+  height: 48px;
+}
+
+#projects .note__btnIcon.note__btnIcon--bw{
+  filter: grayscale(100%) brightness(0.95) contrast(1.35) !important;
+  -webkit-filter: grayscale(100%) brightness(0.95) contrast(1.35) !important;
+}
+
+#projects .note__btnIcon.note__btnIcon--circle{
+  background: #111;
+  border-radius: 999px;
+  padding: 8px;
+  width: 20px;
+  height: 20px;
+  box-sizing: content-box;
+  box-shadow:
+    0 12px 24px rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* label behaves like a tooltip pill */
 #projects .note__btnLabel{
   display: inline-block;
@@ -1117,6 +1155,21 @@
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     font-size: 12px;
+  }
+
+  #projects .note__iconImg{
+    width: 30px;
+    height: 30px;
+  }
+
+  #projects .note__iconImg--expo{
+    width: 26px;
+    height: 26px;
+  }
+
+  #projects .note__iconImg--react{
+    width: 40px;
+    height: 40px;
   }
 
   #projects .note__glass--text{

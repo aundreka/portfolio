@@ -12,7 +12,8 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "icons": [
       "react",
       "expo",
-      "mysql"
+      "figma",
+      "supabase"
     ],
     "note": "c",
     "keyBg": "assets/projects/prism/key.jpg",
@@ -20,295 +21,200 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
       "big": "assets/projects/prism.jpg"
     },
     "links": {
-      "github": "https://github.com/aundreka/prism-app",
+      "github": "https://github.com/aundreka/prism",
       "docs": "https://drive.google.com/drive/folders/1iqKNayNYbg8pU5p6TRbB0Ny091hfXNEO?usp=sharing",
+      "uiMockup": "https://www.figma.com/design/iraXiOnrekFEGtbgxLtBEU/prism?node-id=19-392&t=qUPDXqz5N755vxFH-0"
     }
   },
   {
-    "title": "SchedU: Teacher Assistant and Workflow Tool",
-    "month": 1,
+    "title": "SchedU Teach",
+    "month": 3,
     "day": 26,
     "year": 2026,
-    "description": "A school-focused productivity app for organizing lessons, generating classroom materials, and managing activities.",
-    "language": "react",
+    "description": "A rule-based academic planning system that converts uploaded documents into structured lesson notes, quizzes, and weekly schedules across multiple document types.",
+    "language": "react native",
     "category": "apps",
     "icons": [
       "react",
-      "javascript"
+      "expo",
+      "python",
+      "tensorflow",
+      "figma",
+      "supabase"
     ],
     "note": "d",
     "media": {
       "big": "assets/projects/schedu-teach.jpg"
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/schedu-teach",
+      "docs": "https://drive.google.com/drive/folders/1KZuNWqPrXMu8PlsXENSDBScind6pnMOF?usp=sharing",
+      "uiMockup": "https://www.figma.com/design/1LSUfW48U0wXTKsDdBm1cV/schedu?node-id=0-1&p=f&t=qUPDXqz5N755vxFH-0"
     }
   },
   {
-    "title": "iBotomo: Automation and Utility App for Voting",
-    "month": 12,
-    "day": 10,
-    "year": 2025,
-    "description": "A utility-style app that streamlines repetitive tasks with simple flows, screens, and quick actions.",
-    "language": "kotlin",
-    "category": "apps",
-    "icons": [
-      "kotlin",
-      "android"
-    ],
-    "note": "e",
-    "keyBg": "assets/projects/ibotomo/key.jpg",
-    "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
-    },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
-    }
-  },
-  {
-    "title": "Gabay — Guidance / Helper App",
-    "month": 11,
+    "title": "GABAY: A Crisis-Focused News and Information App for Filipinos",
+    "month": 8,
     "day": 18,
     "year": 2025,
-    "description": "A structured guide-style app focused on clear navigation, accessible UI, and task-based user flows.",
+    "description": "Submitted to the 2025 UNESCO Youth Hackathon, Gavay is a mobile application that delivers verified, real-time crisis information.",
     "language": "react native",
     "category": "apps",
     "icons": [
-      "react native",
-      "expo"
+      "react",
+      "expo",
+      "supabase"
     ],
     "note": "f",
     "keyBg": "assets/projects/gabay/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "docs": "https://drive.google.com/drive/folders/1NdTMzKL0_ak6hJD9LTJCdgJTsqZLPl57?usp=sharing",
+      "uiMockup": "https://www.figma.com/design/hZG1YbAmL4T1ZTKvcATiZq/GABAY?node-id=1-2&p=f&t=rcwHgPFlvFyuKtuR-0"
     }
   },
+
   {
-    "title": "Viewpoint — Content / Posting App Concept",
-    "month": 10,
-    "day": 9,
-    "year": 2025,
-    "description": "An app concept for viewing and sharing posts with emphasis on layout, filtering, and interaction design.",
-    "language": "react",
-    "category": "apps",
-    "icons": [
-      "react",
-      "javascript"
-    ],
-    "note": "g",
-    "keyBg": "assets/projects/viewpoint/key.jpg",
-    "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
-    },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
-    }
-  },
-  {
-    "title": "Tarot Reading App — Card Draw + Interpretations",
-    "month": 9,
+    "title": "AstraiOS Lunar Calendar System",
+    "month": 1,
     "day": 15,
-    "year": 2025,
-    "description": "A tarot app with card draws, saved readings, and clean UI for quick interpretation browsing.",
-    "language": "flutter",
+    "year": 2024,
+    "description": "AstraiOS Lunar Calendar System is a personalized application designed to offer users unique tarot readings and lunar calendar insights based on their birthdate by integrating astrology, lunar phases, and tarot readings.",
+    "language": "python",
     "category": "apps",
     "icons": [
-      "flutter",
-      "dart"
+      "python",
     ],
     "note": "a",
     "keyBg": "assets/projects/tarot/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/astraios",
+      "docs": "https://drive.google.com/drive/folders/1iK1Q3XleyvRnFEJxEwKfSQuT0tiM1We6?usp=sharing",
     }
   },
   {
-    "title": "Dating App — Profiles + Match Flow Concept",
-    "month": 8,
+    "title": "AunDon Matchmaking Services",
+    "month": 4,
     "day": 22,
-    "year": 2025,
-    "description": "A mobile concept focused on profile cards, swipe/match interaction, and messaging-ready layouts.",
-    "language": "react native",
+    "year": 2024,
+    "description": "A comprehensive matchmaking system that allows users to connect based on shared interests. The system will store various personal details and preferences, matching individuals who have common hobbies and personality traits.",
+    "language": "python",
     "category": "apps",
     "icons": [
-      "react native",
-      "expo"
-    ],
+      "python",
+        ],
     "note": "b",
     "keyBg": "assets/projects/dating/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
+
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/aundon-matchmaking-services",
+      "docs": "https://drive.google.com/drive/folders/1lL94r6IGeknGW7iToqh13mnP0Dz3xIVp?usp=sharing",
     }
   },
+  
   {
-    "title": "Land Marketing App — Listings + Lead Capture",
-    "month": 7,
-    "day": 12,
-    "year": 2025,
-    "description": "A listing app for land/property marketing with filters, gallery pages, and inquiry/lead capture.",
-    "language": "react",
-    "category": "apps",
-    "icons": [
-      "react",
-      "javascript"
-    ],
-    "note": "c#",
-    "keyBg": "assets/projects/land-marketing/key.jpg",
-    "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
-    },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
-    }
-  },
-  {
-    "title": "Weather App — Forecast UI + Alerts",
-    "month": 6,
+    "title": "Winderella",
+    "month": 11,
     "day": 6,
     "year": 2025,
     "description": "A weather app with location-based forecasts, clean cards, and a layout designed for quick scanning.",
-    "language": "react native",
+    "language": "flutter",
     "category": "apps",
     "icons": [
-      "react native",
-      "expo"
+      "flutter",
+      "dart",
+      "cpp"
     ],
     "note": "d#",
     "keyBg": "assets/projects/weather-app/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/winderella",
+      "docs": "https://drive.google.com/drive/folders/1L04-hhaMS94WntXcTwHto2HXHskvgWnb?usp=sharing",
     }
   },
   {
-    "title": "University Blood Bank App — Donor + Inventory Flow",
-    "month": 5,
+    "title": "Pirate's Blood Bank Management System",
+    "month": 12,
     "day": 21,
-    "year": 2025,
+    "year": 2024,
     "description": "A campus-oriented app concept for donor info, inventory browsing, and request/appointment flow.",
-    "language": "react",
+    "language": "php",
     "category": "apps",
     "icons": [
-      "react",
-      "javascript"
+      "php",
+      "mysql"
     ],
     "note": "f#",
     "keyBg": "assets/projects/bloodbank-app/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/pirate-s-blood-bank-management-system",
+      "docs": "https://drive.google.com/drive/folders/1PQWbpqSwkTS2HSNq6bHgqn6h7IgISRTG?usp=sharing",
+      "live": "https://pbbms.gt.tc/login.php"
     }
   },
   {
-    "title": "Ju-On Horror Game — Survivable Visual-Novel Style",
-    "month": 4,
+    "title": "Ju-On: Cursebreaker",
+    "month": 7,
     "day": 14,
     "year": 2025,
-    "description": "A horror game with exploration, puzzles, limited resources, and replayable survival mechanics.",
-    "language": "html css js",
+    "description": "Enter the world of Cursebreaker, a horror visual novel that draws inspiration from the terrifying legacy of JU-ON. You awaken inside a house steeped in rage and death, where every shadow hides a presence that watches, waits, and hunts.",
+    "language": "Javascript",
     "category": "games",
     "icons": [
-      "html",
-      "css",
+      "python",
       "javascript"
     ],
     "note": "e",
     "keyBg": "assets/projects/juon/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
+
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "apk": "https://drive.google.com/drive/folders/1zdOgelKaZ0Plcp6A7jOC5M8KhPS57Pln?usp=sharing",
+      "live": "https://aundreka.itch.io/ju-on-cursebreaker"
     }
   },
   {
-    "title": "Tower Defense Game — Waves + Upgrades",
-    "month": 3,
+    "title": "CS301 Tower Defense",
+    "month": 12,
     "day": 1,
     "year": 2025,
-    "description": "A strategy game prototype with wave systems, enemy scaling, and upgrade-based progression.",
-    "language": "java",
+    "description": "A tower defense game with strategic placement and enemy waves using the class of CS301 batch 2025-2026 as playable units.",
+    "language": "flutter",
     "category": "games",
     "icons": [
-      "java"
+      "flutter",
+      "dart"
     ],
     "note": "g#",
     "keyBg": "assets/projects/tower-defense/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
+
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/cs301td-flutter",
+      "live": "https://aundreka.github.io/cs301td-flutter//"
     }
   },
   {
-    "title": "Grimm Runner — Top-Down Survival Runner",
-    "month": 1,
+    "title": "Grimm Runner",
+    "month": 11,
     "day": 19,
     "year": 2025,
     "description": "A survival game with movement/combat loops, expanding maps, and performance-focused gameplay logic.",
@@ -322,14 +228,11 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "keyBg": "assets/projects/grimm-runner/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/grimm-runner",
+      "docs": "https://drive.google.com/drive/folders/1Z9LieA0C9cNOS2pa3Vq5uY11uzJxZ3KZ?usp=sharing",
+      "live": "https://github.com/aundreka/grimm-runner"
     }
   },
   {
@@ -338,23 +241,20 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 6,
     "year": 2024,
     "description": "A small interactive project that visualizes tree traversal steps (DFS/BFS) in a game-like flow.",
-    "language": "python",
+    "language": "javascript",
     "category": "games",
     "icons": [
-      "python"
+      "javascript"
     ],
     "note": "b#",
     "keyBg": "assets/projects/tree-traversal/key.jpg",
     "media": {
       "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
+
     },
     "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
+      "github": "https://github.com/aundreka/treequest",
+      "live": "https://aundreka.github.io/treequest/"
     }
   },
   {
@@ -492,86 +392,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
       "live": ""
     }
   },
-  {
-    "title": "University Blood Bank Website — Portal Concept",
-    "month": 6,
-    "day": 11,
-    "year": 2024,
-    "description": "A web portal concept for donor information, inventory browsing, and request-friendly navigation.",
-    "language": "react",
-    "category": "websites",
-    "icons": [
-      "react",
-      "javascript"
-    ],
-    "note": "a",
-    "keyBg": "assets/projects/bloodbank-website/key.jpg",
-    "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
-    },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
-    }
-  },
-  {
-    "title": "Weather Website — Forecast Dashboard",
-    "month": 5,
-    "day": 3,
-    "year": 2024,
-    "description": "A dashboard-style site that displays weather information with clean UI and readable data cards.",
-    "language": "html css js",
-    "category": "websites",
-    "icons": [
-      "html",
-      "css",
-      "javascript"
-    ],
-    "note": "b",
-    "keyBg": "assets/projects/weather-website/key.jpg",
-    "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
-    },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
-    }
-  },
-  {
-    "title": "PRISM — Analytics Intelligence (AI/ML Extension)",
-    "month": 4,
-    "day": 18,
-    "year": 2024,
-    "description": "A machine-learning extension for performance prediction and smarter scheduling decisions using historical analytics.",
-    "language": "python",
-    "category": "ai/ml",
-    "icons": [
-      "python",
-      "ml",
-      "time-series"
-    ],
-    "note": "c",
-    "keyBg": "assets/projects/prism-ml/key.jpg",
-    "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
-    },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
-    }
-  },
+  
   {
     "title": "BitMind — Bitcoin Auto-Trading (Predictive Modeling)",
     "month": 3,
@@ -600,114 +421,6 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
       "live": ""
     }
   },
-  {
-    "title": "Neural Interface Programming — EEG Brain-to-Code Prototype",
-    "month": 2,
-    "day": 22,
-    "year": 2024,
-    "description": "A research prototype exploring EEG signal processing and transformer-based decoding for real-time intent-to-code translation.",
-    "language": "python",
-    "category": "ai/ml",
-    "icons": [
-      "python",
-      "pytorch",
-      "signal-processing",
-      "transformers"
-    ],
-    "note": "e",
-    "keyBg": "assets/projects/eeg-brain-to-code/key.jpg",
-    "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
-    },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
-    }
-  },
-  {
-    "title": "Gabriel — UI System + Visual Polish",
-    "month": 1,
-    "day": 12,
-    "year": 2024,
-    "description": "A UI-focused build emphasizing typography, spacing, responsive grids, and interaction details.",
-    "language": "html css js",
-    "category": "ui/ux",
-    "icons": [
-      "html",
-      "css",
-      "javascript"
-    ],
-    "note": "f",
-    "keyBg": "assets/projects/ui-gabriel/key.jpg",
-    "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
-    },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
-    }
-  },
-  {
-    "title": "Weather App — UI/UX Case Build",
-    "month": 11,
-    "day": 18,
-    "year": 2023,
-    "description": "A design-forward weather UI with readable cards, hierarchy, and polished micro-interactions.",
-    "language": "react native",
-    "category": "ui/ux",
-    "icons": [
-      "react native",
-      "expo"
-    ],
-    "note": "g",
-    "keyBg": "assets/projects/ui-weather-app/key.jpg",
-    "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
-    },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
-    }
-  },
-  {
-    "title": "School Projects — UI Components + Layout Practice",
-    "month": 10,
-    "day": 7,
-    "year": 2023,
-    "description": "A collection of UI builds from school work focusing on layout structure, consistency, and clean screens.",
-    "language": "html css js",
-    "category": "ui/ux",
-    "icons": [
-      "html",
-      "css",
-      "javascript"
-    ],
-    "note": "a#",
-    "keyBg": "assets/projects/ui-school-projects/key.jpg",
-    "media": {
-      "big": "",
-      "midTop": "",
-      "midBottom": "",
-      "tall": ""
-    },
-    "links": {
-      "github": "",
-      "docs": "",
-      "live": ""
-    }
-  }
 ];
 
 window.PROJECTS_DATA.PROJECT_DATE_SEEDS = [
