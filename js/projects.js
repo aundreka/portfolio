@@ -517,8 +517,9 @@ document.addEventListener("pointerdown", (e) => {
 
  
 function buildNotePanel(project) {
-  const note = document.createElement("div");
-  note.className = "note note--hero";
+  const note = document.createElement("div");
+  note.className = "note note--hero";
+  note.dataset.projectTitle = project.title || "This is the Project Title";
 
   // keep your open animation
   note.style.opacity = "0";
@@ -621,11 +622,9 @@ const makeBtn = (label, href, iconSrc, iconExtraClasses = [], options = {}) => {
   }
 
   // IMPORTANT: prevent parent click handlers from hijacking the click
-  a.addEventListener("click", (e) => {
-    e.stopPropagation(); // don't let the piano key / note handlers eat it
-    // bulletproof open (in case something else prevents default)
-    window.open(href, "_blank", "noopener,noreferrer");
-  });
+  a.addEventListener("click", (e) => {
+    e.stopPropagation(); // don't let the piano key / note handlers eat it
+  });
 
   const ic = document.createElement("img");
   ic.className = "note__btnIcon";
@@ -654,11 +653,11 @@ const dc = makeBtn("Docs", links.docs, "assets/icons/document.png");
 const uiMockupBtn = makeBtn(
   "UI Mockup",
   links.uiMockup,
-  "assets/icons/figma.png",
-  ["note__btnIcon--bw", "note__btnIcon--circle"]
+  "assets/icons/ui-mockup.svg",
+  ["note__btnIcon--white"]
 );
 const downloadHref = links.download || links.apk;
-const downloadBtn = makeBtn("Download", downloadHref, "assets/icons/download.svg", [], { download: true });
+const downloadBtn = makeBtn("Download", downloadHref, "assets/icons/download.svg", ["note__btnIcon--white"], { download: true });
 const liveBtn = makeBtn("Live", links.live, "assets/icons/website.png");
 [gh, dc, uiMockupBtn, downloadBtn, liveBtn].forEach((b) => b && btnWrap.appendChild(b));
 
@@ -667,13 +666,8 @@ metaRow.appendChild(iconsGlass);
 if (btnWrap.childElementCount) metaRow.appendChild(btnWrap);
 
 // overlay order
-if (isCompactProjectsViewport()) {
-  overlay.appendChild(textGlass);
-  overlay.appendChild(metaRow);
-} else {
-  overlay.appendChild(metaRow);
-  overlay.appendChild(textGlass);
-}
+  overlay.appendChild(metaRow);
+  overlay.appendChild(textGlass);
 
 note.appendChild(bg);
 note.appendChild(overlay);

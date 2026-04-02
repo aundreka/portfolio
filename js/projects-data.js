@@ -68,7 +68,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "f",
     "keyBg": "assets/projects/gabay/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/gabay.png",
     },
     "links": {
       "docs": "https://drive.google.com/drive/folders/1NdTMzKL0_ak6hJD9LTJCdgJTsqZLPl57?usp=sharing",
@@ -90,7 +90,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "a",
     "keyBg": "assets/projects/tarot/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/astraios.png",
     },
     "links": {
       "github": "https://github.com/aundreka/astraios",
@@ -111,7 +111,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "b",
     "keyBg": "assets/projects/dating/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/aundon.png",
 
     },
     "links": {
@@ -136,7 +136,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "d#",
     "keyBg": "assets/projects/weather-app/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/winderella.png",
     },
     "links": {
       "github": "https://github.com/aundreka/winderella",
@@ -158,7 +158,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "f#",
     "keyBg": "assets/projects/bloodbank-app/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/pbbms.png",
     },
     "links": {
       "github": "https://github.com/aundreka/pirate-s-blood-bank-management-system",
@@ -181,7 +181,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "e",
     "keyBg": "assets/projects/juon/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/juon.png",
 
     },
     "links": {
@@ -204,7 +204,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "g#",
     "keyBg": "assets/projects/tower-defense/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/cs301td.png",
 
     },
     "links": {
@@ -227,12 +227,12 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "a#",
     "keyBg": "assets/projects/grimm-runner/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/grimmrunner.png",
     },
     "links": {
-      "github": "https://github.com/aundreka/grimm-runner",
+      "github": "https://github.com/aundreka/appdev-finalproj",
       "docs": "https://drive.google.com/drive/folders/1Z9LieA0C9cNOS2pa3Vq5uY11uzJxZ3KZ?usp=sharing",
-      "live": "https://github.com/aundreka/grimm-runner"
+      "live": "https://aundreka.github.io/appdev-finalproj/"
     }
   },
   {
@@ -249,7 +249,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "b#",
     "keyBg": "assets/projects/tree-traversal/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/treequest.png",
 
     },
     "links": {
@@ -267,13 +267,13 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "category": "websites",
     "icons": [
       "php",
-      "sql",
+      "mysql",
       "javascript"
     ],
     "note": "c",
     "keyBg": "assets/projects/beth-aven/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/bethaven.png",
 
     },
     "links": {
@@ -317,7 +317,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "e",
     "keyBg": "assets/projects/lol-login/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/arcane.png",
     },
     "links": {
       "github": "https://github.com/aundreka/arcane-fansite",
@@ -340,7 +340,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "g",
     "keyBg": "assets/projects/diversity-globe/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/diversityglobe.png",
     },
     "links": {
       "github": "https://github.com/aundreka/diversityglobe",
@@ -365,7 +365,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "d",
     "keyBg": "assets/projects/bitmind/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/bitmind.png",
     },
     "links": {
       "github": "https://github.com/aundreka/bitmind",
@@ -387,7 +387,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "g",
     "keyBg": "assets/projects/diversity-globe/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/pols.png",
     },
     "links": {
       "github": "https://github.com/aundreka/physicsoflifeandstuff",
@@ -410,7 +410,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "g",
     "keyBg": "assets/projects/diversity-globe/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/universentiment.png",
     },
     "links": {
       "github": "https://github.com/aundreka/universentiment",
@@ -427,13 +427,13 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "category": "websites",
     "icons": [
       "php",
-      "sql",
+      "mysql",
       "html"
     ],
     "note": "f",
     "keyBg": "assets/projects/school-websites/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/hephzibah.png",
     },
     "links": {
       "github": "https://github.com/aundreka/Hephzibah-School",
@@ -450,13 +450,13 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "category": "websites",
     "icons": [
       "php",
-      "sql",
+      "mysql",
       "html"
     ],
     "note": "f",
     "keyBg": "assets/projects/school-websites/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/shalom.png",
     },
     "links": {
       "github": "https://github.com/aundreka/Shalom-Learning-Center",
@@ -473,13 +473,13 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "category": "websites",
     "icons": [
       "php",
-      "sql",
+      "mysql",
       "html"
     ],
     "note": "f",
     "keyBg": "assets/projects/school-websites/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/makwills.png",
     },
     "links": {
       "github": "https://github.com/aundreka/Makwills-Integrated-School",
@@ -496,13 +496,13 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "category": "websites",
     "icons": [
       "php",
-      "sql",
+      "mysql",
       "html"
     ],
     "note": "f",
     "keyBg": "assets/projects/school-websites/key.jpg",
     "media": {
-      "big": "",
+      "big": "assets/projects/queenanne.png",
     },
     "links": {
       "github": "https://github.com/aundreka/Queen-Anne-School",

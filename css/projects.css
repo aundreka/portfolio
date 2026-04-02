@@ -610,289 +610,455 @@
 /* =========================
    HERO NOTE (OPEN KEY)
    ========================= */
-#projects .note{
+#projects .note {
   position: relative;
   height: 100%;
   width: 100%;
   padding: 0;
   overflow: hidden;
   border-radius: 0;
-  background: #fff;
+  background: #050505;
+  color: #fff;
   touch-action: pan-y;
 }
 
-/* full image */
-#projects .note__bg{
+#projects .note::before,
+#projects .note::after {
+  content: attr(data-project-title);
+  position: absolute;
+  top: 24px;
+  width: 64px;
+  height: 62%;
+  background: #050505;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  line-height: 1.2;
+  text-align: center;
+  padding: 12px 0;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+}
+
+#projects .note::before {
+  left: -58px;
+}
+
+#projects .note::after {
+  right: -58px;
+}
+
+#projects .note__bg {
   position: absolute;
   inset: 0;
-  background: #cbb4c0;
+  background: #111;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transform: scale(1.02);
+  transform: scale(1.05);
+  filter: saturate(1.15);
 }
 
-/* readability scrim */
-#projects .note__bg::after{
-  content:"";
-  position:absolute;
-  inset:0;
+#projects .note__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background: linear-gradient(
     to top,
-    rgba(0,0,0,0.58) 0%,
-    rgba(0,0,0,0.28) 48%,
-    rgba(0,0,0,0.10) 78%,
-    rgba(0,0,0,0.00) 100%
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.55) 42%,
+    rgba(0, 0, 0, 0.25) 68%,
+    rgba(0, 0, 0, 0.02) 100%
   );
 }
 
-/* overlay layout */
-#projects .note__overlay{
+#projects .note__overlay {
   position: relative;
   z-index: 2;
   height: 100%;
   width: 100%;
-  padding: 20px 24px;
-
+  padding: 32px clamp(24px, 3vw, 48px) 46px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 20px;
+  align-items: flex-start;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 5, 5, 0.08) 0%,
+    rgba(5, 5, 5, 0.3) 40%,
+    rgba(5, 5, 5, 0.8) 100%
+  );
 }
 
-/* glass base */
-#projects .note__glass{
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow:
-    0 18px 40px rgba(0,0,0,0.18),
-    inset 0 0 0 1px rgba(255,255,255,0.18);
-}
-
-/* row that holds left icons glass + right buttons */
-#projects .note__metaRow{
+#projects .note__metaRow {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
+  justify-content: space-between;
   width: 100%;
-  flex-wrap: nowrap;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin: 0 auto 12px;
 }
 
-/* =========================
-   ICONS GLASS (languages)
-   - less height (padding down)
-   - MORE rounded edges
-   - logos stay same size
-   ========================= */
-#projects .note__glass--icons{
-  padding: 6px 12px;
-  background: rgba(20, 22, 26, 0.28);
-  border-radius: 30px;
-  flex: 0 0 auto;
-}
-
-#projects .note__icons{
+#projects .note__glass--icons {
+  padding: 6px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-width: 0;
+  align-self: flex-start;
+  margin: 0;
+}
+
+#projects .note__icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   line-height: 0;
 }
 
-#projects .note__iconItem{
+#projects .note__iconItem {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 16px;
-  width: 44px;
-  height: 44px;
+  border-radius: 999px;
+  width: 46px;
+  height: 46px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  padding: 6px;
   flex: 0 0 auto;
 }
 
-#projects .note__iconImg{
+#projects .note__iconImg {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  display: block;
-  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.22));
-  -webkit-filter: drop-shadow(0 8px 14px rgba(0,0,0,0.22));
+  filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.25));
 }
 
-#projects .note__iconImg--expo{
-  transform: scale(0.88);
-  transform-origin: center;
-}
-
-#projects .note__iconImg--react{
-  transform: scale(0.92);
-  transform-origin: center;
-}
-
-/* =========================
-   BUTTONS (GitHub/Docs/Website)
-   - remove the "half circle" artifact
-   - label only shows on hover (as a tooltip pill)
-   ========================= */
-#projects .note__btns{
+#projects .note__btns {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-left: 8px;
+  gap: 12px;
+  margin-left: auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  position: relative;
+  top: 4px;
 }
 
-/* icon-only button (no pill/background when idle) */
-#projects .note__btn{
+#projects .note__btn {
   display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
-
-  height: 40px;
-  min-width: 40px;          /* keeps icon-only size */
-  padding: 0;               /* no idle pill padding */
+  justify-content: center;
+  position: relative;
+  width: 48px;
+  height: 48px;
+  padding: 0;
   border-radius: 999px;
-
-  background: transparent;  /* no half-circle artifact */
+  background: rgba(4, 4, 4, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65);
   text-decoration: none;
   color: inherit;
-
-  overflow: hidden;         /* clean reveal */
-  transition: transform 160ms ease, opacity 160ms ease, padding 180ms ease;
+  overflow: hidden;
+  transition: transform 200ms ease, background 180ms ease, box-shadow 180ms ease;
 }
 
-/* icon image */
-#projects .note__btnIcon{
+#projects .note__btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 28px rgba(0, 0, 0, 0.55);
+}
+
+#projects .note__btnIcon {
   width: 36px;
   height: 36px;
   object-fit: contain;
   display: block;
   flex: 0 0 auto;
-  filter: none !important;
-  -webkit-filter: none !important;
+  filter: none;
+  -webkit-filter: none;
 }
 
-
-#projects .note__btnIcon.note__btnIcon--bw{
-  filter: grayscale(100%) brightness(0.95) contrast(1.35) !important;
-  -webkit-filter: grayscale(100%) brightness(0.95) contrast(1.35) !important;
+#projects .note__btnIcon.note__btnIcon--white {
+  filter: brightness(0) invert(1);
+  -webkit-filter: brightness(0) invert(1);
 }
 
-#projects .note__btnIcon.note__btnIcon--circle{
-  background: #111;
-  border-radius: 999px;
-  padding: 8px;
-  width: 20px;
-  height: 20px;
-  box-sizing: content-box;
-  box-shadow:
-    0 12px 24px rgba(0,0,0,0.45),
-    inset 0 0 0 1px rgba(255,255,255,0.15);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+#projects .note__btnLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 
-/* label behaves like a tooltip pill */
-#projects .note__btnLabel{
-  display: inline-block;
-  white-space: nowrap;
-
-  max-width: 0;             /* collapsed */
-  opacity: 0;
-  transform: translateX(-6px);
-
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: rgba(255,255,255,0.95);
-
-  background: rgba(20, 22, 26, 0.38);
-  border-radius: 999px;
-  padding: 7px 9px;
-
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow:
-    0 18px 40px rgba(0,0,0,0.18),
-    inset 0 0 0 1px rgba(255,255,255,0.14);
-
-  transition: max-width 220ms ease, opacity 160ms ease, transform 160ms ease;
+#projects .note__glass--text {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  padding: 28px 32px;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 28px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.24);
+  position: relative;
+  margin: 0;
+  color: #111;
 }
 
-#projects .note__btn:hover{
-  padding-right: 4px;       /* optional: small breathing room */
-  transform: translateY(-1px);
+#projects .note__glass--text::before {
+  content: "";
+  position: absolute;
+  left: 32px;
+  right: 32px;
+  top: 12px;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
 }
 
-#projects .note__btn:hover .note__btnLabel{
-  max-width: 180px;         /* enough for “Website”, “Documentation”, etc. */
-  opacity: 1;
-  transform: translateX(0);
+#projects .note__title {
+  margin: 0 0 10px 0;
+  font-family: "Abril Fatface", serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-size: clamp(32px, 3.6vw, 48px);
+  line-height: 1.06;
+  color: #0b0b0b;
+  max-width: 100%;
 }
-#projects .note__btn:active{
-  transform: translateY(0);
-  opacity: 0.95;
+
+#projects .note__desc {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(17, 17, 17, 0.9);
+  max-width: 100%;
 }
 
 /* =========================
-   TEXT GLASS
+   HERO GLASS ENTRANCE
    ========================= */
-#projects .note__glass--text{
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  width: fit-content;
-  max-width: calc(100% - 48px);
-
-  padding: 18px 20px 16px 20px;
-  background: rgba(20, 22, 26, 0.32);
-  border-radius: 22px;
-  position: relative;
+#projects .note--hero .note__glass {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 360ms ease, transform 360ms ease;
+  will-change: opacity, transform;
 }
 
-/* subtle highlight line */
-#projects .note__glass--text::before{
-  content:"";
-  position:absolute;
-  left: 16px;
-  right: 16px;
-  top: 12px;
-  height: 1px;
-  background: rgba(255,255,255,0.16);
+#projects .note--hero .note__glass--icons {
+  transition-delay: 70ms;
 }
 
-/* title/desc */
-#projects .note__title{
-  margin: 0 0 10px 0;
-
-  font-family: "Abril Fatface", serif;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  font-size: clamp(34px, 3.7vw, 46px);
-  line-height: 1.02;
-  color: rgba(255,255,255,0.98);
-  text-shadow: 0 12px 26px rgba(0,0,0,0.40);
-
-  max-width: clamp(22ch, 48vw, 34ch);
-  white-space: normal;
-  overflow-wrap: anywhere;
+#projects .note--hero .note__glass--text {
+  transition-delay: 140ms;
 }
 
-#projects .note__desc{
-  margin: 0;
-
-  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.48;
-  color: rgba(255,255,255,0.92);
-  text-shadow: 0 10px 22px rgba(0,0,0,0.34);
-
-  max-width: clamp(36ch, 58vw, 62ch);
+#projects .note--hero .note__glass {
+  opacity: 1;
+  transform: translateY(0);
 }
 
+@media (max-width: 1300px) {
+  #projects .note::before,
+  #projects .note::after {
+    display: none;
+  }
+
+  #projects .note__overlay {
+    padding: 26px 28px 32px;
+  }
+
+  #projects .note__glass--text {
+    width: min(100%, 600px);
+    padding: 30px 32px;
+  }
+
+  #projects .note__title {
+    font-size: clamp(32px, 5vw, 48px);
+  }
+
+  #projects .note__desc {
+    font-size: 15px;
+  }
+
+  #projects .note__btns {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  #projects .note__glass--icons {
+    max-width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 720px){
+  #projects .piano-track,
+  #projects .piano-key{
+    height: min(82svh, 900px);
+  }
+
+  #projects .key-title{
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    font-size: 13px;
+  }
+
+  #projects .blacklayer .black-key{
+    width: 52px;
+    height: min(46svh, 420px);
+    border-radius: 12px;
+  }
+
+  #projects .note__overlay{
+    padding: 14px 14px 18px;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  #projects .note__metaRow{
+    gap: 18px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #projects .note__glass--icons{
+    width: auto;
+    padding: 0;
+    border-radius: 0;
+    justify-content: flex-start;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    order: 1;
+    margin-bottom: 18px;
+  }
+
+  #projects .note__btn{
+    width: 40px;
+    height: 40px;
+  }
+
+  #projects .note__btnIcon{
+    width: 20px;
+    height: 20px;
+  }
+
+  #projects .note__icons{
+    gap: 8px;
+  }
+
+  #projects .note__iconItem{
+    width: 40px;
+    height: 40px;
+  }
+
+  #projects .note__iconImg--expo{
+    transform: scale(0.8);
+    transform-origin: center;
+  }
+
+  #projects .note__iconImg{
+    width: 25px;
+    height: 25px;
+  }
+
+  #projects .note__iconImg--expo{
+    width: 30px;
+    height: 30px;
+  }
+
+  #projects .note__iconImg--react{
+    width: 40px;
+    height: 40px;
+  }
+
+  #projects .note__glass--text{
+    width: 100%;
+    max-width: 100%;
+    padding: 16px 16px 14px;
+    border-radius: 18px;
+  }
+
+  #projects .note__glass--text::before{
+    left: 16px;
+    right: 16px;
+    top: 10px;
+  }
+
+  #projects .note__title{
+    margin-bottom: 8px;
+    font-size: clamp(28px, 7.6vw, 38px);
+    line-height: 1.06;
+    max-width: 100%;
+  }
+
+  #projects .note__desc{
+    font-size: 13px;
+    line-height: 1.45;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  #projects .note__overlay {
+    padding: 16px 16px 20px;
+  }
+
+  #projects .note__glass--text {
+    width: 100%;
+    padding: 20px;
+  }
+
+  #projects .note__btns {
+    justify-content: flex-start;
+  }
+
+  #projects .projects-empty {
+    top: 12px;
+    padding: 7px 10px;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #projects .projects__filters,
+  #projects .filter__menu,
+  #projects .filter__menuInner > * {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  #projects .note--hero .note__glass {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
 /* =========================
    PROJECTS PIANO: background image hover
    ========================= */
@@ -960,28 +1126,6 @@
   display: none !important;
 }
 
-/* =========================
-   HERO GLASS ENTRANCE
-   ========================= */
-#projects .note--hero .note__glass{
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 360ms ease, transform 360ms ease;
-  will-change: opacity, transform;
-}
-
-#projects .note--hero .note__glass--icons{ transition-delay: 70ms; }
-#projects .note--hero .note__glass--text{  transition-delay: 140ms; }
-
-#projects .note--hero .note__glass{
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@media (max-width: 1300px){
-  #projects .note__title{ font-size: 44px; }
-}
-
 @media (max-width: 1300px){
   #projects .projects_piano{
     border-left-width: 1px;
@@ -1017,48 +1161,6 @@
       rgba(0,0,0,0.68) 100%
     );
   }
-
-  #projects .note__overlay{
-    padding: 18px 18px 20px;
-    justify-content: space-between;
-    gap: 14px;
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  #projects .note__metaRow{
-    align-items: flex-end;
-    flex-wrap: wrap;
-    margin-top: auto;
-  }
-
-  #projects .note__glass--icons{
-    max-width: 100%;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  #projects .note__glass--icons::-webkit-scrollbar{ display:none; }
-
-  #projects .note__glass--text{
-    width: min(100%, 520px);
-    max-width: 100%;
-    padding: 16px 18px 14px;
-    border-radius: 20px;
-    background: rgba(14, 16, 19, 0.28);
-  }
-
-  #projects .note__title{
-    font-size: clamp(30px, 6vw, 44px);
-    line-height: 1.04;
-    max-width: 100%;
-  }
-  #projects .note__desc{
-    font-size: 15px;
-    line-height: 1.55;
-    max-width: min(34ch, 100%);
-  }
 }
 
 @media (max-width: 720px){
@@ -1078,101 +1180,6 @@
     width: 52px;
     height: min(46svh, 420px);
     border-radius: 12px;
-  }
-
-  #projects .note__overlay{
-    padding: 14px 14px 18px;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  #projects .note__metaRow{
-    gap: 10px;
-  }
-
-  #projects .note__glass--icons{
-    width: 100%;
-    padding: 6px 8px;
-    border-radius: 20px;
-  }
-
-  #projects .note__icons{
-    gap: 8px;
-  }
-
-  #projects .note__iconItem{
-    width: 38px;
-    height: 38px;
-  }
-
-  #projects .note__iconImg--expo{
-    transform: scale(0.8);
-    transform-origin: center;
-  }
-
-  #projects .note__btns{
-    width: 100%;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  #projects .note__btn{
-    min-width: 0;
-    height: auto;
-    padding: 8px 12px;
-    background: rgba(20, 22, 26, 0.42);
-    border-radius: 999px;
-    box-shadow:
-      0 18px 40px rgba(0,0,0,0.18),
-      inset 0 0 0 1px rgba(255,255,255,0.14);
-  }
-
-  #projects .note__btn:hover{
-    padding-right: 12px;
-    transform: none;
-  }
-
-  #projects .note__btnIcon{
-    width: 24px;
-    height: 24px;
-  }
-
-  #projects .note__btnLabel{
-    max-width: 160px;
-    opacity: 1;
-    transform: none;
-    padding: 0;
-    background: transparent;
-    box-shadow: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    font-size: 12px;
-  }
-
-  #projects .note__glass--text{
-    width: 100%;
-    max-width: 100%;
-    padding: 16px 16px 14px;
-    border-radius: 18px;
-  }
-
-  #projects .note__glass--text::before{
-    left: 16px;
-    right: 16px;
-    top: 10px;
-  }
-
-  #projects .note__title{
-    margin-bottom: 8px;
-    font-size: clamp(28px, 7.6vw, 38px);
-    line-height: 1.06;
-    max-width: 100%;
-  }
-
-  #projects .note__desc{
-    font-size: 14px;
-    line-height: 1.5;
-    max-width: 100%;
   }
 }
 
@@ -1196,44 +1203,5 @@
     width: 48px;
     height: min(48svh, 440px);
   }
-
-  #projects .note__overlay{
-    padding: 12px;
-    gap: 10px;
-  }
-
-  #projects .note__glass--text{
-    padding: 14px 14px 12px;
-  }
-
-  #projects .note__title{
-    font-size: clamp(24px, 7vw, 32px);
-  }
-
-  #projects .note__desc{
-    font-size: 13px;
-    line-height: 1.45;
-  }
-
-  #projects .projects-empty{
-    top: 12px;
-    padding: 7px 10px;
-    font-size: 9px;
-    letter-spacing: 0.05em;
-  }
 }
 
-@media (prefers-reduced-motion: reduce){
-  #projects .projects__filters,
-  #projects .filter__menu,
-  #projects .filter__menuInner > *{
-    transition: none !important;
-    transform: none !important;
-  }
-
-  #projects .note--hero .note__glass{
-    transition: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
