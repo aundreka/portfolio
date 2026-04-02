@@ -7,6 +7,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 15,
     "year": 2025,
     "description": "An algorithm-driven scheduling and recommendation tool for Philippine SMEs and creators that pairs temporal engagement signals with contextual Thompson Sampling to surface posting and content strategy suggestions via an interpretable mobile view.",
+    "context": "Built during a tight grant sprint with patchy SME data, so I instrumented engagement heuristics and layered Thompson Sampling walk-forward tests to keep the mobile view responsive even when the signals lagged.",
     "language": "react native",
     "category": "apps",
     "icons": [
@@ -32,6 +33,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 26,
     "year": 2026,
     "description": "A rule-based academic planning system that converts uploaded documents into structured lesson notes, quizzes, and weekly schedules across multiple document types.",
+    "context": "Document uploads came in noisy, non-standard formats, so I built a resilient parser with cascading fallback rules and verbose logging to debug why a few PDFs kept breaking the quiz generator.",
     "language": "react native",
     "category": "apps",
     "icons": [
@@ -58,6 +60,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 18,
     "year": 2025,
     "description": "Submitted to the 2025 UNESCO Youth Hackathon, Gavay is a mobile application that delivers verified, real-time crisis information.",
+    "context": "Reliable info pipelines kept failing during the hackathon prototype demo, so I introduced short-lived caching and manual verification layers that let the app stay online long enough to prove the idea.",
     "language": "react native",
     "category": "apps",
     "icons": [
@@ -82,6 +85,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 15,
     "year": 2024,
     "description": "AstraiOS Lunar Calendar System is a personalized application designed to offer users unique tarot readings and lunar calendar insights based on their birthdate by integrating astrology, lunar phases, and tarot readings.",
+    "context": "Mapping celestial data proved fiddly, so I leaned on open-source ephemeris tables and utility scripts that reconciled timezone quirks before rendering the tarot visuals.",
     "language": "python",
     "category": "apps",
     "icons": [
@@ -103,6 +107,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 22,
     "year": 2024,
     "description": "A comprehensive matchmaking system that allows users to connect based on shared interests. The system will store various personal details and preferences, matching individuals who have common hobbies and personality traits.",
+    "context": "The matching rules kept returning odd pairings because of inconsistent preference data, so I normalized the inputs and layered a scoring pipeline that biased towards verified interests.",
     "language": "python",
     "category": "apps",
     "icons": [
@@ -126,6 +131,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 6,
     "year": 2025,
     "description": "Winderella is a low-cost, real-time wind hazard detection and visualization system designed to provide hyperlocal, accessible, and reliable wind monitoring, especially for disaster-prone communities.",
+    "context": "Sensor noise made the first demos look jittery, so I smoothed the readings in the data pipeline while keeping the alert latency below five seconds to demonstrate usability.",
     "language": "flutter",
     "category": "apps",
     "icons": [
@@ -149,6 +155,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 21,
     "year": 2024,
     "description": "A campus-oriented app concept for donor info, inventory browsing, and request/appointment flow.",
+    "context": "Managing donated blood data meant extra validation, so I added audit logs and input sanitizers that doubled as safeguards when the inventory workflow glitched during live testing.",
     "language": "php",
     "category": "apps",
     "icons": [
@@ -172,6 +179,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 14,
     "year": 2025,
     "description": "Enter the world of Cursebreaker, a horror visual novel that draws inspiration from the terrifying legacy of JU-ON. You awaken inside a house steeped in rage and death, where every shadow hides a presence that watches, waits, and hunts.",
+    "context": "Story branching and asset loading were choking the game on low-end devices, so I refactored the Python backend to preload only the next scene and turned the majority of the audio cues into streamed fragments.",
     "language": "Javascript",
     "category": "games",
     "icons": [
@@ -195,6 +203,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 1,
     "year": 2025,
     "description": "A tower defense game with strategic placement and enemy waves using the class of CS301 batch 2025-2026 as playable units.",
+    "context": "Syncing the class roster with wave logic caused sporadic crashes, so I separated the data model from the rendering loop and added defensive checks that kept the demo playable.",
     "language": "flutter",
     "category": "games",
     "icons": [
@@ -218,6 +227,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 19,
     "year": 2025,
     "description": "A survival game with movement/combat loops, expanding maps, and performance-focused gameplay logic.",
+    "context": "The first build stuttered under complex maps, so I profiled the Flutter renderer and throttled updates on non-critical layers while optimizing enemy spawn logic.",
     "language": "flutter",
     "category": "games",
     "icons": [
@@ -241,6 +251,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 6,
     "year": 2024,
     "description": "TreeQuest is an educational web-based game designed to help students understand tree traversals in a fun and interactive way. It was created as a learning aid for classmates to better grasp traversal concepts through gameplay rather than traditional lectures.",
+    "context": "Translating recursive traversal logic into an interactive game loop caused timing glitches, so I added step-by-step animation queues and throttled input to keep the lesson paced.",
     "language": "javascript",
     "category": "games",
     "icons": [
@@ -263,6 +274,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 10,
     "year": 2024,
     "description": "A responsive site focused on layout, typography, and clean section-based presentation.",
+    "context": "My initial typography scale felt off on different browsers, so I reworked the CSS variables and retested spacing before lock-in.",
     "language": "php",
     "category": "websites",
     "icons": [
@@ -287,6 +299,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 4,
     "year": 2024,
     "description": "A personal website emphasizing UI polish, sections, and interactive presentation of work.",
+    "context": "Polishing the UI meant balancing interactivity with load time, so I swapped large GIFs for SVG sequences and added staged reveals that hid heavy content until needed.",
     "language": "ui design",
     "category": "ui/ux",
     "icons": [
@@ -307,6 +320,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 17,
     "year": 2024,
     "description": "This is a League of Legends / Arcane fan experience built with PHP, MySQL, and handcrafted styling. The site centres on the Runeterra lore and gives visitors a Piltover/Zaun‑flavoured landing page, gated character explorations, and light admin management for the crew that keeps the community running.",
+    "context": "Gated content broke when I tried to cache too aggressively, so I tuned the PHP session handling and added server-side guards to keep the lore pages consistent.",
     "language": "html css js",
     "category": "websites",
     "icons": [
@@ -330,6 +344,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 21,
     "year": 2024,
     "description": "A content-forward site with structured sections, visual hierarchy, and accessible navigation.",
+    "context": "Getting the accessibility states right took a few iterations, so I reworked the navigation landmarks and added keyboard-only checks before unveiling the final layout.",
     "language": "html css js",
     "category": "websites",
     "icons": [
@@ -354,6 +369,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 9,
     "year": 2025,
     "description": "A trading system combining time-series prediction, backtesting, and real-time execution logic for decision-making.",
+    "context": "Backtests fluctuated wildly until I introduced walk-forward validation and spot checks on the live feed, which kept the predictive signals from overfitting during demonstrations.",
     "language": "python",
     "category": "ai/ml",
     "icons": [
@@ -377,6 +393,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 21,
     "year": 2026,
     "description": "This website was developed for the Physics of Life and Stuff research group at the University of Santo Tomas. It serves as an online platform to present the group’s profile, research areas, projects, and related information in a clear and accessible format.",
+    "context": "Coordinating researchers meant frequent copy updates, so I built a lightweight CMS using App Script that let the group maintain the research list without needing another deploy.",
     "language": "react",
     "category": "websites",
     "icons": [
@@ -400,6 +417,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 21,
     "year": 2026,
     "description": "Universentiment is a sentiment-analysis AI chatbot that lets prospective students ask about campus life across Philippine universities. ",
+    "context": "Data bias surfaced early, so I blended manual annotations with crowd-sourced reviews and added a confidence indicator to explain why a reply leaned positive or negative.",
     "language": "react",
     "category": "websites",
     "icons": [
@@ -423,6 +441,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 8,
     "year": 2024,
     "description": "A responsive single-page site for Hephzibah School (Secondary), a DepEd-recognized institution in Silang, Cavite. ",
+    "context": "Limited brand assets meant guessing colors, so I built a quick style guide and got approval before committing to the layout.",
     "language": "php sql",
     "category": "websites",
     "icons": [
@@ -446,6 +465,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 8,
     "year": 2024,
     "description": "A responsive single-page site for Shalom Learning Center (Secondary), a DepEd-recognized institution in Dasmarinas, Cavite. ",
+    "context": "Client feedback came in late so I modularized the sections, which let me swap layouts and texts without touching the underlying PHP again.",
     "language": "php sql",
     "category": "websites",
     "icons": [
@@ -469,6 +489,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 8,
     "year": 2024,
     "description": "A responsive single-page site for Makwills Integrated School (Secondary), a DepEd-recognized institution in Imus, Cavite. ",
+    "context": "Network restrictions at the school made live edits hard, so I developed a scripted deployment that synced only changed sections and left the rest untouched.",
     "language": "php sql",
     "category": "websites",
     "icons": [
@@ -492,6 +513,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "day": 8,
     "year": 2024,
     "description": "A responsive single-page site for Queen Anne School (Secondary), a DepEd-recognized institution in General Trias, Cavite. ",
+    "context": "The school wanted a single-page feel while keeping SEO friendly, so I emulated landing scrolling but hosted each section as a separate PHP include for easier maintenance.",
     "language": "php sql",
     "category": "websites",
     "icons": [

@@ -544,12 +544,18 @@ function buildNotePanel(project) {
   title.className = "note__title";
   title.textContent = project.title || "This is the Project Title";
 
-  const desc = document.createElement("p");
-  desc.className = "note__desc";
-  desc.textContent = project.description || "This is the project description.";
-
-  textGlass.appendChild(title);
-  textGlass.appendChild(desc);
+  const desc = document.createElement("p");
+  desc.className = "note__desc";
+  desc.textContent = project.description || "This is the project description.";
+
+  textGlass.appendChild(title);
+  textGlass.appendChild(desc);
+  if (project.context) {
+    const context = document.createElement("p");
+    context.className = "note__context";
+    context.textContent = project.context;
+    textGlass.appendChild(context);
+  }
 
 // --- bottom row wrapper (two separate glasses) ---
 const metaRow = document.createElement("div");

@@ -688,12 +688,7 @@
   justify-content: flex-end;
   gap: 20px;
   align-items: flex-start;
-  background: linear-gradient(
-    180deg,
-    rgba(5, 5, 5, 0.08) 0%,
-    rgba(5, 5, 5, 0.3) 40%,
-    rgba(5, 5, 5, 0.8) 100%
-  );
+  background: transparent;
 }
 
 #projects .note__metaRow {
@@ -707,11 +702,11 @@
 }
 
 #projects .note__glass--icons {
-  padding: 6px 20px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 999px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.3);
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -856,6 +851,16 @@
   max-width: 100%;
 }
 
+#projects .note__context {
+  margin: 8px 0 0 0;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(17, 17, 17, 0.75);
+  font-style: italic;
+  max-width: 100%;
+}
+
 /* =========================
    HERO GLASS ENTRANCE
    ========================= */
@@ -900,6 +905,10 @@
 
   #projects .note__desc {
     font-size: 15px;
+  }
+
+  #projects .note__context {
+    font-size: 13px;
   }
 
   #projects .note__btns {
@@ -1020,6 +1029,11 @@
     font-size: 13px;
     line-height: 1.45;
     max-width: 100%;
+  }
+
+  #projects .note__context{
+    font-size: 12px;
+    line-height: 1.35;
   }
 }
 
