@@ -552,7 +552,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     },
     "links": {
       "github": "https://github.com/aundreka/schedu-learn",
-      "docu": "https://drive.google.com/drive/folders/1EdtCSeuMFKG84rfW2L4kUYmfjrxVZlr7?usp=sharing"
+      "docs": "https://drive.google.com/drive/folders/1EdtCSeuMFKG84rfW2L4kUYmfjrxVZlr7?usp=sharing"
     }
   },
 ];
