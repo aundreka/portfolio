@@ -548,7 +548,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "note": "f",
     "keyBg": "assets/projects/school-websites/key.jpg",
     "media": {
-      "big": "assets/projects/queenanne.png",
+      "big": "assets/projects/schedu-learn.png",
     },
     "links": {
       "github": "https://github.com/aundreka/schedu-learn",
