@@ -853,8 +853,9 @@ note.appendChild(overlay);
 let moved = 0;
 let movedY = 0;
 let dragAxis = null;
-const DRAG_THRESHOLD = 8;
-const AXIS_LOCK_BIAS = 6;
+const DRAG_THRESHOLD = 4;
+const AXIS_LOCK_BIAS = 3;
+const DRAG_SCROLL_MULT = 2.2;
   const PAGE_SCROLL_TAP_CANCEL_PX = 8;
 
 function getNearestProjectSlot() {
@@ -934,7 +935,8 @@ pianoHost.addEventListener("pointermove", (e) => {
 
   if (dragAxis === "x") {
     e.preventDefault();
-    pianoHost.scrollLeft = startScrollLeft - dx;
+    const scrollDelta = dx * DRAG_SCROLL_MULT;
+    pianoHost.scrollLeft = startScrollLeft - scrollDelta;
   }
 });
 
