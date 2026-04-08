@@ -536,7 +536,7 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "month": 4,
     "day": 8,
     "year": 2026,
-    "description": "schEDU learn is an intelligent study management app that automatically turns deadlines into personalized, adaptive study plans. At its core is a dynamic scheduling algorithm that continuously adjusts your study schedule in real time based on missed sessions, available time, and upcoming deadlines. By combining evidence-based learning strategies with smart automation and gamification, it helps students stay consistent, reduce burnout, and study more effectively.",
+    "description": "schEDU learn is an intelligent study management app that automatically turns deadlines into personalized, adaptive study plans. At its core is a dynamic scheduling algorithm that continuously adjusts your study schedule in real time based on missed sessions, available time, and upcoming deadlines.",
     "context": "We were only given 2 hours to develop this app for a hackathon, so we weren't able to implement all the features we wanted. We had to pick and choose and then perfect what we could.",
     "language": "react native",
     "category": "apps, ai/ml",

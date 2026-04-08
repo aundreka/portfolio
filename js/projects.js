@@ -905,22 +905,23 @@ pianoHost.addEventListener("pointermove", (e) => {
   if (!isDown) return;
   const dx = e.clientX - startX;
   const dy = e.clientY - startY;
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
   if (Math.abs(window.scrollY - startWindowScrollY) > PAGE_SCROLL_TAP_CANCEL_PX) {
     didPageScrollDuringPointer = true;
   }
-  moved = Math.max(moved, Math.abs(dx));
-  movedY = Math.max(movedY, Math.abs(dy));
+  moved = Math.max(moved, absDx);
+  movedY = Math.max(movedY, absDy);
 
-  if (!dragAxis && Math.max(moved, movedY) >= DRAG_THRESHOLD) {
-    if (moved >= movedY + AXIS_LOCK_BIAS) {
+  if (!dragAxis && Math.max(absDx, absDy) >= DRAG_THRESHOLD) {
+    if (absDx > absDy + AXIS_LOCK_BIAS) {
       dragAxis = "x";
-    } else if (movedY >= moved + AXIS_LOCK_BIAS) {
+    } else if (absDy > absDx + AXIS_LOCK_BIAS) {
       dragAxis = "y";
-    } else if (moved > movedY) {
+    } else {
       dragAxis = "x";
-    } else if (movedY > moved) {
-      dragAxis = "y";
     }
+
     if (dragAxis === "y") {
       didPageScrollDuringPointer = true;
       isDown = false;

@@ -838,7 +838,7 @@
   font-family: "Abril Fatface", serif;
   font-weight: 400;
   letter-spacing: -0.02em;
-  font-size: clamp(32px, 3.6vw, 48px);
+  font-size: clamp(28px, 3.3vw, 42px);
   line-height: 1.06;
   color: #0b0b0b;
   max-width: 100%;
@@ -847,7 +847,7 @@
 #projects .note__desc {
   margin: 0;
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.5;
   color: rgba(17, 17, 17, 0.9);
   max-width: 100%;
@@ -856,7 +856,7 @@
 #projects .note__context {
   margin: 8px 0 0 0;
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.5;
   color: rgba(17, 17, 17, 0.75);
   font-style: italic;
@@ -902,11 +902,11 @@
   }
 
   #projects .note__title {
-    font-size: clamp(32px, 5vw, 48px);
+    font-size: clamp(28px, 4.6vw, 42px);
   }
 
   #projects .note__desc {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   #projects .note__context {
@@ -1022,19 +1022,19 @@
 
   #projects .note__title{
     margin-bottom: 8px;
-    font-size: clamp(28px, 7.6vw, 38px);
+    font-size: clamp(26px, 7.6vw, 34px);
     line-height: 1.06;
     max-width: 100%;
   }
 
   #projects .note__desc{
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.45;
     max-width: 100%;
   }
 
   #projects .note__context{
-    font-size: 12px;
+    font-size: 11px;
     line-height: 1.35;
   }
 }
