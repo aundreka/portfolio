@@ -534,6 +534,8 @@
   -ms-overflow-style: none;
   overscroll-behavior-x: contain;
   touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 #projects .projects_piano::-webkit-scrollbar{ display:none; }
 

@@ -850,11 +850,11 @@ note.appendChild(overlay);
   let startScrollLeft = 0;
   let startWindowScrollY = 0;
   let didPageScrollDuringPointer = false;
-  let moved = 0;
-  let movedY = 0;
-  let dragAxis = null;
-  const DRAG_THRESHOLD = 10;
-  const AXIS_LOCK_BIAS = 10;
+let moved = 0;
+let movedY = 0;
+let dragAxis = null;
+const DRAG_THRESHOLD = 8;
+const AXIS_LOCK_BIAS = 6;
   const PAGE_SCROLL_TAP_CANCEL_PX = 8;
 
 function getNearestProjectSlot() {
@@ -884,64 +884,72 @@ function focusProjectSlot(slot, behavior = "smooth") {
   key?.scrollIntoView({ behavior, inline: "center", block: "nearest" });
 }
 
-pianoHost.addEventListener("pointerdown", (e) => {
-  // ✅ allow links/buttons inside note to work normally
-  if (isNoteInteractiveTarget(e.target)) return;
+pianoHost.addEventListener("pointerdown", (e) => {
+  // ✅ allow links/buttons inside note to work normally
+  if (isNoteInteractiveTarget(e.target)) return;
+
+  if (e.pointerType === "mouse" && e.button !== 0) return;
+  isDown = true;
+  startX = e.clientX;
+  startY = e.clientY;
+  startScrollLeft = pianoHost.scrollLeft;
+  startWindowScrollY = window.scrollY;
+  didPageScrollDuringPointer = false;
+  moved = 0;
+  movedY = 0;
+  dragAxis = null;
+  pianoHost.setPointerCapture?.(e.pointerId);
+});
 
-  if (e.pointerType === "mouse" && e.button !== 0) return;
-  isDown = true;
-  startX = e.clientX;
-  startY = e.clientY;
-  startScrollLeft = pianoHost.scrollLeft;
-  startWindowScrollY = window.scrollY;
-  didPageScrollDuringPointer = false;
-  moved = 0;
-  movedY = 0;
-  dragAxis = null;
-  if (e.pointerType === "mouse") {
-    pianoHost.setPointerCapture?.(e.pointerId);
-  }
-});
+pianoHost.addEventListener("pointermove", (e) => {
+  if (!isDown) return;
+  const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
+  if (Math.abs(window.scrollY - startWindowScrollY) > PAGE_SCROLL_TAP_CANCEL_PX) {
+    didPageScrollDuringPointer = true;
+  }
+  moved = Math.max(moved, Math.abs(dx));
+  movedY = Math.max(movedY, Math.abs(dy));
+
+  if (!dragAxis && Math.max(moved, movedY) >= DRAG_THRESHOLD) {
+    if (moved >= movedY + AXIS_LOCK_BIAS) {
+      dragAxis = "x";
+    } else if (movedY >= moved + AXIS_LOCK_BIAS) {
+      dragAxis = "y";
+    } else if (moved > movedY) {
+      dragAxis = "x";
+    } else if (movedY > moved) {
+      dragAxis = "y";
+    }
+    if (dragAxis === "y") {
+      didPageScrollDuringPointer = true;
+      isDown = false;
+      if (pianoHost.hasPointerCapture?.(e.pointerId)) {
+        pianoHost.releasePointerCapture?.(e.pointerId);
+      }
+      return;
+    }
+  }
+
+  if (dragAxis === "x") {
+    e.preventDefault();
+    pianoHost.scrollLeft = startScrollLeft - dx;
+  }
+});
 
-pianoHost.addEventListener("pointermove", (e) => {
-  if (!isDown) return;
-  const dx = e.clientX - startX;
-  const dy = e.clientY - startY;
-  if (Math.abs(window.scrollY - startWindowScrollY) > PAGE_SCROLL_TAP_CANCEL_PX) {
-    didPageScrollDuringPointer = true;
-  }
-  moved = Math.max(moved, Math.abs(dx));
-  movedY = Math.max(movedY, Math.abs(dy));
-
-  if (!dragAxis && (moved > DRAG_THRESHOLD || movedY > DRAG_THRESHOLD)) {
-    if (moved >= DRAG_THRESHOLD && moved - movedY >= AXIS_LOCK_BIAS) {
-      dragAxis = "x";
-    } else if (movedY >= DRAG_THRESHOLD && movedY - moved >= AXIS_LOCK_BIAS) {
-      dragAxis = "y";
-      didPageScrollDuringPointer = true;
-      isDown = false;
-      if (e.pointerType === "mouse" && pianoHost.hasPointerCapture?.(e.pointerId)) {
-        pianoHost.releasePointerCapture?.(e.pointerId);
-      }
-      return;
-    }
-  }
-
-  if (dragAxis === "x" && moved > DRAG_THRESHOLD) {
-    pianoHost.scrollLeft = startScrollLeft - dx;
-  }
-});
-
-pianoHost.addEventListener("pointerup", (e) => {
-  // ✅ if they clicked inside note (links/buttons), don't treat it as piano click
-  if (isNoteInteractiveTarget(e.target)) {
-    isDown = false;
-    didPageScrollDuringPointer = false;
-    return;
-  }
-
-  if (!isDown) return;
-  isDown = false;
+pianoHost.addEventListener("pointerup", (e) => {
+  // ✅ if they clicked inside note (links/buttons), don't treat it as piano click
+  if (isNoteInteractiveTarget(e.target)) {
+    isDown = false;
+    didPageScrollDuringPointer = false;
+    return;
+  }
+
+  if (!isDown) return;
+  isDown = false;
+  if (pianoHost.hasPointerCapture?.(e.pointerId)) {
+    pianoHost.releasePointerCapture?.(e.pointerId);
+  }
 
   if (Math.abs(window.scrollY - startWindowScrollY) > PAGE_SCROLL_TAP_CANCEL_PX) {
     didPageScrollDuringPointer = true;
@@ -973,11 +981,14 @@ pianoHost.addEventListener("pointerup", (e) => {
   render({ focusSlot: slot });
 });
 
-  pianoHost.addEventListener("pointercancel", () => {
-    isDown = false;
-    dragAxis = null;
-    didPageScrollDuringPointer = false;
-  });
+  pianoHost.addEventListener("pointercancel", (e) => {
+    if (pianoHost.hasPointerCapture?.(e.pointerId)) {
+      pianoHost.releasePointerCapture?.(e.pointerId);
+    }
+    isDown = false;
+    dragAxis = null;
+    didPageScrollDuringPointer = false;
+  });
 
   document.addEventListener("pointerdown", (e) => {
     if (state.openIndex === null) return;
