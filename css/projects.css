@@ -184,6 +184,49 @@
   color: #111;
 }
 
+#projects .projects__reset{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  margin-left: -4px;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #111;
+  cursor: pointer;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+#projects .projects__reset:hover{
+  opacity: 0.64;
+}
+
+#projects .projects__reset:active{
+  transform: translateY(1px);
+}
+
+#projects .projects__reset[hidden]{
+  display: none;
+}
+
+#projects .projects__reset svg{
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+#projects .projects__reset path{
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 /* hint */
 #projects .projects__hint{
   margin-left: auto;
@@ -299,7 +342,8 @@
 
   #projects .projects__searchToggle--mobile,
   #projects .projects__searchInline--mobile,
-  #projects .projects__filterToggle{
+  #projects .projects__filterToggle,
+  #projects .projects__reset{
     margin-left: 0;
   }
 
@@ -307,8 +351,13 @@
     margin-left: auto;
   }
 
+  #projects .projects__filterToggle + .projects__reset{
+    margin-left: 4px;
+  }
+
   #projects .projects__searchToggle:active,
-  #projects .projects__filterToggle:active{
+  #projects .projects__filterToggle:active,
+  #projects .projects__reset:active{
     transform: translateY(1px);
   }
 
@@ -397,6 +446,12 @@
     font-size: 10px;
     line-height: 1.2;
     font-weight: 600;
+  }
+
+  #projects .projects__reset{
+    width: 24px;
+    height: 24px;
+    order: 4;
   }
 
   #projects .filter__searchShell{
@@ -844,6 +899,17 @@
   max-width: 100%;
 }
 
+#projects .note__date {
+  margin: -2px 0 12px;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.56);
+}
+
 #projects .note__desc {
   margin: 0;
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -1025,6 +1091,12 @@
     font-size: clamp(26px, 7.6vw, 34px);
     line-height: 1.06;
     max-width: 100%;
+  }
+
+  #projects .note__date{
+    margin: -2px 0 10px;
+    font-size: 10px;
+    letter-spacing: 0.14em;
   }
 
   #projects .note__desc{
@@ -1220,4 +1292,3 @@
     height: min(48svh, 440px);
   }
 }
-

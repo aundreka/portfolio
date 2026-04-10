@@ -1,10 +1,11 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-  const root = document.querySelector("#projects.projects");
-  if (!root) return;
-
-  const pianoHost   = root.querySelector("#projectsPiano");
-  const filtersPanelEl = root.querySelector("#projectsFiltersPanel");
+  const root = document.querySelector("#projects.projects");
+  if (!root) return;
+
+  const pianoHost   = root.querySelector("#projectsPiano");
+  const topbarEl = root.querySelector(".projects__topbar");
+  const filtersPanelEl = root.querySelector("#projectsFiltersPanel");
   const searchToggleBtn = root.querySelector("#projectsSearchToggle");
   const searchToggleMobileBtn = root.querySelector("#projectsSearchToggleMobile");
   const filterToggleBtn = root.querySelector("#projectsFiltersToggle");
@@ -23,13 +24,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const catFilter   = root.querySelector('.filter[data-filter="category"]');
   const sortFilter  = root.querySelector('.filter[data-filter="sort"]');
 
-  if (!pianoHost || !filtersPanelEl || !searchToggleBtn || !filterToggleBtn || !searchInputEl || !langValueEl || !toolValueEl || !catValueEl || !sortValueEl || !langMenuEl || !toolMenuEl || !catMenuEl || !sortMenuEl || !langFilter || !toolFilter || !catFilter || !sortFilter) {
+  if (!pianoHost || !topbarEl || !filtersPanelEl || !searchToggleBtn || !filterToggleBtn || !searchInputEl || !langValueEl || !toolValueEl || !catValueEl || !sortValueEl || !langMenuEl || !toolMenuEl || !catMenuEl || !sortMenuEl || !langFilter || !toolFilter || !catFilter || !sortFilter) {
     console.warn("[ProjectsPiano] Missing required DOM elements inside #projects.");
     return;
   }
 
-  const searchToggleButtons = [searchToggleBtn, searchToggleMobileBtn].filter(Boolean);
-  const searchInputs = [searchInputEl, searchInputMobileEl].filter(Boolean);
+  const searchToggleButtons = [searchToggleBtn, searchToggleMobileBtn].filter(Boolean);
+  const searchInputs = [searchInputEl, searchInputMobileEl].filter(Boolean);
+  const resetFiltersBtn = document.createElement("button");
+  resetFiltersBtn.type = "button";
+  resetFiltersBtn.className = "projects__reset";
+  resetFiltersBtn.hidden = true;
+  resetFiltersBtn.setAttribute("aria-label", "Reset all project filters");
+  resetFiltersBtn.innerHTML = `
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11a8 8 0 1 1-2.35-5.66" />
+      <path d="M20 4v5h-5" />
+    </svg>
+  `;
+  topbarEl.insertBefore(resetFiltersBtn, filtersPanelEl.nextSibling);
 
   function getResponsivePianoMetrics() {
     const viewportW = window.innerWidth || document.documentElement.clientWidth || 1440;
@@ -111,14 +124,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function handleSearchInput(event) {
-    state.search = event.currentTarget.value || "";
-    state.openIndex = null;
-    syncSearchInputs(state.search);
-    clearMenus();
-    setSearchTrayOpen(Boolean(state.search) || root.classList.contains("search-open"));
-    render({ restoreScrollLeft: 0 });
-  }
+  function handleSearchInput(event) {
+    state.search = event.currentTarget.value || "";
+    state.openIndex = null;
+    syncFilterUI();
+    clearMenus();
+    setSearchTrayOpen(Boolean(state.search) || root.classList.contains("search-open"));
+    render({ restoreScrollLeft: 0 });
+  }
 
   applyResponsivePianoMetrics();
 
@@ -176,16 +189,48 @@ document.addEventListener("DOMContentLoaded", () => {
   const KEY_ANIM_MS = 520;
   const NOTE_ANIM_MS = 380;
 
-  const state = {
-    language: "All",
-    tool: "All",
-    category: "All",
+  const state = {
+    language: "All",
+    tool: "All",
+    category: "All",
     sort: "Newest",
     search: "",
-    openIndex: null,
-    lastHoverAt: 0,
-    lastHoverSlot: null,
-  };
+    openIndex: null,
+    lastHoverAt: 0,
+    lastHoverSlot: null,
+  };
+
+  function hasActiveProjectFilters() {
+    return (
+      state.language !== "All" ||
+      state.tool !== "All" ||
+      state.category !== "All" ||
+      state.sort !== "Newest" ||
+      Boolean(normalize(state.search))
+    );
+  }
+
+  function syncFilterUI() {
+    langValueEl.textContent = state.language;
+    toolValueEl.textContent = state.tool;
+    catValueEl.textContent = state.category;
+    sortValueEl.textContent = state.sort;
+    syncSearchInputs(state.search);
+    resetFiltersBtn.hidden = !hasActiveProjectFilters();
+  }
+
+  function resetProjectFilters() {
+    state.language = "All";
+    state.tool = "All";
+    state.category = "All";
+    state.sort = "Newest";
+    state.search = "";
+    state.openIndex = null;
+    clearMenus();
+    setSearchTrayOpen(false);
+    syncFilterUI();
+    render({ restoreScrollLeft: 0 });
+  }
 
   const normalize = (s) => String(s || "").trim().toLowerCase();
   const hasNormalized = (items, needle) => items.some((item) => normalize(item) === normalize(needle));
@@ -426,44 +471,50 @@ function renderMenu(menuEl, items, onPick) {
 }
 
 
-renderMenu(langMenuEl, LANGUAGES, (picked) => {
-  state.language = picked;
-  langValueEl.textContent = picked;
-  state.openIndex = null;
-  clearMenus();
-  setFiltersTrayOpen(false);
-  render({ restoreScrollLeft: 0 });
-});
+renderMenu(langMenuEl, LANGUAGES, (picked) => {
+  state.language = picked;
+  state.openIndex = null;
+  syncFilterUI();
+  clearMenus();
+  setFiltersTrayOpen(false);
+  render({ restoreScrollLeft: 0 });
+});
 
-renderMenu(toolMenuEl, TOOLS, (picked) => {
-  state.tool = picked;
-  toolValueEl.textContent = picked;
-  state.openIndex = null;
-  clearMenus();
-  setFiltersTrayOpen(false);
-  render({ restoreScrollLeft: 0 });
-});
+renderMenu(toolMenuEl, TOOLS, (picked) => {
+  state.tool = picked;
+  state.openIndex = null;
+  syncFilterUI();
+  clearMenus();
+  setFiltersTrayOpen(false);
+  render({ restoreScrollLeft: 0 });
+});
 
-renderMenu(catMenuEl, CATEGORIES, (picked) => {
-  state.category = picked;
-  catValueEl.textContent = picked;
-  state.openIndex = null;
-  clearMenus();
-  setFiltersTrayOpen(false);
-  render({ restoreScrollLeft: 0 });
-});
+renderMenu(catMenuEl, CATEGORIES, (picked) => {
+  state.category = picked;
+  state.openIndex = null;
+  syncFilterUI();
+  clearMenus();
+  setFiltersTrayOpen(false);
+  render({ restoreScrollLeft: 0 });
+});
 
-renderMenu(sortMenuEl, SORT_OPTIONS, (picked) => {
-  state.sort = picked;
-  sortValueEl.textContent = picked;
-  state.openIndex = null;
-  clearMenus();
-  setFiltersTrayOpen(false);
-  render({ restoreScrollLeft: 0 });
-});
-
-  searchToggleButtons.forEach((button) => {
-    button.addEventListener("click", (e) => {
+renderMenu(sortMenuEl, SORT_OPTIONS, (picked) => {
+  state.sort = picked;
+  state.openIndex = null;
+  syncFilterUI();
+  clearMenus();
+  setFiltersTrayOpen(false);
+  render({ restoreScrollLeft: 0 });
+});
+
+resetFiltersBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  resetProjectFilters();
+});
+
+  searchToggleButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
       setSearchTrayOpen(!root.classList.contains("search-open"));
@@ -508,15 +559,17 @@ searchInputs.forEach((input) => {
 });
 
 
-document.addEventListener("pointerdown", (e) => {
-  if (searchToggleButtons.some((button) => button.contains(e.target)) || filterToggleBtn.contains(e.target) || filtersPanelEl.contains(e.target)) return;
-  clearMenusAnimated();
-  setSearchTrayOpen(false);
-  setFiltersTrayOpen(false);
-});
-
- 
-function buildNotePanel(project) {
+document.addEventListener("pointerdown", (e) => {
+  if (searchToggleButtons.some((button) => button.contains(e.target)) || filterToggleBtn.contains(e.target) || filtersPanelEl.contains(e.target)) return;
+  clearMenusAnimated();
+  setSearchTrayOpen(false);
+  setFiltersTrayOpen(false);
+});
+
+  syncFilterUI();
+
+ 
+function buildNotePanel(project) {
   const note = document.createElement("div");
   note.className = "note note--hero";
   note.dataset.projectTitle = project.title || "This is the Project Title";
@@ -540,15 +593,24 @@ function buildNotePanel(project) {
   const textGlass = document.createElement("div");
   textGlass.className = "note__glass note__glass--text";
 
-  const title = document.createElement("h2");
-  title.className = "note__title";
-  title.textContent = project.title || "This is the Project Title";
-
+  const title = document.createElement("h2");
+  title.className = "note__title";
+  title.textContent = project.title || "This is the Project Title";
+
+  if (project.dateKeyword) {
+    const date = document.createElement("p");
+    date.className = "note__date";
+    date.textContent = project.dateKeyword;
+    textGlass.appendChild(title);
+    textGlass.appendChild(date);
+  } else {
+    textGlass.appendChild(title);
+  }
+
   const desc = document.createElement("p");
   desc.className = "note__desc";
   desc.textContent = project.description || "This is the project description.";
 
-  textGlass.appendChild(title);
   textGlass.appendChild(desc);
   if (project.context) {
     const context = document.createElement("p");

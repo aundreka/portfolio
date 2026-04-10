@@ -514,11 +514,14 @@ function getVisualCatHintTarget() {
 
   if (window.innerWidth > 700) return rect;
 
+  const anchorX = rect.left + rect.width * 0.5;
+  const anchorY = rect.top + rect.height * 0.28;
+
   return makeRectLike(
-    rect.left + rect.width * 0.2,
-    rect.top + rect.height * 0.2,
-    rect.width * 0.62,
-    rect.height * 0.52
+    anchorX - 10,
+    anchorY - 10,
+    20,
+    20
   );
 }
 
@@ -1339,11 +1342,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function layout(forceFresh = false) {
     const tr = getTargetRect();
     if (!tr) {
-hint.style.opacity = "0";
-svg.style.opacity = "0";
-mobileArrow.style.opacity = "0";
-cachedMobilePlacement = null;
-return;
+      hint.style.opacity = "0";
+      svg.style.opacity = "0";
+      mobileArrow.style.opacity = "0";
+      return;
     }
 
     const mobileHintLayout = window.innerWidth <= 700;
@@ -1391,12 +1393,11 @@ return;
     hy += shiftY;
 
     if (mobileHintLayout && id === "intro-hint-cat") {
-      const navPanel = document.querySelector(".nav__panel");
-      const navRect = navPanel?.getBoundingClientRect?.();
-      const navBottom = navRect ? navRect.bottom : 0;
-      const headingBottom = heading?.getBoundingClientRect?.().bottom || 0;
-      hx = tr.left + tr.width * 0.34 - hintRect.width * 0.5;
-      hy = Math.max(headingBottom + 104, navBottom + 150);
+      const sourceRect = (catWrap || catEl)?.getBoundingClientRect?.() || tr;
+      const catCenterX = sourceRect.left + sourceRect.width * 0.5;
+      const catAnchorY = sourceRect.top + sourceRect.height * 0.28;
+      hx = catCenterX - hintRect.width * 0.5;
+      hy = catAnchorY - hintRect.height - 42;
     }
 
     if (mobileHintLayout && id === "intro-hint-piano") {
@@ -1437,10 +1438,6 @@ return;
     let desiredHx = b.left;
     let desiredHy = b.top;
 
-    if (mobileHintLayout && id === "intro-hint-cat") {
-      desiredHy -= 8;
-    }
-
     
     let desiredStartY = b.top + b.height * 0.55;
     let desiredStartX = side === "left" ? (b.right + 10) : (b.left - 10);
@@ -1454,8 +1451,9 @@ return;
 
     if (id === "intro-hint-cat") {
       if (mobileHintLayout) {
-        desiredEndX = tr.left + tr.width * 0.34;
-        desiredEndY = tr.top + 2;
+        const sourceRect = (catWrap || catEl)?.getBoundingClientRect?.() || tr;
+        desiredEndX = sourceRect.left + sourceRect.width * 0.5;
+        desiredEndY = sourceRect.top + sourceRect.height * 0.28 - 33;
       } else {
         desiredEndX = tr.left - marginFromTarget;
         desiredEndY = tr.top + tr.height * 0.48;
@@ -1485,11 +1483,14 @@ return;
     let desiredCtrlY = midY - curve * 0.35;
 
     if (mobileHintLayout && id === "intro-hint-cat") {
-      desiredStartX = tr.left + tr.width * 0.34;
-      desiredStartY = b.bottom + 26;
-      desiredEndX = desiredStartX;
-      desiredEndY = tr.top - 32;
-      desiredCtrlX = desiredStartX;
+      const sourceRect = (catWrap || catEl)?.getBoundingClientRect?.() || tr;
+      const catCenterX = sourceRect.left + sourceRect.width * 0.5;
+      const catAnchorY = sourceRect.top + sourceRect.height * 0.28;
+      desiredStartX = b.left + b.width * 0.5;
+      desiredStartY = b.bottom + 4;
+      desiredEndX = catCenterX;
+      desiredEndY = catAnchorY - 28;
+      desiredCtrlX = catCenterX;
       desiredCtrlY = (desiredStartY + desiredEndY) / 2;
     }
 
@@ -1504,13 +1505,8 @@ return;
 
     if (mobileHintLayout) {
       svg.style.display = "none";
-      let top = Math.min(desiredStartY, desiredEndY);
-      let height = Math.max(16, Math.abs(desiredEndY - desiredStartY));
-
-      if (id === "intro-hint-cat") {
-        top += 4;
-        height = Math.max(16, height - 24);
-      }
+      const top = Math.min(desiredStartY, desiredEndY);
+      const height = Math.max(16, Math.abs(desiredEndY - desiredStartY));
 
       mobileArrow.style.left = `${desiredStartX - 7}px`;
       mobileArrow.style.top = `${top + scrollTop}px`;
@@ -1519,7 +1515,7 @@ return;
       mobileArrow.classList.toggle("is-down", id === "intro-hint-cat");
       cachedMobilePlacement = {
         hx: desiredHx,
-        hy: id === "intro-hint-cat" ? desiredHy + scrollTop : parseFloat(hint.style.top) || (desiredHy + scrollTop),
+        hy: parseFloat(hint.style.top) || (desiredHy + scrollTop),
         arrowLeft: desiredStartX - 7,
         arrowTop: top + scrollTop,
         arrowHeight: height,
@@ -1626,6 +1622,9 @@ head.setAttribute(
    async function showTyped() {
     await waitForStableMobileTarget();
 
+    span.textContent = text;
+    span.style.visibility = "hidden";
+
     enabled = true;
     layout(true);
 
@@ -1634,6 +1633,8 @@ head.setAttribute(
     void path.getBoundingClientRect();
     path.classList.add("is-drawing");
 
+    span.textContent = "";
+    span.style.visibility = "";
     await typeInto(span, text, 28);
   }
 
@@ -1741,7 +1742,9 @@ const pianoHint = makeHint({
       syncHeroHints();
     };
     window.addEventListener("resize", relayout, { passive: true });
-    window.addEventListener("scroll", relayout, { passive: true });
+    window.addEventListener("scroll", () => {
+      if (window.innerWidth > 700) relayout();
+    }, { passive: true });
   })();
 });
 
