@@ -1,4 +1,3 @@
-# Piano Themed Portfolio
 
 This site is my personal portfolio, crafted over several months of experimentation and refinement to showcase the work I care about most. Every page and interaction reflects long evenings spent polishing content, layouts, and subtle animations so it feels like a living record of my journey.
 
