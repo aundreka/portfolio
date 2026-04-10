@@ -1117,7 +1117,7 @@
 }
 
 .interests-mobile-gallery .ph1{ background: linear-gradient(145deg,#eff6ff,#dbeafe 55%,#eff6ff); }
-.interests-mobile-gallery .ph2{ background: linear-gradient(145deg,#f0f9ff,#e0f2fe 55%,#dbeafe); }
+.interests-mobile-gallery .ph2{ background: none; }
 .interests-mobile-gallery .ph3{ background: linear-gradient(145deg,#eef2ff,#e0e7ff 55%,#eff6ff); }
 
 .interests-mobile-gallery .phico{
@@ -1167,7 +1167,7 @@
 .interests-mobile-gallery .c4c-n em{ font-style: italic; color: var(--a); }
 .interests-mobile-gallery .at-body,
 .interests-mobile-gallery .c4c-d{ font-size: 11px; font-weight: 300; color: var(--t2); line-height: 1.7; }
-.interests-mobile-gallery .tags{ display: flex; flex-wrap: wrap; gap: 6px; }
+.interests-mobile-gallery .tags{ display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px;}
 .interests-mobile-gallery .tag{
   font-size: 8px;
   font-weight: 600;

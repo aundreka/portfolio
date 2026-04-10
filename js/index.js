@@ -981,7 +981,7 @@ const updateNavVisibility = () => {
 
   const currentY = window.scrollY || document.documentElement.scrollTop || 0;
   const scrollDelta = currentY - lastNavScrollY;
-  const keepVisible = currentY < 80 || navEl.classList.contains("is-menu-open") || isMobileNav();
+  const keepVisible = currentY < 80 || navEl.classList.contains("is-menu-open");
 
   if (keepVisible || scrollDelta < -6) {
     navEl.classList.remove("nav--hidden");
@@ -1053,7 +1053,7 @@ if (navDropdown && navToggle && navMenu) {
   });
 }
 
-const navAnchorLinks = document.querySelectorAll('.nav a[href^="#"]');
+const navAnchorLinks = document.querySelectorAll('.nav a[href^="#"]:not(.nav__menu-item[data-about-target])');
 navAnchorLinks.forEach((link) => {
   link.addEventListener("click", (e) => {
     const href = link.getAttribute("href");
@@ -1085,10 +1085,11 @@ aboutMenuLinks.forEach((link) => {
     e.preventDefault();
     const target = link.dataset.aboutTarget;
     const aboutSection = document.getElementById("about");
+    const note = aboutSection?.querySelector(`.note-block[data-category="${target}"]`);
     if (!aboutSection || !aboutTrack) return;
 
     if (isScrollEffectsMobile()) {
-      aboutSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      (note || aboutSection).scrollIntoView({ behavior: "smooth", block: "start" });
       closeAboutDropdown();
       if (isMobileNav()) closeNavMenu();
       return;
@@ -1096,7 +1097,6 @@ aboutMenuLinks.forEach((link) => {
 
     aboutSection.scrollIntoView({ behavior: "smooth", block: "center" });
 
-    const note = aboutSection.querySelector(`.note-block[data-category="${target}"]`);
     if (note) {
       const noteRect = note.getBoundingClientRect();
       const trackRect = aboutTrack.getBoundingClientRect();
