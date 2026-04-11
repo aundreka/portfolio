@@ -321,11 +321,6 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-color: var(--nav-surface-bg);
-  background-image: var(--nav-surface-gloss);
-  backdrop-filter: var(--nav-surface-filter);
-  -webkit-backdrop-filter: var(--nav-surface-filter);
-  box-shadow: var(--nav-surface-shadow);
   pointer-events: none;
   z-index: 0;
 }
