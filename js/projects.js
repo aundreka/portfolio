@@ -232,8 +232,22 @@ document.addEventListener("DOMContentLoaded", () => {
     render({ restoreScrollLeft: 0 });
   }
 
-  const normalize = (s) => String(s || "").trim().toLowerCase();
-  const hasNormalized = (items, needle) => items.some((item) => normalize(item) === normalize(needle));
+  const normalize = (s) => String(s || "").trim().toLowerCase();
+  const hasNormalized = (items, needle) => items.some((item) => normalize(item) === normalize(needle));
+  const splitCategoryString = (value) =>
+    String(value || "")
+      .split(",")
+      .map((item) => normalize(item))
+      .filter(Boolean);
+  const getProjectCategories = (project) => {
+    if (Array.isArray(project?.categories)) {
+      return project.categories.map((category) => normalize(category)).filter(Boolean);
+    }
+    if (Array.isArray(project?.category)) {
+      return project.category.map((category) => normalize(category)).filter(Boolean);
+    }
+    return splitCategoryString(project?.category);
+  };
 
   function getProjectToolTags(project) {
     const tags = new Set();
@@ -241,10 +255,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (value) tags.add(normalize(value));
     };
 
-    const language = normalize(project?.language);
-    const category = normalize(project?.category);
-    const title = normalize(project?.title);
-    const description = normalize(project?.description);
+    const language = normalize(project?.language);
+    const categories = getProjectCategories(project);
+    const title = normalize(project?.title);
+    const description = normalize(project?.description);
 
     add(project?.language);
     (project?.icons || []).forEach(add);
@@ -275,13 +289,13 @@ document.addEventListener("DOMContentLoaded", () => {
       add("Figma");
     }
 
-    if (category === "ui/ux") add("Figma");
-    if (category === "apps" || category === "websites") add("Git");
-
-    if (category === "ai/ml" || title.includes("analytics") || description.includes("analytics")) {
-      add("Tableau");
-      add("Power BI");
-    }
+    if (categories.includes("ui/ux")) add("Figma");
+    if (categories.includes("apps") || categories.includes("websites")) add("Git");
+
+    if (categories.includes("ai/ml") || title.includes("analytics") || description.includes("analytics")) {
+      add("Tableau");
+      add("Power BI");
+    }
 
     if (title.includes("dashboard") || description.includes("dashboard")) add("Power BI");
 
@@ -296,9 +310,10 @@ document.addEventListener("DOMContentLoaded", () => {
       project?.title,
       project?.description,
       project?.language,
-      project?.category,
-      project?.dateKeyword,
-      project?.publishedAt,
+      ...(project?.categories || []),
+      ...(Array.isArray(project?.category) ? project.category : [project?.category]),
+      project?.dateKeyword,
+      project?.publishedAt,
       ...(project?.icons || []),
       ...getProjectToolTags(project),
     ]
@@ -315,7 +330,7 @@ function isNoteInteractiveTarget(target) {
     if (!project) return false;
     const langOk = state.language === "All" || normalize(project.language) === normalize(state.language);
     const toolOk = state.tool === "All" || hasNormalized(getProjectToolTags(project), state.tool);
-    const catOk  = state.category === "All" || normalize(project.category) === normalize(state.category);
+    const catOk  = state.category === "All" || hasNormalized(getProjectCategories(project), state.category);
     const searchOk = matchesSearch(project);
     return langOk && toolOk && catOk && searchOk;
   }
