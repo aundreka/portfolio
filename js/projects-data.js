@@ -559,6 +559,35 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
       "docs": "https://drive.google.com/drive/folders/1EdtCSeuMFKG84rfW2L4kUYmfjrxVZlr7?usp=sharing"
     }
   },
+        {
+    "title": "Fishbowl Trading Analytics",
+    "month": 5,
+    "day": 8,
+    "year": 2026,
+    "description": "The term “Fishbowl” represents a controlled environment where behavior can be observed without external risk. Similarly, the system simulates trading strategies within a contained historical market environment, allowing users to analyze performance, evaluate decision rules, and study outcomes without real financial exposure.",
+    "language": "react",
+    "categories": [
+      "websites",
+      "ai/ml",
+      "ui/ux"
+    ],
+    "icons": [
+      "mysql",
+      "supabase",
+      "react",
+      "python",
+      "qwen"
+    ],
+    "note": "f",
+    "keyBg": "assets/projects/school-websites/key.jpg",
+    "media": {
+      "big": "assets/projects/fishbowl.png",
+    },
+    "links": {
+      "github": "https://github.com/aundreka/fishbowl-trading-analytics",
+      "docs": "https://docs.google.com/document/d/1Q94YbB_dKaf3ihTuW31eSCT2xx-G1Fb6/edit?usp=sharing&ouid=117702929946020977756&rtpof=true&sd=true"
+    }
+  },
 ];
 
 window.PROJECTS_DATA.PROJECT_DATE_SEEDS = [
