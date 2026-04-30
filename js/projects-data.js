@@ -561,8 +561,8 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
   },
         {
     "title": "Fishbowl Trading Analytics",
-    "month": 5,
-    "day": 8,
+    "month": 4,
+    "day": 15,
     "year": 2026,
     "description": "The term “Fishbowl” represents a controlled environment where behavior can be observed without external risk. Similarly, the system simulates trading strategies within a contained historical market environment, allowing users to analyze performance, evaluate decision rules, and study outcomes without real financial exposure.",
     "language": "react",
@@ -586,6 +586,38 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     "links": {
       "github": "https://github.com/aundreka/fishbowl-trading-analytics",
       "docs": "https://docs.google.com/document/d/1Q94YbB_dKaf3ihTuW31eSCT2xx-G1Fb6/edit?usp=sharing&ouid=117702929946020977756&rtpof=true&sd=true"
+    }
+  },
+       {
+    "title": "Academon",
+    "month": 4,
+    "day": 30,
+    "year": 2026,
+    "description": "Study. Battle. Collect. A gacha-powered learning RPG with PvP & PvE quiz combat.",
+    "context": "We created this in a 24 hour hackathon, and it was a great learning experience. We were able to complete all desired MVP features, including PDF to reviewer, flashcard, quiz, and n8n workflow integrations, all while building 10 beautiful screens with functional front and backend.",
+    "language": "flutter",
+    "categories": [
+      "websites",
+      "apps",
+      "ai/ml",
+      "ui/ux"
+    ],
+    "icons": [
+      "flutter",
+      "supabase",
+      "qwen",
+      "n8n",
+      "mysql"
+    ],
+    "note": "f",
+    "keyBg": "assets/projects/school-websites/key.jpg",
+    "media": {
+      "big": "assets/projects/academon.png",
+    },
+    "links": {
+      "github": "https://github.com/aundreka/academon",
+      "docs": "https://drive.google.com/drive/folders/1l9-oJcDSJ8l7QzInlgay2ttRmCMwcdOD?usp=sharing",
+      "live": "https://aundreka.github.io/academon/"
     }
   },
 ];
