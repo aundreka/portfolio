@@ -589,35 +589,31 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
     }
   },
        {
-    "title": "Academon",
-    "month": 4,
-    "day": 30,
+    "title": "Anomaly Detector",
+    "month": 1,
+    "day": 5,
     "year": 2026,
-    "description": "Study. Battle. Collect. A gacha-powered learning RPG with PvP & PvE quiz combat.",
-    "context": "We created this in a 24 hour hackathon, and it was a great learning experience. We were able to complete all desired MVP features, including PDF to reviewer, flashcard, quiz, and n8n workflow integrations, all while building 10 beautiful screens with functional front and backend.",
-    "language": "flutter",
+    "description": "This project is a simple web-based anomaly detection app built with PHP, JavaScript, and D3.js. Its goal is to let a user upload or paste numeric data, run Z-score-based anomaly detection on the server, and visualize the results in an interactive chart.",
+    "context": "Created as a laboratory activity for my third year CS Elective AI and Machine Learning class.",
+    "language": "php",
     "categories": [
       "websites",
-      "apps",
       "ai/ml",
       "ui/ux"
     ],
     "icons": [
-      "flutter",
-      "supabase",
-      "qwen",
-      "n8n",
-      "mysql"
+      "php",
+      "javascript",
+      "d3.js"
     ],
     "note": "f",
     "keyBg": "assets/projects/school-websites/key.jpg",
     "media": {
-      "big": "assets/projects/academon.png",
+      "big": "assets/projects/anomaly-detector.png",
     },
     "links": {
-      "github": "https://github.com/aundreka/academon",
-      "docs": "https://drive.google.com/drive/folders/1l9-oJcDSJ8l7QzInlgay2ttRmCMwcdOD?usp=sharing",
-      "live": "https://aundreka.github.io/academon/"
+      "github": "https://github.com/aundreka/anomaly-detector",
+      "live": "https://anomaly-detector.ct.ws/"
     }
   },
 ];
