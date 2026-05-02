@@ -588,10 +588,41 @@ window.PROJECTS_DATA.RAW_PROJECTS = [
       "docs": "https://docs.google.com/document/d/1Q94YbB_dKaf3ihTuW31eSCT2xx-G1Fb6/edit?usp=sharing&ouid=117702929946020977756&rtpof=true&sd=true"
     }
   },
+         {
+    "title": "Academon",
+    "month": 4,
+    "day": 30,
+    "year": 2026,
+    "description": "Study. Battle. Collect. A gacha-powered learning RPG with PvP & PvE quiz combat.",
+    "context": "It is an EdTech web-application built under 24 hours and submitted to the 2026 iSITE Hackathon under the problem \"Learning... Without having to learn...\", by my team Cheilou Puro and Lhanz Arias. ",
+    "language": "flutter",
+    "categories": [
+      "apps",
+      "websites",
+      "ai/ml",
+      "ui/ux"
+    ],
+    "icons": [
+      "flutter",
+      "n8n",
+      "sql",
+      "supabase"
+    ],
+    "note": "f",
+    "keyBg": "assets/projects/school-websites/key.jpg",
+    "media": {
+      "big": "assets/projects/academon.png",
+    },
+    "links": {
+      "github": "https://github.com/aundreka/academon",
+      "live": "https://aundreka.github.io/academon/",
+      "docs": "https://drive.google.com/drive/folders/1l9-oJcDSJ8l7QzInlgay2ttRmCMwcdOD?usp=sharing"
+    }
+  },
        {
     "title": "Anomaly Detector",
-    "month": 1,
-    "day": 5,
+    "month": 5,
+    "day": 1,
     "year": 2026,
     "description": "This project is a simple web-based anomaly detection app built with PHP, JavaScript, and D3.js. Its goal is to let a user upload or paste numeric data, run Z-score-based anomaly detection on the server, and visualize the results in an interactive chart.",
     "context": "Created as a laboratory activity for my third year CS Elective AI and Machine Learning class.",
